@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laplacian Curvature Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script>
+window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] }, svg: { fontCache: "global" }, startup: { typeset: true } };
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-svg.min.js" async></script>
+<style>
+/* VOICE: a working laboratory notebook, calm and precise, one idea per bench.
+   IDEA: the Laplacian Lab's bench, now with curvature: each section is an instrument that measures K, H or Ric through Δ.
+   PICTURE: every section opens on a live instrument — a coloured surface, a flowing curve, a coloured graph.
+   COLOUR and TYPE: Laplacian Lab tokens — cool paper and ink, Computational Classnotes orange for positive curvature, steel blue for negative; Bricolage Grotesque / IBM Plex Sans / JetBrains Mono.
+   LAYOUT: hash-routed sections, one visible at a time, instrument left and readings right above 900px, stacked below. */
+:root{color-scheme:light dark;
+ --bg:light-dark(#f3f5f8,#0e131a);--panel:light-dark(#ffffff,#151c25);--ink:light-dark(#17202b,#e5eaf0);--soft:light-dark(#566273,#9aa7b6);
+ --line:light-dark(#d9dfe7,#263241);--acc:#fa8f2b;--acc-ink:light-dark(#b85a05,#ffb26b);--neg:light-dark(#2e5cc7,#6f97ff);--tint:light-dark(#fff3e6,#2a1d10);
+ --code:light-dark(#f6f7f9,#0b1016)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html{scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
+[hidden]{display:none!important}
+header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
+.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding:10px max(4vw,16px)}
+#status{font-size:12.5px}
+.brand{font:700 20px/1.1 "Bricolage Grotesque",sans-serif;letter-spacing:-.01em;white-space:nowrap}
+.brand b{color:var(--acc-ink);font-weight:700}
+nav{display:flex;gap:4px;overflow-x:auto;padding:0 max(4vw,16px) 8px;scrollbar-width:thin}
+nav a{flex:none;color:var(--soft);text-decoration:none;font-size:13.5px;padding:6px 10px;border-radius:999px;border:1px solid transparent}
+nav a:hover{color:var(--ink);border-color:var(--line)}
+nav a[aria-current=page]{color:var(--ink);background:var(--panel);border-color:var(--acc)}
+main{max-width:1240px;margin:0 auto;padding:clamp(18px,3vw,40px) max(4vw,16px) 40px}
+h1,h2{font-family:"Bricolage Grotesque",sans-serif;letter-spacing:-.015em;text-wrap:balance;margin:0 0 10px}
+h1{font-size:clamp(30px,4.4vw,48px);line-height:1.05}
+h2{font-size:clamp(24px,3vw,34px);line-height:1.1}
+h3{font:600 17px/1.3 "IBM Plex Sans",sans-serif;margin:18px 0 6px}
+.lede{font-size:17px;max-width:70ch;color:var(--ink)}
+.muted{color:var(--soft);font-size:14px}
+.bench{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px;margin:18px 0}
+@media(max-width:900px){.bench{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+.fig{position:relative;min-height:340px;border-radius:10px;overflow:hidden;background:var(--panel)}
+.fig>canvas,.fig>svg{position:absolute;inset:0;width:100%;height:100%;touch-action:none}
+.fig.short{min-height:260px}
+.controls{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;margin:10px 0}
+label{font-size:14px;color:var(--soft);display:flex;align-items:center;gap:8px}
+select,button,input[type=number],textarea{font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:8px}
+select,input[type=number]{min-height:40px;padding:6px 10px}
+button{min-height:40px;padding:6px 14px;cursor:pointer}
+button.primary{background:var(--acc);border-color:var(--acc);color:#1b1206;font-weight:600}
+button:focus-visible,select:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+input[type=range]{accent-color:var(--acc);width:160px}
+.read{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14.5px;margin:8px 0}
+.read dt{color:var(--soft)}.read dd{margin:0;font-variant-numeric:tabular-nums;text-align:right;font-family:"JetBrains Mono",monospace;font-size:13.5px}
+.check{border-left:3px solid var(--acc);background:var(--tint);padding:8px 12px;border-radius:0 8px 8px 0;font-size:14.5px;margin:12px 0}
+.legend{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--soft)}
+.legend i{display:inline-block;width:120px;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--neg),light-dark(#f4f4f4,#2a313a),var(--acc))}
+.math{overflow-x:auto;font-size:16px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{border-bottom:1px solid var(--line);padding:8px 8px;text-align:left;vertical-align:top}
+th{color:var(--soft);font-weight:600;font-size:13px}
+td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.scroll{overflow-x:auto}
+pre,code,textarea{font-family:"JetBrains Mono",monospace}
+pre{background:var(--code);border:1px solid var(--line);border-radius:8px;padding:10px;overflow-x:auto;font-size:13px;white-space:pre-wrap;margin:8px 0}
+.wl textarea{width:100%;min-height:150px;padding:10px;font-size:13px;background:var(--code)}
+.wl .out img{max-width:100%;background:#fff;border-radius:6px;margin-top:6px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:28px;border-top:1px solid var(--line);padding-top:16px}
+.pager a{color:var(--ink);text-decoration:none;font-weight:600}
+.pager a span{display:block;color:var(--soft);font-weight:400;font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:18px}
+.tile{display:block;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px}
+.tile:hover{border-color:var(--acc)}
+.tile b{display:block;font-family:"Bricolage Grotesque",sans-serif;font-size:18px;margin-bottom:4px}
+.tile span{font-size:14px;color:var(--soft)}
+.chat{display:flex;flex-direction:column;gap:10px;max-height:58vh;overflow-y:auto;padding:4px}
+.msg{padding:10px 12px;border-radius:10px;max-width:92%;white-space:pre-wrap;font-size:15px}
+.msg.user{align-self:flex-end;background:var(--tint)}
+.msg.ta{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
+.msg details{margin-top:6px;font-size:13px}
+.ask-row{display:flex;gap:8px;margin-top:10px}.ask-row textarea{flex:1;min-height:64px;padding:10px}
+.quiz li{margin:14px 0}.quiz button{margin:4px 6px 0 0}
+.ok{color:light-dark(#1f7a3a,#6fd68f)}.no{color:light-dark(#b3261e,#ff8a80)}
+footer{max-width:1240px;margin:0 auto;padding:20px max(4vw,16px) 40px;color:var(--soft);font-size:13.5px;border-top:1px solid var(--line)}
+footer a{color:inherit}
+@media(max-width:600px){table{font-size:13px}input[type=range]{width:120px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div class="brand">Laplacian <b>Curvature</b> Lab</div><span class="muted" id="status"></span></div>
+ <nav id="nav" aria-label="Sections"></nav>
+</header>
+<main id="main">
+
+<!-- 1 -->
+<section id="map" data-title="At a glance">
+ <h1>Curvature is what the Laplacian sees beyond flat space</h1>
+ <p class="lede">On surfaces, on triangle meshes and on graphs, every standard curvature can be read off Δ: from its mean values, its heat flow, its Bochner identity or its spectrum. Each bench below measures one of them live, checks it against the theory, and hands the same computation to a Wolfram kernel.</p>
+ <div class="fig short card" style="min-height:300px"><svg id="mapsvg" role="img" aria-label="Smooth identities and their discrete twins"></svg></div>
+ <div class="tiles" id="tiles"></div>
+</section>
+
+<!-- 2 -->
+<section id="surfaces" data-title="Surfaces: K and H" hidden>
+ <h2>Gauss and mean curvature, coloured on six surfaces</h2>
+ <p class="lede">Gauss curvature is the flat Laplacian of the log conformal factor, \(K=-e^{-2u}\Delta_0u\), and the Laplace–Beltrami operator of the position vector is the mean-curvature vector, \(\Delta_gX=-2H\mathbf n\). Here both are computed from the parametrisation by finite differences and painted on the surface: blue negative, near-white zero, orange positive.</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="surfcv"></canvas></div>
+   <div class="controls"><label>Surface <select id="surfsel"></select></label><label>Colour by <select id="surfq"><option value="K">Gauss curvature K</option><option value="H">mean curvature |H|</option></select></label><span class="legend"><span>−1</span><i></i><span>+1</span></span></div>
+   <p class="muted">Drag to turn the surface.</p></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="surfread"></dl>
+   <div class="check" id="surfcheck"></div>
+   <p class="muted">Gauss–Bonnet: \(\iint K\,dA=2\pi\chi\) on closed surfaces, so the sphere gives \(4\pi\) and the torus \(0\). Positive outside the torus, negative inside, zero on the top and bottom circles.</p></div>
+ </div>
+ <div class="wl" data-key="surfaces"></div>
+</section>
+
+<!-- 3 -->
+<section id="ricci" data-title="Ricci flow" hidden>
+ <h2>Ricci flow is a heat equation for the conformal factor</h2>
+ <p class="lede">With \(g=e^{2u}(dx^2+dy^2)\), Ricci flow \(\partial_tg=-2\,\mathrm{Ric}\) becomes \(\partial_tu=e^{-2u}\Delta_0u=-K\). Start from a bumpy metric on the flat torus and watch the flow iron the curvature out. The total curvature stays exactly zero, as Gauss–Bonnet demands for \(\chi=0\).</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="riccicv"></canvas></div>
+   <div class="controls"><button class="primary" id="ricciplay">Run</button><button id="riccireset">Reset</button><label>Bump size <input type="range" id="riccia" min="0.1" max="0.45" step="0.05" value="0.3"></label><span class="legend"><span>−1.5</span><i></i><span>+1.5</span></span></div></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="ricciread"></dl><div class="fig short"><canvas id="riccichart"></canvas></div>
+   <div class="check">Notebook §10.2 (NDSolve, 31×31): max|K| 4.83 → 0.059 by t = 2, with \(\iint K\,dA=0\) throughout.</div></div>
+ </div>
+ <div class="wl" data-key="ricci"></div>
+</section>
+
+<!-- 4 -->
+<section id="means" data-title="Curved mean values" hidden>
+ <h2>The mean-value origin of Δ, on a curved surface</h2>
+ <p class="lede">Laplacian Lab Section 1 derives Δ from sphere means in flat space. On a surface of constant curvature K the geodesic-circle mean picks up curvature at order r⁴:</p>
+ <div class="math">\[M_rf=f+\frac{r^2}{4}\Delta f+r^4\Big(\frac{\Delta^2f}{64}+\frac{K\,\Delta f}{96}\Big)+r^6\Big(\frac{\Delta^3f}{2304}+\frac{K\Delta^2f}{1152}+\frac{K^2\Delta f}{1440}\Big)+O(r^8)\]</div>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="meanscv"></canvas></div>
+   <p class="muted">Errors of three approximations to the exact circle mean of \(f=e^x(1+z)^2+yz^3\) on the unit sphere (at the pole \(f=4,\ \Delta f=-4,\ \Delta^2f=-20,\ \Delta^3f=500\)), on log–log axes.</p></div>
+  <div class="card"><h3>Error slopes</h3><dl class="read" id="meansread"></dl>
+   <div class="check">The flat formula is wrong at order r⁴ (slope 4). The K term fixes it (slope 6); the r⁶ terms push the error to slope 8.</div>
+   <h3>Disc areas</h3><div class="controls"><label>K <input type="range" id="discK" min="-1" max="1" step="0.1" value="1"></label><span id="discKv" class="muted"></span></div>
+   <div class="fig short"><canvas id="disccv"></canvas></div>
+   <p class="muted">\(A(r)/\pi r^2=1-Kr^2/12+K^2r^4/360-\dots\)</p></div>
+ </div>
+ <div class="wl" data-key="means"></div>
+</section>
+
+<!-- 5 -->
+<section id="heat" data-title="Heat trace" hidden>
+ <h2>Curvature is the first correction to Weyl’s law</h2>
+ <p class="lede">The heat trace \(\operatorname{Tr}e^{t\Delta}=\sum e^{-\lambda_kt}\sim(4\pi t)^{-n/2}\big(\mathrm{Vol}+\tfrac t6\int S+\dots\big)\) (McKean–Singer). Two drums with the same area 4π: the unit sphere (K = 1) and a flat square torus (K = 0). Their spectra differ by exactly the curvature term.</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="heatcv"></canvas></div></div>
+  <div class="card"><h3>At time t</h3><div class="controls"><label>t <input type="range" id="heatt" min="0.005" max="0.4" step="0.005" value="0.05"></label></div><dl class="read" id="heatread"></dl>
+   <div class="check">Sphere eigenvalues l(l+1) with multiplicity 2l+1; the ratio to Weyl’s Area/(4πt) rises like 1 + t/3, slope \(\int S/(6\,\mathrm{Area})=1/3\). The flat torus stays at 1.</div></div>
+ </div>
+ <div class="wl" data-key="heat"></div>
+</section>
+
+<!-- 6 -->
+<section id="bochner" data-title="Bochner & comparison" hidden>
+ <h2>Bochner’s formula, and what a curvature bound controls</h2>
+ <p class="lede">\(\tfrac12\Delta|\nabla f|^2=|\mathrm{Hess}f|^2+\langle\nabla f,\nabla\Delta f\rangle+\mathrm{Ric}(\nabla f,\nabla f)\). Integrated, it gives Lichnerowicz \(\lambda_1\ge nk\); along geodesics it gives the Laplacian comparison \(\Delta r\le(n-1)\sqrt k\cot(\sqrt k r)\) and Bishop–Gromov volume comparison. Its Γ₂ form, \(\Gamma_2\ge K\Gamma\), is the definition graphs copy.</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="bochcv"></canvas></div>
+   <div class="controls"><label>K <input type="range" id="bochK" min="-1" max="2" step="0.1" value="1"></label><span id="bochKv" class="muted"></span></div></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="bochread"></dl>
+   <div class="check">Notebook §6: Bochner holds symbolically for an arbitrary f on S² and on the torus (variable K = cos v/(2 + cos v)); λ₁(S²) = 2 = nk, the equality case.</div></div>
+ </div>
+ <div class="wl" data-key="bochner"></div>
+</section>
+
+<!-- 7 -->
+<section id="mesh" data-title="Meshes" hidden>
+ <h2>On a mesh, angle defect is curvature and the cotangent Laplacian is −2Hn</h2>
+ <p class="lede">\((\Delta f)_i=\frac1{2A_i}\sum_j(\cot\alpha_{ij}+\cot\beta_{ij})(f_j-f_i)\), and \(K_i\approx(2\pi-\sum\theta)/A_i\). The defects of a closed mesh add to exactly \(2\pi\chi\), a discrete Gauss–Bonnet theorem that holds at every resolution.</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="meshcv"></canvas></div>
+   <div class="controls"><label>Resolution <select id="meshres"><option value="12,6">12 × 6</option><option value="24,12">24 × 12</option><option value="40,20" selected>40 × 20</option><option value="64,32">64 × 32</option></select></label><label>Colour <select id="meshq"><option value="K">defect / area ≈ K</option><option value="H">|cotan ΔX|/2 ≈ H</option></select></label></div></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="meshread"></dl><div class="fig short"><canvas id="meshchart"></canvas></div></div>
+ </div>
+ <div class="wl" data-key="mesh"></div>
+</section>
+
+<!-- 8 -->
+<section id="graphs" data-title="Graph curvatures" hidden>
+ <h2>Seven graph curvatures, each built from the graph Laplacian</h2>
+ <p class="lede">Ollivier and Lin–Lu–Yau compare neighbourhood averages (the twin of curved mean values); Bakry–Émery copies Bochner, \(\Gamma_2\ge K\Gamma\); Forman copies Weitzenböck; resistance curvature comes from the pseudoinverse of the Laplacian and always sums to 1. Pick a graph and a curvature.</p>
+ <div class="bench">
+  <div><div class="fig card"><svg id="graphsvg" role="img" aria-label="Graph coloured by curvature"></svg></div>
+   <div class="controls"><label>Graph <select id="gsel"><option value="tree">binary tree</option><option value="cycle">cycle C₆</option><option value="cube">cube Q₃</option><option value="complete">complete K₅</option><option value="petersen">Petersen</option><option value="grid">grid 5 × 5</option><option value="dumbbell" selected>dumbbell</option></select></label>
+   <label>Curvature <select id="ksel"><option value="lly">Lin–Lu–Yau (edges)</option><option value="k0">Ollivier, non-lazy (edges)</option><option value="be">Bakry–Émery K∞ (vertices)</option><option value="forman">Forman (edges)</option><option value="formanAug">Forman + triangles (edges)</option><option value="res">resistance p (vertices)</option><option value="stein">Steinerberger (vertices)</option></select></label></div>
+   <p class="muted">Hover or tap an edge or vertex to read its value.</p></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="gread"></dl><div class="check" id="gcheck"></div><p class="muted" id="gnote"></p></div>
+ </div>
+ <div class="wl" data-key="graphs"></div>
+</section>
+
+<!-- 9 -->
+<section id="flows" data-title="Curve shortening" hidden>
+ <h2>Mean-curvature flow: a curve rounds itself off</h2>
+ <p class="lede">\(\partial_tX=\Delta X=\kappa N\). In the plane this is curve shortening: any embedded curve becomes convex, then round, and shrinks to a point (Gage–Hamilton–Grayson). The curve is a polygon and \(\partial_s^2X\) is the graph Laplacian of the cycle \(C_n\), weighted by arc length. The enclosed area falls at exactly 2π per unit time because \(\oint\kappa\,ds=2\pi\).</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="flowcv"></canvas></div>
+   <div class="controls"><button class="primary" id="flowplay">Run</button><button id="flowreset">Reset</button><label>Start <select id="flowsel"><option value="wiggle">wiggly</option><option value="star">five-pointed</option><option value="bean">bean</option><option value="ellipse">ellipse</option></select></label></div></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="flowread"></dl><div class="fig short"><canvas id="flowchart"></canvas></div></div>
+ </div>
+ <div class="wl" data-key="flows"></div>
+</section>
+
+<!-- 10 -->
+<section id="ollivier" data-title="Ollivier on manifolds" hidden>
+ <h2>Comparing two ball averages measures Ricci curvature</h2>
+ <p class="lede">Ollivier’s curvature \(\kappa(x,y)=1-W_1(\mu_x,\mu_y)/d(x,y)\) with \(\mu\) the uniform measure on ε-balls satisfies \(\kappa\approx\varepsilon^2\,\mathrm{Ric}(v,v)/(2(n+2))=\varepsilon^2K/8\) on a surface. Sliding the surface along the geodesic carries one ball onto the other; a point at distance λ from the geodesic moves \(\delta\cos(\sqrt K\lambda)\), so κ is a plain integral over the ball.</p>
+ <div class="bench">
+  <div><div class="fig card"><canvas id="ollcv"></canvas></div>
+   <div class="controls"><label>K <input type="range" id="ollK" min="-2" max="2" step="0.25" value="1"></label><span id="ollKv" class="muted"></span></div></div>
+  <div class="card"><h3>Readings</h3><dl class="read" id="ollread"></dl>
+   <div class="check">Notebook §10.4: κ/ε² = 0.12496 (sphere), 0 (plane), −0.12504 (hyperbolic plane) at ε = 0.05.</div>
+   <p class="muted">This is the same comparison that defines Lin–Lu–Yau curvature on a graph, with neighbourhoods in place of balls.</p></div>
+ </div>
+ <div class="wl" data-key="ollivier"></div>
+</section>
+
+<!-- 11 -->
+<section id="forms" data-title="All the instances" hidden>
+ <h2>Every Laplacian–curvature relationship on one sheet</h2>
+ <div class="scroll card"><table id="formtable"><thead><tr><th>Instance</th><th>Formula</th><th>Discrete twin</th><th>Bench</th></tr></thead><tbody></tbody></table></div>
+ <p class="muted">Full derivations, verified values and references: the write-up <em>The Laplacian and Curvature — Instances and Relationships</em> and its notebook, github.com/lossofgenerality/laplacian.</p>
+</section>
+
+<!-- 12 -->
+<section id="quiz" data-title="Self-check" hidden>
+ <h2>Self-check</h2>
+ <ol class="quiz" id="quizlist"></ol>
+ <p id="quizscore" class="check"></p>
+</section>
+
+<!-- 13 -->
+<section id="ask" data-title="Ask the TA" hidden>
+ <h2>Ask the TA</h2>
+ <p class="lede">The teaching assistant knows the write-up, the notebook and the bench you came from, and can run Wolfram Language itself; code it ran appears under its answer.</p>
+ <div class="card"><div class="muted" id="askctx"></div><div class="chat" id="chat"></div>
+  <div class="ask-row"><textarea id="askq" placeholder="For example: why is Lin–Lu–Yau curvature positive on leaf edges of a tree?"></textarea><button class="primary" id="asksend">Ask</button></div>
+  <p class="muted" id="askstate"></p></div>
+</section>
+
+<!-- 14 -->
+<section id="wolfram" data-title="Wolfram Language" hidden>
+ <h2>Wolfram Language</h2>
+ <p class="lede">A free cell on the Wolfram kernel. Each evaluation is stateless, so put definitions and the expression in one cell. Snippets load the companion notebook’s code.</p>
+ <div class="controls"><label>Snippet <select id="wlsnip"></select></label></div>
+ <div class="wl" data-key="free"></div>
+</section>
+
+<div class="pager" id="pager"></div>
+</main>
+<footer>
+ Built on the Computational Classnotes notebook <em>Where did Laplacian come from? Laplacian things… Computational conception of Laplacian Operator (fully coded) β1.0</em>, DOI 10.13140/RG.2.2.33742.01600, and its companion <em>The Laplacian and Curvature — Instances and Relationships</em> (github.com/lossofgenerality/laplacian).<br>
+ © 2026 Computational Classnotes · CC BY-NC-SA 4.0
+</footer>
+<script>
+/*CORE*/
+</script>
+<script>
+/*APP*/
+</script>
+</body>
+</html>

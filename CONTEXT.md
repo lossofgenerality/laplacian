@@ -33,6 +33,7 @@ The page has three layers:
 | **Laplacian Lab** | `PwLafg8VqNGeKbXfigbhq6` | Version 5. The original. Uses the Wolfram connector (`mcp`) and Claude (`sample`) capabilities. User asked for it to be left unchanged. |
 | **Laplacian Lab_version2** | `VWTpah5hC6ACLpoDg454Yc` | Version 1. Exact copy of the original with "_version2" in the title and heading. **None of the standalone version2 changes are in it.** |
 | **The Laplacian and Curvature — Instances and Relationships** (doc) | `8C2j3466b5YuTWRwX2oAkE` | Claude Docs write-up, see §2a. |
+| **Laplacian Curvature Lab** | `EE3bVEQ2SJATsd579m9NYK` (slug `6b191210-c383-4100-a046-75d75116df8c`) | Version 2 (declares `mcp` Wolfram/WolframLanguageEvaluator and `sample`). Source `lab/laplacian-curvature-lab.html` in the repo; see §2b. |
 
 ### Files
 
@@ -76,6 +77,32 @@ A literature survey plus a verified write-up and notebook on every Laplacian–c
 - **Graphics (23 Nov):** six surfaces coloured by K with Gauss–Bonnet totals (torus 0, sphere 4π); torus coloured by H with −ΔX arrows; catenoid and helicoid (H = 0); log–log error plot of the curved mean value with slopes 3.98, 6.00, 8.00; disc-area and heat-trace plots (sphere vs same-area flat torus); Bochner on the torus (variable K); comparison and Bishop–Gromov plots; a 40×20 torus mesh (Σ defect = 0, max |K_mesh − K| = 0.016); seven example graphs coloured by Lin–Lu–Yau, Bakry–Émery, Forman, resistance and Steinerberger curvature; an Ollivier neighbourhood picture; Higuchi on Platonic solids; a λ₁ vs bound bar chart; and a point-cloud scatter. The §4 test function is now eˣ(1+z)² + yz³ (the old one had Δf = 0 at the pole, which hid the K term).
 - **Section 10 worked out (23 Nov):** Weitzenböck on S² via df + ⋆dh (difference 0); Ricci flow (sphere exact; NDSolve on a bumpy flat torus, max|K| 4.83 → 0.059, ∬K dA = 0); mean-curvature flow (sphere exact; curve shortening of a polygon via the cycle-graph Laplacian, dA/dt = −6.32 vs −2π); Ollivier on manifolds via the sliding coupling, κ/ε² → ±1/8 computed as s²/(1+√(1∓s²)) to avoid cancellation; Yamabe in ℝ³ (S̃ = 6). Doc gained Section 10; mapping is now doc 1–8 ↔ notebook 2–9, doc 10 ↔ notebook 10.
 - **Fix (23 Nov):** the notebook §8.2 summary line nested two `&` functions (`bakryEmery[#, v] & /@ VertexList[#]`), which passed a vertex as the graph. Now `Function[G, Min[bakryEmery[G, #] & /@ VertexList[G]]]`.
+
+### 2b. Laplacian Curvature Lab (23 Nov 2026)
+
+A sibling of Laplacian Lab for the curvature material, same tokens (cool paper/ink, CCN orange, Bricolage Grotesque / IBM Plex Sans / JetBrains Mono, MathJax 3.2.2 tex-svg), hash-routed with pagers.
+
+| # | `#hash` | Bench | Live computation (JS, `lab/core.js`) |
+|---|---|---|---|
+| 1 | `map` | At a glance | relationship map (SVG), tiles |
+| 2 | `surfaces` | Surfaces: K and H | six surfaces, K and \|H\| by finite differences, drag-to-rotate painter renderer, ∬K dA |
+| 3 | `ricci` | Ricci flow | 32×32 periodic conformal flow ∂u/∂t = e^{−2u}Δ₀u, K heatmap, max\|K\| log plot, ∬K dA = 0 |
+| 4 | `means` | Curved mean values | log–log errors of flat / +KΔf/96 / +r⁶ (slopes 3.92, 6.00, 8.01); disc-area ratio with K slider |
+| 5 | `heat` | Heat trace | sphere vs same-area flat torus, 1 + t/3 + t²/15 |
+| 6 | `bochner` | Bochner & comparison | Δr for chosen K, Lichnerowicz / Bonnet–Myers readings |
+| 7 | `mesh` | Meshes | torus mesh 12×6 … 64×32, angle defect and cotan H, mesh vs smooth K |
+| 8 | `graphs` | Graph curvatures | 7 graphs × 7 curvatures (LLY via min-cost-flow transport, κ₀, Bakry–Émery by Jacobi + bisection, Forman ±, resistance via pseudoinverse, Steinerberger), λ₁ bound checks, notes |
+| 9 | `flows` | Curve shortening | polygon flow via the cycle-graph Laplacian, area vs −2π |
+| 10 | `ollivier` | Ollivier on manifolds | κ/ε² → K/8 by quadrature (cancellation-free form) |
+| 11 | `forms` | All the instances | 14-row reference table |
+| 12 | `quiz` | Self-check | 8 questions with reasoning |
+| 13 | `ask` | Ask the TA | `sample` with a `run_wolfram` tool; brief holds the verified facts; knows the bench the student came from |
+| 14 | `wolfram` | Wolfram Language | free cell + 11 snippets; every section also has its own cell (stateless kernel, self-contained code) |
+
+- Core verified in Node (`lab/test-core.js`) against the notebook: LLY/κ₀/K_BE/λ₁ for all graphs, Σp = 1, surface K/H and totals, mesh Σ defect ≈ 1e−13, curved-mean error orders, heat traces, Ollivier ±0.125, curve dA/dt −6.33, Ricci max\|K\| 4.66 → 0.053.
+- Lab Wolfram snippets were run on the connector kernel (Weitzenböck {0,0}, LLY on Q₃ = 2/3 = λ₁, mesh defect 0, Liouville 1/−1).
+- Wolfram cells strip `Symbol::undefined2` / `General::messages` lint lines from output.
+- Not yet tested inside Claude: the `mcp` and `sample` calls themselves (only the no-capability fallback was seen in headless Chrome).
 
 ---
 
