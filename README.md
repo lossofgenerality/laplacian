@@ -1,5 +1,7 @@
 # The Laplacian and Curvature
 
+**Live lab:** https://lossofgenerality.github.io/laplacian/ (GitHub Pages; opens `lab/Laplacian_Curvature_Lab.html`)
+
 Every standard notion of curvature, on smooth surfaces and manifolds, on triangle meshes and on graphs, can be read off the Laplacian. This repository collects those instances, with a computed check for each one.
 
 It is a companion to **Laplacian Lab** and the Computational Classnotes notebook *Where did Laplacian come from? Laplacian things… Computational conception of Laplacian Operator (fully coded) β1.0* (DOI 10.13140/RG.2.2.33742.01600).
