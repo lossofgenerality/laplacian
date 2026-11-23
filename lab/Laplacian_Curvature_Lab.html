@@ -1097,7 +1097,7 @@ if (STANDALONE) {
   const wsec = $("wolfram"); wsec.insertBefore(card, wsec.querySelector(".controls"));
   try { const k = localStorage.getItem("ccn-key"); if (k) { $("wl-key").value = k; $("wl-remember").checked = true; } } catch (e) {}
   const connect = async () => {
-    WL_KEY = $("wl-key").value.trim(); $("wl-state").textContent = "Connecting…";
+    WL_KEY = $("wl-key").value.trim().replace(/^\s*["“”'‘’]+|["“”'‘’]+\s*$/g, "").trim(); $("wl-key").value = WL_KEY; $("wl-state").textContent = "Connecting…";
     try {
       const j = await kernelPost({ code_b64: b64enc("$VersionNumber"), mode: "wolfram" });
       kernelOK = true; chatReady = j.chat_ready === true || j.chat_ready === "True";
