@@ -39,8 +39,8 @@ KN[G_, x_, Ninv_] := Module[{k, M1, M2, MD, A, a, B, C, S},
   S = If[C === {}, a, a - B . Inverse[C] . Transpose[B]];
   Min[Eigenvalues[{S, M1[[;; k, ;; k]]}]]];
 KBE[G_, x_] := KN[G, x, 0];
-κColour[k_, s_] := Blend[{RGBColor[0.18, 0.36, 0.78], GrayLevel[0.96], RGBColor[0.98, 0.56, 0.17]}, (1 + Clip[k/s, {-1, 1}])/2];
-κLegend[s_, name_] := BarLegend[{κColour[#, s] &, {-s, s}}, LegendLabel -> name];
+κColour[k_, s_] := With[{u = Clip[k/s, {-1, 1}]}, Blend[{RGBColor[0.10, 0.27, 0.75], GrayLevel[0.97], RGBColor[0.96, 0.47, 0.02]}, (1 + Sign[u] Abs[u]^0.55)/2]];
+κLegend[s_, name_] := BarLegend[{κColour[#, s] &, {-s, s}}, LegendLabel -> Style[name, 13, Black], LabelStyle -> {12, Black}];
 tree = KaryTree[15, 2];
 dumbbell = Graph[UndirectedEdge @@@ Join[List @@@ EdgeList[CompleteGraph[5]], (List @@@ EdgeList[CompleteGraph[5]]) + 7, {{5, 6}, {6, 7}, {7, 8}}]];
 fam = {{"tree", tree}, {"C₆", CycleGraph[6]}, {"Q₃", HypercubeGraph[3]}, {"K₅", CompleteGraph[5]}, {"Petersen", PetersenGraph[]}, {"grid 4×4", GridGraph[{4, 4}]}, {"dumbbell", dumbbell}};
@@ -71,12 +71,12 @@ gS = Cos[θ] + Sin[θ]^2 Cos[2 φ];
 slack = FullSimplify[Γ2s[gS] - Γs[gS, gS] - Δs[gS]^2/2];
 {slack, MinMax[Table[slack, {θ, 0.01, Pi - 0.01, Pi/60}, {φ, 0, 2 Pi, Pi/60}]], Simplify[slack /. θ -> Pi/2]}
 
-slackCol[v_] := Blend[{GrayLevel[0.97], RGBColor[0.98, 0.56, 0.17], RGBColor[0.64, 0.32, 0.02]}, v/8];
+slackCol[v_] := Blend[{GrayLevel[0.98], RGBColor[1., 0.62, 0.20], RGBColor[0.92, 0.38, 0.], RGBColor[0.50, 0.20, 0.]}, (v/8)^0.8];
 pic = Show[SphericalPlot3D[1, {θ, 0, Pi}, {φ, 0, 2 Pi}, ColorFunction -> Function[{x, y, z, t, p, r}, slackCol[slack /. {θ -> t, φ -> p}]],
-  ColorFunctionScaling -> False, Mesh -> None, PlotPoints -> 70, Lighting -> {{"Ambient", White}}],
- Graphics3D[{Black, PointSize[0.025], Point[Table[1.01 {Cos[p], Sin[p], 0}, {p, Pi/4, 7 Pi/4, Pi/2}]]}],
+  ColorFunctionScaling -> False, Mesh -> None, PlotPoints -> 70, Lighting -> {{"Ambient", GrayLevel[0.82]}, {"Directional", GrayLevel[0.28], ImageScaled[{2, 2, 3}]}}],
+ Graphics3D[{GrayLevel[0.25], Thickness[0.004], Line[Table[1.004 {Cos[p], Sin[p], 0}, {p, 0, 2 Pi, Pi/90}]], Black, PointSize[0.03], Point[Table[1.01 {Cos[p], Sin[p], 0}, {p, Pi/4, 7 Pi/4, Pi/2}]]}],
  Boxed -> False, Axes -> False, SphericalRegion -> True, ViewPoint -> {2.4, 1.0, 0.9}, ImageSize -> 340];
-Row[{pic, BarLegend[{slackCol, {0, 8}}, LegendLabel -> "slack"]}]
+Row[{pic, BarLegend[{slackCol, {0, 8}}, LegendLabel -> Style["slack", 12, Black], LabelStyle -> {12, Black}]}]
 
 (* ::Text:: *)
 (*Fig. 1. The slack Γ₂ − Γ − (Δg)²/2 of CD(1, 2) on the unit sphere for g = z + (x² − y²): zero only at the four equator points marked in black, largest, 8, at the poles.*)
@@ -128,9 +128,9 @@ Table[{n, KBE[CompleteGraph[n], 1], (n + 2)/(2 (n - 1))}, {n, 2, 8}]
 (*Fig. 2 colours every vertex of the seven example graphs by K∞, on the same blue–white–orange scale as the Ollivier gallery.*)
 
 vertexPlot[G_, label_] := With[{ks = KBE[G, #] & /@ VertexList[G]},
-  Graph[G, VertexStyle -> Thread[VertexList[G] -> (Directive[EdgeForm[GrayLevel[0.4]], κColour[#, 1.25]] & /@ ks)],
-   VertexSize -> If[VertexCount[G] > 12, 0.32, 0.22], EdgeStyle -> GrayLevel[0.75], ImageSize -> 175,
-   PlotLabel -> Style[Row[{label, "  min ", With[{k = Min[ks]}, If[MatchQ[k, _Integer | _Rational], k, NumberForm[N[k], 3]]]}], 9], ImagePadding -> {{6, 6}, {6, 34}}]];
+  Graph[G, VertexStyle -> Thread[VertexList[G] -> (Directive[EdgeForm[{GrayLevel[0.1], Thickness[0.004]}], κColour[#, 1.25]] & /@ ks)],
+   VertexSize -> If[VertexCount[G] > 12, 0.32, 0.22], EdgeStyle -> Directive[GrayLevel[0.35], Thickness[0.006]], ImageSize -> 190,
+   PlotLabel -> Style[Row[{label, "  min ", With[{k = Min[ks]}, If[MatchQ[k, _Integer | _Rational], k, NumberForm[N[k], 3]]]}], 11, GrayLevel[0.1]], ImagePadding -> {{6, 6}, {6, 34}}]];
 Legended[Grid[Partition[vertexPlot[#[[2]], #[[1]]] & /@ fam, 4, 4, {1, 1}, ""]], κLegend[1.25, Subscript["K", "∞"]]]
 
 (* ::Text:: *)
@@ -148,9 +148,10 @@ Legended[Grid[Partition[vertexPlot[#[[2]], #[[1]]] & /@ fam, 4, 4, {1, 1}, ""]],
 curves = Table[{g[[1]], Table[{n, KN[g[[2]], 1, 1/n]}, {n, 1, 30, 0.5}]},
    {g, {{"K₅", CompleteGraph[5]}, {"Q₃", HypercubeGraph[3]}, {"C₆", CycleGraph[6]}, {"Petersen", PetersenGraph[]}}}];
 ListLinePlot[curves[[All, 2]], PlotLegends -> curves[[All, 1]], AxesLabel -> {"N", Subscript["K", "N"]},
- PlotStyle -> {RGBColor[0.83, 0.44, 0.10], RGBColor[0.18, 0.36, 0.78], RGBColor[0.09, 0.45, 0.45], RGBColor[0.48, 0.29, 0.69]},
- Epilog -> {Dashed, RGBColor[0.83, 0.44, 0.10], Line[{{0, 7/8}, {30, 7/8}}], RGBColor[0.18, 0.36, 0.78], Line[{{0, 2/3}, {30, 2/3}}]},
- PlotRange -> {{0, 30}, {-1.4, 1}}, PlotLabel -> "Curvature with a dimension term rises to K∞ (dashed)", ImageSize -> 480, ImagePadding -> {{40, 28}, {30, 30}}, GridLines -> {None, {0}}]
+ PlotStyle -> (Directive[#, AbsoluteThickness[3]] & /@ {RGBColor[0.90, 0.42, 0.], RGBColor[0.10, 0.27, 0.75], RGBColor[0., 0.50, 0.45], RGBColor[0.50, 0.20, 0.72]}),
+ BaseStyle -> {FontSize -> 13, FontColor -> GrayLevel[0.1]}, AxesStyle -> Directive[GrayLevel[0.2], AbsoluteThickness[1.2]],
+ Epilog -> {Dashing[{0.02, 0.012}], AbsoluteThickness[1.8], RGBColor[0.90, 0.42, 0.], Line[{{0, 7/8}, {30, 7/8}}], RGBColor[0.10, 0.27, 0.75], Line[{{0, 2/3}, {30, 2/3}}]},
+ PlotRange -> {{0, 30}, {-1.4, 1}}, PlotLabel -> "Curvature with a dimension term rises to K∞ (dashed)", ImageSize -> 520, ImagePadding -> {{46, 30}, {34, 34}}, GridLines -> {None, {0}}]
 
 (* ::Text:: *)
 (*Fig. 3. \!\(\*SubscriptBox[\(K\), \(N\)]\) against N on K₅, Q₃, C₆ and Petersen. Each curve rises to its K∞ (7/8 and 2/3 dashed; 0 and −1/3 are reached at N = 2).*)
