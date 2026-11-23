@@ -196,18 +196,24 @@ const LC = (() => {
     for (let i = 0; i < n; i++) { const q = L * i / n; while (s[k + 1] < q) k++; const t = (q - s[k]) / (s[k + 1] - s[k] || 1); out.push([c[k][0] + t * (c[k + 1][0] - c[k][0]), c[k][1] + t * (c[k + 1][1] - c[k][1])]); }
     return out;
   }
-  // Advance the flow by time T with stable steps: dt ≤ 0.2·(shortest edge)², and as the curve shrinks
-  // resample it with edges about 1/40 of its initial perimeter (between 24 and 160 vertices) so the steps stay usable.
+  // Advance the flow by time T with stable explicit steps, dt ≤ 0.2·(shortest edge)². Every 20 steps (counted across calls)
+  // the polygon is resampled by arc length, but only when it needs it: when it has shrunk so that 160·(perimeter/initial
+  // perimeter) vertices (at least 24) is under 85% of the current count, or when its edges have become uneven (longest > 3 × shortest).
+  // Each resampling cuts corners and loses a little area, so it is done as rarely as this.
   const perimeter = X => X.reduce((s, p, i) => { const q = X[(i + 1) % X.length]; return s + Math.hypot(q[0] - p[0], q[1] - p[1]); }, 0);
   function curveFlow(state, T) {
-    let { X, t, L0 } = state, done = 0, k = 0;
+    let { X, t, L0 } = state, done = 0, k = state.steps || 0;
     while (done < T - 1e-15) {
       let h = Infinity; for (let i = 0; i < X.length; i++) { const q = X[(i + 1) % X.length]; h = Math.min(h, Math.hypot(q[0] - X[i][0], q[1] - X[i][1])); }
       const dt = Math.min(T - done, 0.2 * h * h);
       X = curveStep(X, dt); done += dt; k++;
-      if (k % 20 === 0) X = curveResample(X, Math.max(24, Math.min(160, Math.round(160 * perimeter(X) / L0))));
+      if (k % 20 === 0) {
+        let lo = Infinity, hi = 0; for (let i = 0; i < X.length; i++) { const q = X[(i + 1) % X.length], l = Math.hypot(q[0] - X[i][0], q[1] - X[i][1]); lo = Math.min(lo, l); hi = Math.max(hi, l); }
+        const target = Math.max(24, Math.min(160, Math.round(160 * perimeter(X) / L0)));
+        if (target < 0.85 * X.length || hi > 3 * lo) X = curveResample(X, target);
+      }
     }
-    return { X, t: t + done, L0, steps: (state.steps || 0) + k };
+    return { X, t: t + done, L0, steps: k };
   }
   const polyArea = X => Math.abs(X.reduce((s, p, i) => { const q = X[(i + 1) % X.length]; return s + p[0] * q[1] - q[0] * p[1]; }, 0)) / 2;
 

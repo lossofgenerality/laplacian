@@ -152,7 +152,7 @@ inits.surfaces = () => {
 
 // ===================== 3. Ricci flow =====================
 let RS = null, ricciTimer = 0, ricciHist = [];
-function ricciReset() { RS = LC.ricciInit(32, +$("riccia").value, +$("riccia").value * 0.83); ricciHist = [[0, maxAbs(LC.ricciK(RS))]]; drawRicci(); }
+function ricciReset() { RS = LC.ricciInit(32, +$("riccia").value, +$("riccia").value * 0.83); ricciHist = [[0, maxAbs(LC.ricciK(RS))]]; $("ricciplay").textContent = "Run"; drawRicci(); }
 const maxAbs = M => Math.max(...M.flat().map(Math.abs));
 function drawRicci() {
   const { c, W, H } = fit($("riccicv")), K = LC.ricciK(RS), N = RS.N, s = Math.min(W, H) * 0.92, ox = (W - s) / 2, oy = (H - s) / 2, cell = s / N;
@@ -166,8 +166,9 @@ function drawRicci() {
 const POSc = () => "rgb(250,143,43)", NEGc = () => (isDark() ? "rgb(111,151,255)" : "rgb(46,92,199)");
 function ricciRun() {
   if (ricciTimer) { cancelAnimationFrame(ricciTimer); ricciTimer = 0; $("ricciplay").textContent = "Run"; return; }
+  if (RS.t >= 2) ricciReset();  // a finished run starts again from the bump instead of doing nothing
   $("ricciplay").textContent = "Pause";
-  const tick = () => { LC.ricciStep(RS, reduced ? 200 : 12); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run"; } };
+  const tick = () => { LC.ricciStep(RS, reduced ? 200 : 12); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run again"; } };
   ricciTimer = requestAnimationFrame(tick);
 }
 inits.ricci = () => { ricciReset(); $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
@@ -250,13 +251,13 @@ const KINFO = {
   stein: { s: 1.5, edge: false, all: G => LC.steinerberger(G), name: "Steinerberger K" }
 };
 const NOTES = {
-  tree: "Interior edges have κ<sub>LLY</sub> = −2/3 (the two neighbourhoods do not overlap); leaf edges +2/3, because a leaf sees only its parent. On a tree, resistance equals distance, so resistance and Steinerberger curvature are exactly proportional.",
+  tree: "Interior edges have κ<sub>LLY</sub> = −2/3 (the two neighbourhoods do not overlap), except the two at the root, whose end has degree 2 (−1/3); leaf edges +2/3, because a leaf sees only its parent. On a tree, resistance equals distance, and Steinerberger curvature is exactly 2n/(n − 1) times resistance curvature (here 15/7).",
   cycle: "Flat: Lin–Lu–Yau, Ollivier and Bakry–Émery are all 0 on C₆ — the discrete circle has no curvature.",
   cube: "κ<sub>LLY</sub> = K<sub>BE</sub> = 2/3 = λ₁: the cube is an equality case of both discrete Lichnerowicz bounds.",
   complete: "Every pair shares three neighbours, so mass can stay put: κ<sub>LLY</sub> = 5/4 = λ₁, another equality case.",
   petersen: "Girth 5 and 3-regular: κ<sub>LLY</sub> = 0, κ₀ = −1/3 and K<sub>BE</sub> = 2/d − 1 = −1/3, yet λ₁ = 2/3 is large.",
-  grid: "Zero curvature inside, as on ℤ²; the boundary carries positive Lin–Lu–Yau curvature and the corners the most.",
-  dumbbell: "The bridge is a bottleneck: its edges are negative (κ<sub>LLY</sub> = −3/5) while the cliques are positive. This is the negative curvature behind over-squashing in graph networks."
+  grid: "Zero curvature on interior edges, as on ℤ², and along the sides; κ<sub>LLY</sub> is +1/6 on edges from a side inward and +1/3 on the edges at a corner.",
+  dumbbell: "The bridge is a bottleneck: the two edges joining a clique to the path have κ<sub>LLY</sub> = −3/5 (the middle edge has 0) while the cliques are positive. This is the negative curvature behind over-squashing in graph networks."
 };
 let gKey = "dumbbell", kKey = "lly";
 function graphValues(G, k) {
@@ -287,8 +288,8 @@ function drawGraph() {
 inits.graphs = () => { $("gsel").onchange = e => { gKey = e.target.value; drawGraph(); }; $("ksel").onchange = e => { kKey = e.target.value; drawGraph(); }; onSize($("graphsvg").parentElement, drawGraph); };
 
 // ===================== 9. curve shortening =====================
-let CX = null, CA0 = 0, Ct = 0, CL0 = 1, Chist = [], Cframe = 0;
-function flowReset() { CX = LC.curveInit($("flowsel").value); CA0 = LC.polyArea(CX); CL0 = LC.perimeter(CX); Ct = 0; Chist = [[0, CA0]]; drawFlow(); }
+let CX = null, CA0 = 0, Ct = 0, CL0 = 1, Csteps = 0, Chist = [], Cframe = 0;
+function flowReset() { CX = LC.curveInit($("flowsel").value); CA0 = LC.polyArea(CX); CL0 = LC.perimeter(CX); Ct = 0; Csteps = 0; Chist = [[0, CA0]]; $("flowplay").textContent = "Run"; drawFlow(); }
 function drawFlow() {
   const { c, W, H } = fit($("flowcv")); c.clearRect(0, 0, W, H);
   const s = Math.min(W, H) / 3.4, ox = W / 2, oy = H / 2;
@@ -300,11 +301,12 @@ function drawFlow() {
 }
 function flowRun() {
   if (Cframe) { cancelAnimationFrame(Cframe); Cframe = 0; $("flowplay").textContent = "Run"; return; }
+  if (LC.polyArea(CX) <= 0.08 * CA0) flowReset();  // a finished run starts again from the chosen curve instead of doing nothing
   $("flowplay").textContent = "Pause";
   const tick = () => {
-    const S = LC.curveFlow({ X: CX, t: Ct, L0: CL0 }, (reduced ? 200 : 15) * 2e-4); CX = S.X; Ct = S.t;
+    const S = LC.curveFlow({ X: CX, t: Ct, L0: CL0, steps: Csteps }, (reduced ? 200 : 15) * 2e-4); CX = S.X; Ct = S.t; Csteps = S.steps;
     Chist.push([Ct, LC.polyArea(CX)]); drawFlow();
-    if (LC.polyArea(CX) > 0.08 * CA0) Cframe = requestAnimationFrame(tick); else { Cframe = 0; $("flowplay").textContent = "Run"; }
+    if (LC.polyArea(CX) > 0.08 * CA0) Cframe = requestAnimationFrame(tick); else { Cframe = 0; $("flowplay").textContent = "Run again"; }
   };
   Cframe = requestAnimationFrame(tick);
 }

@@ -91,7 +91,7 @@ A positive defect means the surface closes up around the vertex like a cone poin
 
 The angle defects of any closed mesh sum to exactly 2πχ, a discrete Gauss–Bonnet theorem that holds at every resolution, not only in the limit.
 
-**Checked (Wolfram kernel):** defects π/2 (cube, 8 vertices), π/3 (icosahedron, 12), π (tetrahedron, 4) and 2π/3 (octahedron, 6); each total divided by 2π is 2.
+**Checked (notebook §7.2):** defects π/2 (cube, 8 vertices), π/3 (icosahedron, 12), π (tetrahedron, 4) and 2π/3 (octahedron, 6); each total divided by 2π is 2.
 
 No discrete Laplacian keeps every smooth property at once: symmetry, locality, linear precision, semidefiniteness and the maximum principle (Wardetzky et al. 2007). The smooth analogue of this tension is the *orthonormal mandate* of the Laplacian notebook (Theorem 7.4): an average over stencil points h**u**, h**v** in the plane gives h²∇ᵀ(**uu**ᵀ + **vv**ᵀ)∇f, which is h²Δf only when the axes are orthonormal; skewed axes add a cross term 2M₁₂ ∂ₓ∂ᵧf. A mesh has no orthonormal axes, and the cotangent weights are what correct for that. See [Laplacian Programmable Lab, Section 5: Stencils and the orthonormal mandate](https://lossofgenerality.github.io/Laplacian-lab/#discrete).
 

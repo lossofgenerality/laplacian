@@ -3,7 +3,7 @@ import sys, importlib
 sys.path.insert(0, '/home/claude/laplacian/tools'); sys.path.insert(0, '/home/claude/laplacian/tools/series')
 from build import wl_escape, text_cell, text_plain, number_figures, any_cell
 m = importlib.import_module(sys.argv[1])
-fn = '/home/claude/laplacian/notebooks/series/' + m.FILE
+fn = getattr(m, 'DIR', '/home/claude/laplacian/notebooks/series/') + m.FILE
 CS = number_figures(m.CELLS)
 cells = ',\n'.join(any_cell(s, t) for s, t in CS)
 open(fn + '.nb', 'w', encoding='ascii').write(

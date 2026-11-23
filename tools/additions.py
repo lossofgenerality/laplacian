@@ -182,6 +182,26 @@ Ksmooth = Flatten[Table[N[Cos[2 π j/nvv]/(2 + Cos[2 π j/nvv])], {i, 0, nu - 1}
     PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Black}, AxesLabel -> {"v", "K"},
     PlotLegends -> {"mesh: defect/area", "smooth K"}, PlotLabel -> "Mesh vs smooth Gauss curvature", ImageSize -> 420]}],
  κLegend[1, "K"]]"""),
+("Subsection", "7.2 Checking ang and the angle defect: triangles, fans and the regular polyhedra"),
+("Text", "ang[i, j, k] := VectorAngle[P[[j]] − P[[i]], P[[k]] − P[[i]]] is the corner angle at vertex i of triangle ijk. Three checks: a right triangle gives π/2, π/4, π/4; 1000 random triangles have angle sum π to round-off; and the angle does not depend on the order of j and k. Then the angle defect δ = 2π − Σθ at a flat fan (0), a square-pyramid apex with unit edges (2π/3) and a saddle vertex (negative), and on the five regular polyhedra, where every total is 2πχ = 4π."),
+("Input",
+r"""SeedRandom[7]; angSum[P_] := Module[{ang}, ang[i_, j_, k_] := VectorAngle[P[[j]] - P[[i]], P[[k]] - P[[i]]];
+   ang[1, 2, 3] + ang[2, 3, 1] + ang[3, 1, 2]];
+<|"right triangle" -> Module[{P = {{0, 0, 0}, {1, 0, 0}, {0, 1, 0}}, ang}, ang[i_, j_, k_] := VectorAngle[P[[j]] - P[[i]], P[[k]] - P[[i]]]; {ang[1, 2, 3], ang[2, 3, 1], ang[3, 1, 2]}],
+  "max |angle sum − π|, 1000 random triangles" -> Max[Table[Abs[angSum[RandomReal[{-1, 1}, {3, 3}]] - π], {1000}]],
+  "symmetric in j, k" -> Module[{P = RandomReal[1, {3, 3}]}, VectorAngle[P[[2]] - P[[1]], P[[3]] - P[[1]]] == VectorAngle[P[[3]] - P[[1]], P[[2]] - P[[1]]]]|>"""),
+("Input",
+r"""defectAt[apex_, ring_] := 2 π - Total[Table[VectorAngle[ring[[k]] - apex, ring[[Mod[k, Length[ring]] + 1]] - apex], {k, Length[ring]}]];
+hex = Table[{Cos[2 π k/6], Sin[2 π k/6], 0}, {k, 0, 5}];
+<|"flat fan of six triangles" -> Chop[defectAt[{0, 0, 0}, hex]],
+  "square-pyramid apex (unit edges)" -> FullSimplify[defectAt[{0, 0, 1/Sqrt[2]}, {{1, 0, 0}, {0, 1, 0}, {-1, 0, 0}, {0, -1, 0}}/Sqrt[2]]],
+  "saddle vertex on z = (x² − y²)/2, eight neighbours on the unit circle" -> N[defectAt[{0, 0, 0}, Table[With[{t = 2 π k/8}, {Cos[t], Sin[t], (Cos[t]^2 - Sin[t]^2)/2}], {k, 0, 7}]]]|>"""),
+("Input",
+r"""polyDefects[name_] := Module[{P = N[PolyhedronData[name, "VertexCoordinates"]], F = PolyhedronData[name, "FaceIndices"], def},
+   def = ConstantArray[2. π, Length[P]];
+   Do[Do[With[{i = f[[k]], j = f[[Mod[k, Length[f]] + 1]], l = f[[Mod[k - 2, Length[f]] + 1]]}, def[[i]] -= VectorAngle[P[[j]] - P[[i]], P[[l]] - P[[i]]]], {k, Length[f]}], {f, F}];
+   {name, Length[P], Union[Rationalize[def/π, 10^-9]] π, Chop[Total[def]/(2 π), 10^-12]}];
+Grid[Prepend[polyDefects /@ {"Tetrahedron", "Cube", "Octahedron", "Dodecahedron", "Icosahedron"}, Style[#, Bold] & /@ {"polyhedron", "vertices", "defect at each vertex", "Σ defect / 2π"}], Frame -> All]"""),
 ]
 
 # ---------------------------------------------------------------- 8: graph pictures and examples
@@ -202,7 +222,7 @@ vertexCurvaturePlot[G_, kv_List, s_, label_] := Graph[G,
   EdgeStyle -> GrayLevel[0.6], PlotLabel -> Style[label, 10], ImageSize -> 180];
 row[plots_] := GraphicsRow[plots, ImageSize -> 1100, Spacings -> 0];
 Keys[family]"""),
-("Text", "Lin–Lu–Yau curvature on every edge. In the binary tree, interior edges are −2/3 (the two neighbourhoods do not overlap) while leaf edges are +2/3 (a leaf sees only its parent). The cycle and the Petersen graph are 0, the cube is 2/3 everywhere and K₅ is 5/4. The grid is 0 inside and positive along the boundary. The dumbbell’s bridge is negative (−3/5) while its cliques are positive: the bottleneck shows up as negative curvature."),
+("Text", "Lin–Lu–Yau curvature on every edge. In the binary tree, interior edges are −2/3 (the two neighbourhoods do not overlap), except the two at the root, whose end has degree 2 (−1/3), while leaf edges are +2/3 (a leaf sees only its parent). The cycle and the Petersen graph are 0, the cube is 2/3 everywhere and K₅ is 5/4. The grid is 0 on interior edges and along its sides, +1/6 on edges from a side inward and +1/3 at the corners. The dumbbell’s bridge is negative (−3/5 on the two edges joining a clique to the path, 0 on the middle edge) while its cliques are positive: the bottleneck shows up as negative curvature."),
 ("Input",
 """Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, κLLY, 1.25, nm]], family]], κLegend[1.25, Subscript["κ", "LLY"]]]"""),
 ("Input",
@@ -226,7 +246,7 @@ GraphicsRow[{edgePicture[KaryTree[15, 2], {2, 4}, "tree, interior edge"], edgePi
 ("Input",
 """{Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, pNode[G], 0.3, nm]], family]], κLegend[0.3, "p"]],
  Map[Chop@Total[pNode[#]] &, family]}"""),
-("Text", "Steinerberger curvature at every vertex. It is built from graph distance where resistance curvature uses effective resistance. On a tree the two distances coincide, so the two curvatures are exactly proportional; on the grid they are strongly correlated; on vertex-transitive graphs (cycle, cube, K₅, Petersen) both are constant."),
+("Text", "Steinerberger curvature at every vertex. It is built from graph distance where resistance curvature uses effective resistance. On a tree the two distances coincide, and Steinerberger curvature is exactly 2n/(n − 1) times resistance curvature (15/7 on this tree, by the Graham–Lovász formula for the inverse distance matrix of a tree); on the grid they are strongly correlated; on vertex-transitive graphs (cycle, cube, K₅, Petersen) both are constant."),
 ("Input",
 """{Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, steinerberger[G], 1.5, nm]], family]], κLegend[1.5, Subscript["K", "S"]]],
  "correlation with resistance curvature" -> Map[Quiet@Correlation[steinerberger[#], pNode[#]] &, KeyTake[family, {"Binary tree", "Grid 5×5", "Dumbbell"}]]}"""),
