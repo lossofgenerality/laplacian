@@ -59,7 +59,7 @@ In priority order for each site (agreed 23 Nov 2026). **Top priority overall:** 
 
 **Laplacian Programmable Lab** ([lossofgenerality/Laplacian-lab](https://github.com/lossofgenerality/Laplacian-lab): Lab, manual)
 
-1. The 𝒶𝓇𝓈 bug: the Δ-notation Insert button and table should use 𝒶𝓇ℊ𝓈.
+1. ~~The 𝒶𝓇𝓈 bug~~ (done 23 Nov): the Insert button and table use 𝒶𝓇ℊ𝓈, and typed script letters are sent as Wolfram named characters, so 𝒶𝓇ℊ𝓈 = {x, y, z, t} gives 𝒹 = 4 (checked on Wolfram 15).
 2. Apply the CCN Brand Strategy (the five steps in its §14).
 3. Bring the tutorial in line with version 2 (CCN-KEY field, Connect, chat through the kernel).
 4. A "show the steps" mode for Wolfram cells using `laplacianSteps`.

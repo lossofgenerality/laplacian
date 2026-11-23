@@ -235,7 +235,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 
 ## 8. Open issues
 
-1. **𝒶𝓇𝓈 bug (all versions, both artifacts).** The Insert button, the Section 12 Δ notation table and the "Δ notation" snippet comment use the three-letter `𝒶𝓇𝓈`, which Wolfram doesn't recognise. Fix: insert `𝒶𝓇ℊ𝓈` and have `deltaPre` map `𝒶𝓇𝓈` → `\[ScriptA]\[ScriptR]\[ScriptG]\[ScriptS]`.
+1. **𝒶𝓇𝓈 bug — fixed 23 Nov in the GitHub Pages Lab** (`Laplacian-lab/index.html`): Insert button, table and snippet use 𝒶𝓇ℊ𝓈; `scriptNames()` in `wlPrepare` sends Unicode script letters (U+1D49C–1D4CF) as `\[ScriptX]` / `\[ScriptCapitalX]`, because on Wolfram 15 those named characters are private-use codes, not the Unicode letters, so typed 𝒶𝓇ℊ𝓈 was a different symbol from the prelude's. Still unfixed in the two artifacts and the user's standalone files.
 2. **Section 9 claim about §3.2** ("`series2` is never defined") is unverified and may be wrong.
 3. **Notebook section numbers** cited from reading (e.g. "Factorial2 form (§4.6)", "Factorial form (§4.5)") not checked against the notebook.
 4. **Tutorial §5.6** lists results for the Section 4 cell (Δ³f vs (x+y+z)³) and the Section 12 Plot3D cell that were not run as those exact cells.
