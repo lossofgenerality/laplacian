@@ -21,7 +21,7 @@ for md in sys.argv[1:]:
                       '<canvas data-fig3d="%s" aria-label="Rotatable 3D figure"></canvas><img class="fig3d-fallback" style="display:none" src="%s" alt="">'
                       '<div class="fig3d-note">3D: drag to rotate</div>' % (key, src), body)
     pdf = p.with_suffix('.pdf').name
-    nav = '<nav class="wtop"><a href="%s">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/%s">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a><a href="https://lossofgenerality.github.io/laplacian/docs/series/">All write-ups</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Search</a></nav>' % (pdf, str(p).replace('/home/claude/laplacian/', ''))
+    nav = '<nav class="wtop"><a href="%s">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/%s">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a><a href="https://lossofgenerality.github.io/laplacian/docs/series/">All write-ups</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Search</a><a href="https://lossofgenerality.github.io/laplacian/docs/glossary.html">Glossary</a></nav>' % (pdf, str(p).replace('/home/claude/laplacian/', ''))
     html = ('<!DOCTYPE html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>%s — Computational Classnotes</title><style>%s%s</style></head><body>%s%s'
             '<footer style="margin-top:30px;font-size:9pt;color:#666">© 2026 Computational Classnotes · CC BY-NC-SA 4.0</footer><script>%s</script></body></html>\n'

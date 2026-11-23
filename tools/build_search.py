@@ -44,6 +44,12 @@ for p in sorted((ROOT / 'docs/series').glob('[0-9][0-9]-*.html')):
     writeup(p, SITE + 'docs/series/' + p.name)
 
 
+# 1b. Glossary: one entry per term
+g = (ROOT / 'docs/glossary.html').read_text(encoding='utf-8')
+for m in re.finditer(r'<section class="g" id="([^"]+)"><h2>(.*?)</h2><p>(.*?)</p>', g, re.S):
+    add('Glossary', 'Glossary', text(m.group(2)), SITE + 'docs/glossary.html#' + m.group(1), text(m.group(3)))
+
+
 # 2. Manuals: one entry per reference page and per guide
 def manual(path, base, name):
     s = path.read_text(encoding='utf-8')

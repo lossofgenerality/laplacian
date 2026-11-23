@@ -165,7 +165,7 @@ footer{border-top:1px solid var(--rule);margin-top:34px;padding-top:14px;font-si
 <body>
 <header class="top">
   <a class="logo" href="#/"><span class="mark">C</span><span id="brandname"></span><small>Documentation</small></a>
-  <nav><a href="#/">Home</a><a href="#/index">Index</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Site search</a><a id="lablink" target="_blank" rel="noopener">Open the Lab ↗</a><a id="repolink" target="_blank" rel="noopener">Source ↗</a></nav>
+  <nav><a href="#/">Home</a><a href="#/index">Index</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Site search</a><a href="https://lossofgenerality.github.io/laplacian/docs/glossary.html">Glossary</a><a id="lablink" target="_blank" rel="noopener">Open the Lab ↗</a><a id="repolink" target="_blank" rel="noopener">Source ↗</a></nav>
   <div class="search"><input id="q" placeholder="Search functions…" autocomplete="off" spellcheck="false"><div id="results"></div></div>
 </header>
 <div class="crumbs" id="crumbs"></div>

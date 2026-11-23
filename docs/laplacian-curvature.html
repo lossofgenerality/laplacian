@@ -26,7 +26,7 @@ canvas[data-fig3d]{width:100%;max-width:520px;height:440px;display:block;margin:
 nav.wtop{font-size:10pt;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
 nav.wtop a{color:rgb(212,86,28)}
 @media print{canvas[data-fig3d]{display:none}.fig3d-fallback{display:block!important}}
-</style></head><body><nav class="wtop"><a href="laplacian-curvature.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/laplacian-curvature.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a><a href="https://lossofgenerality.github.io/laplacian/docs/series/">All write-ups</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Search</a></nav><h1 id="the-laplacian-and-curvature-instances-and-relationships">The
+</style></head><body><nav class="wtop"><a href="laplacian-curvature.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/laplacian-curvature.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a><a href="https://lossofgenerality.github.io/laplacian/docs/series/">All write-ups</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Search</a><a href="https://lossofgenerality.github.io/laplacian/docs/glossary.html">Glossary</a></nav><h1 id="the-laplacian-and-curvature-instances-and-relationships">The
 Laplacian and Curvature — Instances and Relationships</h1>
 <p>23 November 2026 · Computational Classnotes · Laplacian Lab</p>
 <p>Curvature is what the Laplacian sees beyond its flat value. On smooth
@@ -181,16 +181,16 @@ Gauss–Bonnet theorem that holds at every resolution, not only in the
 limit.</p>
 <p><strong>Checked (Wolfram kernel):</strong> defects π/2 (cube, 8
 vertices), π/3 (icosahedron, 12), π (tetrahedron, 4) and 2π/3
-(octahedron, 6); each total divided by 2π is 2. No discrete Laplacian
-keeps every smooth property at once: symmetry, locality, linear
-precision, semidefiniteness and the maximum principle (Wardetzky et
-al. 2007). The smooth analogue of this tension is the <em>orthonormal
-mandate</em> of the Laplacian notebook (Theorem 7.4): an average over
-stencil points h<strong>u</strong>, h<strong>v</strong> in the plane
-gives h²∇ᵀ(<strong>uu</strong>ᵀ + <strong>vv</strong>ᵀ)∇f, which is h²Δf
-only when the axes are orthonormal; skewed axes add a cross term 2M₁₂
-∂ₓ∂ᵧf. A mesh has no orthonormal axes, and the cotangent weights are
-what correct for that. See <a
+(octahedron, 6); each total divided by 2π is 2.</p>
+<p>No discrete Laplacian keeps every smooth property at once: symmetry,
+locality, linear precision, semidefiniteness and the maximum principle
+(Wardetzky et al. 2007). The smooth analogue of this tension is the
+<em>orthonormal mandate</em> of the Laplacian notebook (Theorem 7.4): an
+average over stencil points h<strong>u</strong>, h<strong>v</strong> in
+the plane gives h²∇ᵀ(<strong>uu</strong>ᵀ + <strong>vv</strong>ᵀ)∇f,
+which is h²Δf only when the axes are orthonormal; skewed axes add a
+cross term 2M₁₂ ∂ₓ∂ᵧf. A mesh has no orthonormal axes, and the cotangent
+weights are what correct for that. See <a
 href="https://lossofgenerality.github.io/Laplacian-lab/#discrete">Laplacian
 Programmable Lab, Section 5: Stencils and the orthonormal
 mandate</a>.</p>
