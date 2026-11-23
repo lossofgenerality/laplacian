@@ -8,7 +8,7 @@ Curvature is what the Laplacian sees beyond its flat value. On smooth surfaces a
 
 - **Sign.** Δ = div grad (the analyst's sign), so Δ ≤ 0 on a closed manifold and its eigenvalues are written −λ with λ ≥ 0.
 - **Graphs.** Δf(x) = (mean of f over the neighbours of x) − f(x), the random-walk normalisation. Its spectrum is that of the normalised Laplacian I − D^(−1/2) A D^(−1/2), up to sign.
-- **Notebook map.** Section n here ↔ notebook Section n+1. Notebook Section 1 is a shared Riemannian toolkit: Laplace–Beltrami, Christoffel symbols, covariant Hessian, Gauss curvature.
+- **Notebook map.** Sections 1–8 here ↔ notebook Sections 2–9; Section 10 ↔ notebook Section 10. Notebook Section 1 is a shared Riemannian toolkit: Laplace–Beltrami, Christoffel symbols, covariant Hessian, Gauss curvature.
 
 ## At a glance
 
@@ -129,6 +129,20 @@ Computed in the notebook; all curvatures are minima over edges or vertices, and 
 | Grid 4×4 | 0 | 0 | 0.088 | −4 / −4 | −0.112 | 0.218 | 2.000 |
 
 Other totals: Σ resistance curvature = 1.000 on all five graphs. Higuchi curvature sums to 2 on the tetrahedron, cube, dodecahedron, icosahedron and truncated icosahedron. K₅ attains λ₁ = κ_LLY = 5/4 and Q₃ attains λ₁ = κ_LLY = K_BE = 2/3, the discrete equality cases.
+
+## 10. Flows and further identities, worked out (notebook §10)
+
+Five more places where curvature is a Laplacian, each computed in notebook §10.
+
+- **Weitzenböck on 1-forms.** Δ_Hodge = ∇\*∇ + Ric. On S² every 1-form is df + ⋆dh, and Δ_Hodge commutes with d and ⋆, so the identity can be checked for arbitrary f and h. Ric > 0 then leaves no harmonic 1-forms: b₁ = 0.
+- **Ricci flow** ∂g/∂t = −2Ric. In two dimensions, with g = e^(2u)(dx² + dy²), it is the heat equation ∂u/∂t = e^(−2u)Δ₀u = −K. The round sphere shrinks as (1 − 2t)g₀.
+- **Mean-curvature flow** ∂X/∂t = ΔX = −2Hn. A sphere shrinks as R² = R₀² − 4t. In the plane this is curve shortening, which rounds any embedded curve (Gage–Hamilton–Grayson), and the enclosed area falls at exactly 2π per unit time.
+- **Ollivier curvature on a manifold.** For uniform measures on ε-balls, sliding the surface along the geodesic carries one ball onto the other, and gives κ → ε²K/8 = ε² Ric/(2(n+2)).
+- **Yamabe.** For g̃ = u^(4/(n−2)) g, scalar curvature transforms by a Laplacian. In ℝ³, S̃ = −8u^(−5)Δu.
+
+$$\frac{\partial u}{\partial t} = e^{-2u}\Delta_0 u = -K, \qquad \frac{dA}{dt} = -\oint \kappa\,ds = -2\pi, \qquad \tilde S = u^{-\frac{n+2}{n-2}}\Big(-\tfrac{4(n-1)}{n-2}\Delta u + S u\Big)$$
+
+**Checked (notebook §10):** Weitzenböck on S² gives difference {0, 0} for arbitrary f and h. The sphere's Ricci-flow and mean-curvature-flow solutions give residual 0. On a bumpy flat torus, max|K| falls from 4.83 at t = 0 to 0.059 at t = 2 while ∬K dA stays 0. Curve shortening of a 160-vertex polygon gives fitted dA/dt = −6.32 against −2π = −6.28. Ollivier curvature gives κ/ε² = 0.12496 (sphere), 0 (plane) and −0.12504 (hyperbolic plane) at ε = 0.05. The Yamabe factor u = (2/(1 + r²))^(1/2) gives S̃ = 6, the round S³.
 
 ## References
 

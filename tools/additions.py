@@ -252,3 +252,89 @@ BarChart[Values[bounds], ChartLabels -> {Keys[bounds], None}, ChartStyle -> {Bla
  Epilog -> {Gray, Dashed, Line[{{-2, -2}, {2, 2}}]}, AxesLabel -> {"Δz = −2z", "point-cloud L z"},
  PlotLabel -> "Belkin–Niyogi on 20 000 points of S²", ImageSize -> 320]"""),
 ]
+
+# ---------------------------------------------------------------- 10: further instances, worked out
+ADD[10] = [
+("Subsection", "10.1 Weitzenböck on 1-forms: Δ_Hodge = ∇*∇ + Ric"),
+("Text", "Every 1-form on S² is df + ⋆dh (S² has no harmonic 1-forms). The Hodge Laplacian commutes with d and ⋆, and equals −Δ on functions, so Δ_Hodge(df + ⋆dh) = d(−Δf) + ⋆d(−Δh) needs no further machinery. "
+         "The rough Laplacian ∇*∇ω = −g^{jk}∇_k∇_j ω is computed from Christoffel symbols. The difference Δ_Hodge − ∇*∇ must be Ric(ω) = Kω = ω. Bochner’s theorem follows: Ric > 0 leaves no room for harmonic 1-forms, so b₁ = 0."),
+("Input",
+"""roughLaplacian1[g_, 𝓍_][ω_] := Module[{Γ = christoffel[g, 𝓍], gi = Inverse[g], n = Length[𝓍], T, TT},
+  T = Table[D[ω[[i]], 𝓍[[j]]] - Sum[Γ[[k, i, j]] ω[[k]], {k, n}], {i, n}, {j, n}];
+  TT = Table[D[T[[i, j]], 𝓍[[k]]] - Sum[Γ[[m, k, i]] T[[m, j]] + Γ[[m, k, j]] T[[i, m]], {m, n}], {i, n}, {j, n}, {k, n}];
+  Table[-Sum[gi[[j, k]] TT[[i, j, k]], {j, n}, {k, n}], {i, n}]];
+ΔS2 = laplaceBeltrami[gS2, 𝓍S2];
+d1[h_] := {D[h, θ], D[h, φ]};                       (* dh as a covector *)
+star1[{a_, b_}] := {-b/Sin[θ], a Sin[θ]};           (* Hodge star on 1-forms of S² *)
+ω1 = d1[𝒻[θ, φ]] + star1[d1[𝒽[θ, φ]]];
+ΔHodge = d1[-ΔS2[𝒻[θ, φ]]] + star1[d1[-ΔS2[𝒽[θ, φ]]]];
+Simplify[ΔHodge - (roughLaplacian1[gS2, 𝓍S2][ω1] + 1 ω1)]   (* K = 1 on the unit sphere *)"""),
+
+("Subsection", "10.2 Ricci flow ∂g/∂t = −2Ric"),
+("Text", "Exact solution: the round sphere g(t) = (1 − 2t)g₀ shrinks to a point at t = 1/2, because Ric does not change under scaling."),
+("Input", """Simplify[D[(1 - 2 t) gS2, t] + 2 gS2]   (* = −2 Ric(g(t)) − ∂g/∂t, Ric(g(t)) = Ric(g₀) = g₀ *)"""),
+("Text", "Numerical example. In two dimensions write g = e^{2u}(dx² + dy²); then Ricci flow is the nonlinear heat equation ∂u/∂t = e^{−2u}Δ₀u = −K. "
+         "Start from a bumpy metric on the flat torus [0, 2π]². The flow irons the curvature out: max|K| decays to 0, while the total curvature ∬K dA = −∬Δ₀u dx dy stays exactly 0 (Gauss–Bonnet, χ = 0)."),
+("Input",
+"""u0[x_, y_] := 0.3 Cos[x] + 0.25 Sin[2 y] Cos[x + y];
+solR = First@NDSolve[{D[w[t, x, y], t] == Exp[-2 w[t, x, y]] (D[w[t, x, y], {x, 2}] + D[w[t, x, y], {y, 2}]), w[0, x, y] == u0[x, y],
+     w[t, 0, y] == w[t, 2 π, y], w[t, x, 0] == w[t, x, 2 π]}, w, {t, 0, 2}, {x, 0, 2 π}, {y, 0, 2 π},
+    Method -> {"MethodOfLines", "SpatialDiscretization" -> {"TensorProductGrid", "MinPoints" -> 31, "MaxPoints" -> 31}}];
+Kt[tt_, x_, y_] := -Exp[-2 w[tt, x, y]] (Derivative[0, 2, 0][w][tt, x, y] + Derivative[0, 0, 2][w][tt, x, y]) /. solR;
+maxK[tt_] := Max[Table[Abs[Kt[tt, x, y]], {x, 0, 2 π, π/10}, {y, 0, 2 π, π/10}]];
+totalK[tt_] := Total[Flatten@Table[-(Derivative[0, 2, 0][w][tt, x, y] + Derivative[0, 0, 2][w][tt, x, y]) /. solR,
+     {x, 0, 2 π - π/20, π/20}, {y, 0, 2 π - π/20, π/20}]] (π/20)^2;
+TableForm[Table[{tt, maxK[tt], Chop[totalK[tt], 10^-4]}, {tt, {0, 0.25, 0.5, 1, 2}}], TableHeadings -> {None, {"t", "max |K|", "∬K dA"}}]"""),
+("Input",
+"""Row[Append[Table[DensityPlot[Kt[tt, x, y], {x, 0, 2 π}, {y, 0, 2 π}, ColorFunction -> (κColour[#, 1.5] &), ColorFunctionScaling -> False,
+     PlotPoints -> 30, FrameTicks -> None, PlotLabel -> Row[{"K at t = ", tt}], ImageSize -> 160], {tt, {0, 0.25, 0.5, 2}}],
+  ListLogPlot[Table[{tt, maxK[tt]}, {tt, 0, 2, 0.1}], Joined -> True, PlotStyle -> RGBColor[0.98, 0.56, 0.17], AxesLabel -> {"t", "max |K|"}, PlotLabel -> "curvature decays", ImageSize -> 240]]]"""),
+
+("Subsection", "10.3 Mean-curvature flow ∂X/∂t = ΔX = −2H n"),
+("Text", "Exact solution: a round sphere of radius R has H = 1/R, so dR/dt = −2/R and R(t)² = R₀² − 4t."),
+("Input", """Simplify[D[Sqrt[R0^2 - 4 t], t] + 2/Sqrt[R0^2 - 4 t]]"""),
+("Text", "Numerical example in the plane (curve-shortening flow, dX/dt = κN = ∂²X/∂s²). The curve is a polygon, and ∂²X/∂s² is the arc-length-weighted Laplacian of the cycle graph C_n acting on the vertex positions, a graph Laplacian again. "
+         "Gage–Hamilton–Grayson: any embedded curve becomes convex, then round, and shrinks to a point. The enclosed area falls at exactly 2π per unit time, because ∮κ ds = 2π."),
+("Input",
+"""nC = 160; Xc = Table[(1 + 0.35 Cos[3 θ] + 0.2 Sin[5 θ]) {Cos[θ], Sin[θ]}, {θ, 0., 2 π - 2 π/nC, 2 π/nC}];
+lapCurve[X_] := Module[{fw = RotateLeft[X] - X, bw = X - RotateRight[X], lf, lb}, lf = Norm /@ fw; lb = Norm /@ bw; 2 (fw/lf - bw/lb)/(lf + lb)];
+polyArea[X_] := 1/2 Abs[Total[MapThread[#1[[1]] #2[[2]] - #2[[1]] #1[[2]] &, {X, RotateLeft[X]}]]];
+resample[X_] := Module[{c = Append[X, First[X]], s, f}, s = Prepend[Accumulate[Norm /@ Differences[c]], 0];
+   f = Interpolation[Transpose[{s, c}], InterpolationOrder -> 1]; Table[f[q], {q, 0, Last[s] - Last[s]/nC, Last[s]/nC}]];
+dt = 2.*10^-4; snaps = {{0., Xc}}; areas = {{0., polyArea[Xc]}}; Xcur = Xc; tcur = 0.;
+Do[Xcur = Xcur + dt lapCurve[Xcur]; tcur += dt;
+  If[Mod[k, 50] == 0, Xcur = resample[Xcur]; AppendTo[areas, {tcur, polyArea[Xcur]}]];
+  If[Mod[k, 500] == 0, AppendTo[snaps, {tcur, Xcur}]], {k, 1, 2000}];
+<|"fitted dA/dt" -> Coefficient[Fit[areas, {1, s}, s], s], "−2π" -> N[-2 π]|>"""),
+("Input",
+"""Row[{Graphics[{Table[{ColorData["SunsetColors"][1 - sn[[1]]/0.45], Thick, Line[Append[sn[[2]], First[sn[[2]]]]]}, {sn, snaps}]},
+   ImageSize -> 280, PlotLabel -> "curve shortening, t = 0, 0.1, 0.2, 0.3, 0.4"],
+  ListPlot[areas, PlotStyle -> RGBColor[0.98, 0.56, 0.17], Epilog -> {Gray, Dashed, Line[{{0, polyArea[Xc]}, {0.4, polyArea[Xc] - 2 π 0.4}}]},
+   AxesLabel -> {"t", "area"}, PlotLabel -> "area falls at 2π per unit time (dashed)", ImageSize -> 320]}]"""),
+
+("Subsection", "10.4 Ollivier curvature recovers Ricci curvature on a manifold"),
+("Text", "Take two points x, y at distance δ along a geodesic, and the uniform measures on their ε-balls. Sliding the whole surface along the geodesic by δ (a rotation of the sphere, a translation of the plane, a hyperbolic translation) carries one ball onto the other. "
+         "The average distance moved bounds W₁ from above, so it bounds κ = 1 − W₁/δ from below, and its leading term is Ollivier’s ε² Ric/(2(n+2)) = ε²K/8 for surfaces. "
+         "As δ → 0 a point at latitude λ (distance λ from the geodesic) moves δ cos λ on the unit sphere, δ cosh λ in the hyperbolic plane and δ in the plane, so κ = average of 1 − cos λ, cosh λ − 1 with a minus sign, or 0. "
+         "Writing 1 − cos λ = s²/(1 + √(1 − s²)) with s = sin λ avoids cancellation."),
+("Input",
+"""κS2[ε_?NumericQ] := NIntegrate[With[{s = Sin[ρ] Sin[α]}, s^2/(1 + Sqrt[1 - s^2])] Sin[ρ], {ρ, 0, ε}, {α, 0, 2 π}]/(2 π (1 - Cos[ε]));
+κH2[ε_?NumericQ] := -NIntegrate[With[{s = Sinh[ρ] Sin[α]}, s^2/(1 + Sqrt[1 + s^2])] Sinh[ρ], {ρ, 0, ε}, {α, 0, 2 π}]/(2 π (Cosh[ε] - 1));
+ollivierTable = Table[{ε, κS2[ε]/ε^2, 0, κH2[ε]/ε^2}, {ε, {0.05, 0.1, 0.2, 0.4, 0.8}}];
+TableForm[ollivierTable, TableHeadings -> {None, {"ε", "κ/ε² on S² (K = 1)", "plane (K = 0)", "κ/ε² on H² (K = −1)"}}]"""),
+("Input",
+"""Quiet@Plot[{κS2[ε]/ε^2, 0, κH2[ε]/ε^2}, {ε, 0.03, 1.2}, PlotRange -> {-0.16, 0.16},
+ PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Gray, RGBColor[0.18, 0.36, 0.78]}, Epilog -> {Dashed, Gray, Line[{{0, 1/8}, {1.2, 1/8}}], Line[{{0, -1/8}, {1.2, -1/8}}]},
+ PlotLegends -> {"sphere, K = 1", "plane, K = 0", "hyperbolic plane, K = −1"}, AxesLabel -> {"ε", "κ/ε²"},
+ PlotLabel -> "Ollivier curvature of ε-balls → ε²K/8 (dashed ±1/8)", ImageSize -> 460]"""),
+
+("Subsection", "10.5 Yamabe: prescribing scalar curvature with a conformal factor"),
+("Text", "For g̃ = u^{4/(n−2)} g the scalar curvature transforms by a Laplacian: S̃ = u^{−(n+2)/(n−2)} (−4(n−1)/(n−2) Δu + S u). In ℝ³ (S = 0, n = 3) this is S̃ = −8u^{−5}Δu. "
+         "The factor u = (2/(1 + r²))^{1/2} turns flat ℝ³ into the round unit S³ (stereographic projection), with S̃ = 6. The 2-D analogue is Liouville’s equation of Section 2."),
+("Input",
+"""uY = (2/(1 + x^2 + y^2 + z^2))^(1/2);
+{Simplify[-8 uY^-5 Laplacian[uY, {x, y, z}]],
+ Plot[Evaluate[{uY^4 /. {y -> 0, z -> 0}, 1}], {x, -4, 4}, PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Gray},
+  PlotLegends -> {"conformal factor u⁴", "flat"}, AxesLabel -> {"r", "u⁴"}, PlotLabel -> "u⁴ g_flat = round S³, S̃ = 6", ImageSize -> 340]}"""),
+("Text", "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"),
+]

@@ -230,11 +230,5 @@ s = pts[[;; ;; 200]]; lhs = Lpc /@ s; rhs = -2 s[[All, 3]];
 <|"fitted ratio" -> (lhs . rhs)/(rhs . rhs), "correlation" -> Correlation[lhs, rhs]|>"""),
 
 # ---------------------------------------------------------------- 10
-("Section", "10. Further instances (statements only)"),
-("Text", "• Weitzenböck on 1-forms: Δ_Hodge ω = ∇*∇ω + Ric(ω); Bochner’s theorem (Ric > 0 ⇒ b₁ = 0) follows. "
-         "• Ricci flow ∂g/∂t = −2Ric: in dimension 2 with g = e^{2u}g₀ it reads ∂u/∂t = e^{−2u}Δ₀u = −K, a nonlinear heat equation. "
-         "• Mean curvature flow ∂X/∂t = ΔX = −2H\U0001D427: the heat equation for the embedding. "
-         "• Ollivier curvature on a manifold: for nearby x, y along v, κ ≈ ε² Ric(v,v)/(2(n+2)) for balls of radius ε — Ricci curvature measured by comparing ball means. "
-         "• Yamabe / prescribed scalar curvature: for g̃ = u^{4/(n−2)}g, −(4(n−1)/(n−2))Δu + Su = S̃u^{(n+2)/(n−2)}."),
-("Text", "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"),
+("Section", "10. Further instances, worked out: Weitzenböck, Ricci flow, mean-curvature flow, Ollivier on manifolds, Yamabe"),
 ]

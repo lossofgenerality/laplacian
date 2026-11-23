@@ -62,7 +62,7 @@ A literature survey plus a verified write-up and notebook on every Laplacian–c
   - `notebooks/LaplacianCurvature.wl`: same code as a script.
   - `tools/cells.py`: the notebook's core cells (claims + checks). `tools/additions.py`: graphics and worked examples, appended to the end of each notebook section by `build.py`. These are the source of truth: edit them, not the `.nb`.
   - `tools/build.py`: `python3 tools/build.py notebooks` regenerates `.nb` and `.wl` (and `chunks.json`, the Input cells grouped by section, for testing).
-- **Doc ↔ notebook numbering:** write-up Section n ↔ notebook Section n+1 (notebook §1 is the Riemannian toolkit; §9 uses the graph functions of §8).
+- **Doc ↔ notebook numbering:** write-up Sections 1–8 ↔ notebook Sections 2–9, write-up Section 10 ↔ notebook Section 10 (notebook §1 is the Riemannian toolkit; §9 uses the graph functions of §8).
 - **Write-up sections:** 1 Gauss curvature (Liouville), 2 ΔX = −2Hn, 3 curved mean values and volumes (Gray–Willmore; link to Lab Section 1), 4 heat trace (McKean–Singer), 5 Bochner / Lichnerowicz / Weitzenböck, 6 cotangent Laplacian and angle defect, 7 graph curvatures table (Ollivier, Lin–Lu–Yau, Bakry–Émery, CDE, Forman, entropic, resistance, Steinerberger, Higuchi), 8 graph spectral bounds and Belkin–Niyogi, 9 verified graph results, references.
 - **Key verified results:**
   - Constant-curvature circle mean M_r f = f + r²Δf/4 + r⁴(Δ²f/64 + KΔf/96) + r⁶(Δ³f/2304 + KΔ²f/1152 + K²Δf/1440); exact to r⁶ on S² for a non-symmetric function.
@@ -74,6 +74,7 @@ A literature survey plus a verified write-up and notebook on every Laplacian–c
   - Σ resistance curvature = 1, and Higuchi totals = 2.
   - The point-cloud Laplacian on 20 000 points of S² gives ratio 0.9997.
 - **Graphics (23 Nov):** six surfaces coloured by K with Gauss–Bonnet totals (torus 0, sphere 4π); torus coloured by H with −ΔX arrows; catenoid and helicoid (H = 0); log–log error plot of the curved mean value with slopes 3.98, 6.00, 8.00; disc-area and heat-trace plots (sphere vs same-area flat torus); Bochner on the torus (variable K); comparison and Bishop–Gromov plots; a 40×20 torus mesh (Σ defect = 0, max |K_mesh − K| = 0.016); seven example graphs coloured by Lin–Lu–Yau, Bakry–Émery, Forman, resistance and Steinerberger curvature; an Ollivier neighbourhood picture; Higuchi on Platonic solids; a λ₁ vs bound bar chart; and a point-cloud scatter. The §4 test function is now eˣ(1+z)² + yz³ (the old one had Δf = 0 at the pole, which hid the K term).
+- **Section 10 worked out (23 Nov):** Weitzenböck on S² via df + ⋆dh (difference 0); Ricci flow (sphere exact; NDSolve on a bumpy flat torus, max|K| 4.83 → 0.059, ∬K dA = 0); mean-curvature flow (sphere exact; curve shortening of a polygon via the cycle-graph Laplacian, dA/dt = −6.32 vs −2π); Ollivier on manifolds via the sliding coupling, κ/ε² → ±1/8 computed as s²/(1+√(1∓s²)) to avoid cancellation; Yamabe in ℝ³ (S̃ = 6). Doc gained Section 10; mapping is now doc 1–8 ↔ notebook 2–9, doc 10 ↔ notebook 10.
 - **Fix (23 Nov):** the notebook §8.2 summary line nested two `&` functions (`bakryEmery[#, v] & /@ VertexList[#]`), which passed a vertex as the graph. Now `Function[G, Min[bakryEmery[G, #] & /@ VertexList[G]]]`.
 
 ---
@@ -190,7 +191,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 7. **Cloud API time limit.** Version 2 chat waits for the whole answer (no streaming). Long answers may hit the Wolfram Cloud plan's API timeout; lower `max_tokens` in the page if so.
 8. **LaplacianLabKernel.wl comments** still say WOLFRAM_KEY; the page now says CCN-KEY.
 9. **Remaining trade-off (version 2):** anyone with the CCN-KEY can use the TA chat at the owner's cost through the kernel, though they cannot read the chat key.
-10. **Curvature notebook** has not been run whole in a desktop front end; cells were tested one by one on the connector kernel, and one summary line (§8.2) was wrong until the 23 Nov fix. CDE/CDE′ and entropic curvature are described, not computed. The general (non-constant-curvature) Gray–Willmore r⁴ coefficient is not stated.
+10. **Curvature notebook** has not been run whole in a desktop front end; cells were tested one by one on the connector kernel, and one summary line (§8.2) was wrong until the 23 Nov fix. CDE/CDE′ and entropic curvature are described, not computed. The general (non-constant-curvature) Gray–Willmore r⁴ coefficient is not stated. A sampled (point-cloud) Ollivier estimate on S² was tried and dropped: transport between ~200-point samples is biased by about ε²/8 itself; the exact sliding-coupling integral is used instead.
 11. **Lab source files** (`Laplacian_Lab*.html`, `LaplacianLabKernel.wl`, `laplacianSteps.wl`, tutorial) are not in the GitHub repo; add them from the user's copies if wanted.
 
 ---
