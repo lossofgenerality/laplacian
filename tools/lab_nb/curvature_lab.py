@@ -99,17 +99,17 @@ cmpGrid[Join @@ (surfRows /@ Keys[surf])]"""),
 ("Input", r"""(* the conformal form: g = e^(2w) g0 and ∂g/∂t = −2 K g give ∂w/∂t = −K = e^(−2w) Δ0 w *)
 Simplify[(D[Exp[2 w[x, y, t]], t] == -2 (-Exp[-2 w[x, y, t]] (D[w[x, y, t], {x, 2}] + D[w[x, y, t], {y, 2}])) Exp[2 w[x, y, t]]) /.
    Derivative[0, 0, 1][w][x, y, t] -> Exp[-2 w[x, y, t]] (D[w[x, y, t], {x, 2}] + D[w[x, y, t], {y, 2}])]"""),
-("Text", "The page’s flow, reproduced step for step: a 32 × 32 periodic grid on [0, 2π)², initial u = a cos x + b sin 2y cos(x + y) with the default bump a = 0.3, b = 0.83a, the five-point Laplacian, and explicit steps dt = 0.2 h² e^{2 min u}, run until t ≥ 2."),
+("Text", "The page’s flow, reproduced step for step: a 32 × 32 periodic grid on [0, 2π)², initial u = a cos x + b sin 2y cos(x + y) with the default bump a = 0.3, b = 0.83a, the five-point Laplacian, and explicit steps dt = 0.2 h² e^{2 min u}, one at a time, run until t ≥ 2."),
 ("Input", r"""ricciRun[a_, b_, N_] := Module[{h = 2. π/N, U, lap, Kf, t = 0., K0},
    U = Table[a Cos[i h] + b Sin[2 j h] Cos[i h + j h], {i, 0, N - 1}, {j, 0, N - 1}];
    lap[W_] := (RotateLeft[W, {1, 0}] + RotateRight[W, {1, 0}] + RotateLeft[W, {0, 1}] + RotateRight[W, {0, 1}] - 4 W)/h^2;
    Kf[W_] := -Exp[-2 W] lap[W]; K0 = Max[Abs[Kf[U]]];
-   While[t < 2, Do[With[{dt = 0.2 h^2 Exp[2 Min[U]]}, U = U + dt Exp[-2 U] lap[U]; t += dt], {20}]];
+   While[t < 2, With[{dt = 0.2 h^2 Exp[2 Min[U]]}, U = U + dt Exp[-2 U] lap[U]; t += dt]];
    <|"maxK0" -> K0, "t" -> t, "maxK" -> Max[Abs[Kf[U]]], "totalK" -> -Total[lap[U], 2] h^2|>];
 rr = ricciRun[0.3, 0.3 0.83, 32];
 cmpGrid[{cmpRow["bump 0.3", "max |K| at t = 0", page["ricci", "maxK0"], rr["maxK0"]], cmpRow["", "t at the end", page["ricci", "t"], rr["t"]],
   cmpRow["", "max |K| at the end", page["ricci", "maxK"], rr["maxK"]], cmpRow["", "∬ K dA", page["ricci", "totalK"], rr["totalK"]]}]"""),
-("Text", "Note for the proof-reader. The page’s check line used to quote the write-up notebook §10.2 (NDSolve on a 31 × 31 grid: max|K| 4.83 → 0.059 by t = 2). That is a different initial bump and grid, so it did not match the page’s own readout (4.63 → 0.053 by t ≈ 2.11 at the default bump). The page now quotes this section. ∬K dA is 0 to round-off because it is −h²ΣΔ₀u, and a periodic Laplacian sums to zero exactly."),
+("Text", "Note for the proof-reader. The page’s check line used to quote the write-up notebook §10.2 (NDSolve on a 31 × 31 grid: max|K| 4.83 → 0.059 by t = 2). That is a different initial bump and grid, so it did not match the page’s own readout (4.63 → 0.059 by t = 2.00 at the default bump). The page now quotes this section. ∬K dA is 0 to round-off because it is −h²ΣΔ₀u, and a periodic Laplacian sums to zero exactly."),
 
 # ------------------------------------------------------------------ 3 means
 ("Section", "3. The mean-value origin of Δ, on a curved surface (page: #means)"),
@@ -353,7 +353,7 @@ EXTRA[2] = [
 ("Text", "Half-plane. u = log(1/y) = −log y: Δ₀u = 1/y², e^{−2u} = y², K = −y²·(1/y²) = −1."),
 ("Text", "Shrinking sphere. The round metric g₀ on S² has Ric = g₀. Try g(t) = c(t) g₀: Ricci curvature does not change under constant scaling, so Ric(g(t)) = g₀ and Ricci flow ∂g/∂t = −2Ric reads c′ g₀ = −2 g₀, so c = 1 − 2t: the sphere shrinks to a point at t = 1/2."),
 ("Text", "Why ∬K dA stays 0 on the page. With dA = e^{2u} dx dy, K dA = −Δ₀u dx dy, and the integral of a Laplacian over the flat torus is 0. On the 32 × 32 grid the five-point Laplacian sums to exactly 0 over a periodic grid (each value enters once with +4 and four times with −1), so the page reads 0 to round-off, about 10⁻¹⁵."),
-("Text", "Why max|K| falls. ∂u/∂t = e^{−2u}Δ₀u is a heat equation for u; a single Fourier mode a cos x decays like e^{−t}, and K ≈ −Δ₀u for small u, so max|K| falls by about e² ≈ 7.4 between t = 0 and t = 2 for the slowest mode, and faster for the sin 2y cos(x + y) part. Here 4.63 → 0.053 is a factor 87 because the bump is not small at first (e^{−2u} amplifies the start)."),
+("Text", "Why max|K| falls. ∂u/∂t = e^{−2u}Δ₀u is a heat equation for u; a single Fourier mode a cos x decays like e^{−t}, and K ≈ −Δ₀u for small u, so max|K| falls by about e² ≈ 7.4 between t = 0 and t = 2 for the slowest mode, and faster for the sin 2y cos(x + y) part. Here 4.63 → 0.059 is a factor 79 because the bump is not small at first (e^{−2u} amplifies the start)."),
 ("Subsection", "2.2 The plots the page draws, and its animator"),
 ("Input", r"""ricciHistory[a_, b_, N_] := Module[{h = 2. π/N, U, lap, Kf, t = 0., hist = {}, frames = {}, next = 0.},
    U = Table[a Cos[i h] + b Sin[2 j h] Cos[i h + j h], {i, 0, N - 1}, {j, 0, N - 1}];

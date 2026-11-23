@@ -11,7 +11,7 @@ for (const key of Object.keys(LC.SURFACES)) {
 }
 // Ricci flow, default bump 0.3 (b = 0.83 a), run to t >= 2
 { const a = 0.3; const S = LC.ricciInit(32, a, a * 0.83); const mk = s => Math.max(...LC.ricciK(s).flat().map(Math.abs));
-  const K0 = mk(S); while (S.t < 2) LC.ricciStep(S, 20); out.ricci = { a, b: a * 0.83, N: 32, maxK0: K0, t: S.t, maxK: mk(S), totalK: LC.ricciTotalK(S) }; }
+  const K0 = mk(S); while (S.t < 2) LC.ricciStep(S, 1); out.ricci = { a, b: a * 0.83, N: 32, maxK0: K0, t: S.t, maxK: mk(S), totalK: LC.ricciTotalK(S) }; }
 // curved means: slopes fitted on 0.04 < r < 0.16
 { const rs = []; for (let k = 4; k <= 24; k++) rs.push(2 ** (-k / 4));
   const e = rs.map(r => { const ex = LC.circleMean(r); return [r, Math.abs(ex - LC.approx.flat(r)), Math.abs(ex - LC.approx.curved4(r)), Math.abs(ex - LC.approx.curved6(r))]; });
