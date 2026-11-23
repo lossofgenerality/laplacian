@@ -5,6 +5,7 @@
 **Write-ups:** [The Laplacian and Curvature](https://lossofgenerality.github.io/laplacian/docs/laplacian-curvature.html) · [Ollivier Curvature](https://lossofgenerality.github.io/laplacian/docs/series/07-ollivier.html) (HTML with rotatable 3D figures; PDF and markdown alongside)
 
 **Programmer’s manual:** https://lossofgenerality.github.io/laplacian/manual.html (one page per CCN Wolfram function, with verified examples)
+**CCN Brand Strategy:** https://lossofgenerality.github.io/laplacian/brand/CCN-Brand-Strategy.html ([PDF](brand/CCN-Brand-Strategy.pdf), [live specimen](https://lossofgenerality.github.io/laplacian/brand/specimen.html)) — one brand for all CCN projects
 
 Every standard notion of curvature, on smooth surfaces and manifolds, on triangle meshes and on graphs, can be read off the Laplacian. This repository collects those instances, with a computed check for each one.
 
@@ -27,6 +28,7 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | `lab/Laplacian_Curvature_Lab.html` | **Standalone** Laplacian Curvature Lab: open in any browser. Set `WOLFRAM_URL` (your LaplacianLabKernel URL) in the settings block at the top, then type your CCN-KEY in the Wolfram Language section and press Connect. Wolfram cells and Ask the TA run through CCN's Wolfram Cloud kernel; no key is stored in the file |
 | `manual.html` | **Programmer’s manual**: standalone reference for the CCN Wolfram code (65 function pages, 9 guides, index, search; every example evaluated on the kernel) |
 | `tools/manual/` | Manual sources: `spec_curvature.py` (content), `build_manual.py` (renderer), `gen.py` (kernel verification scripts), `outputs_*.json`, `img/`; also builds the Laplacian Lab manual (`make_lab.py`) |
+| `brand/` | **CCN Brand Strategy** (md · PDF · HTML), `ccn-tokens.css`, `ccn-pdf.css`, self-hosted OFL fonts, `specimen.html` (Fig. 1–8), `build_doc.py` |
 | `STYLE.md` | House style for Computational Classnotes math documents |
 | `CONTEXT.md` | Working context for the Laplacian Lab project: deliverables, decisions, lessons, open issues |
 

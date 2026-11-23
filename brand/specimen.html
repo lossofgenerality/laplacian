@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CCN Brand Specimen — Computational Classnotes</title>
+<link rel="stylesheet" href="ccn-tokens.css">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:var(--ccn-page);color:var(--ccn-ink);font:16px/1.55 var(--ccn-f-body)}
+.fig{padding:28px 32px;max-width:1200px;margin:0 auto}
+.fig h3{font:700 13px var(--ccn-f-body);letter-spacing:.14em;text-transform:uppercase;color:var(--ccn-soft);margin:0 0 14px}
+body.one .fig{display:none} body.one .fig.on{display:block}
+.row{display:flex;gap:18px;flex-wrap:wrap}
+.card{background:var(--ccn-panel);border:1px solid var(--ccn-line);border-radius:var(--ccn-r);padding:16px 18px}
+.mono{font-family:var(--ccn-f-mono)}
+/* fig 1 */
+.arch{display:grid;grid-template-columns:1fr;gap:14px}
+.arch .core{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.arch .core div{background:var(--ccn-orange-tint);border:1.5px solid var(--ccn-orange);border-radius:8px;padding:10px 12px;font-size:14px}
+.arch .core b,.arch .reg b,.arch .kit b{display:block;font:700 15px var(--ccn-f-display);margin-bottom:2px}
+.arch .regs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.arch .reg{background:var(--ccn-panel);border:1px solid var(--ccn-line);border-radius:10px;padding:12px 14px;font-size:14px}
+.arch .reg .tag{font:600 11px var(--ccn-f-mono);color:var(--ccn-orange-ink);letter-spacing:.08em}
+.arch .kit{background:var(--ccn-panel);border:1px dashed var(--ccn-soft);border-radius:10px;padding:12px 14px;font-size:14px}
+.arch .lbl{font:600 12px var(--ccn-f-mono);color:var(--ccn-soft);text-align:center}
+/* fig 2 */
+.pal{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.sw{border-radius:10px;overflow:hidden;border:1px solid var(--ccn-line);background:var(--ccn-panel)}
+.sw .c{height:62px;display:flex;align-items:flex-end;padding:6px 10px;font:600 13px var(--ccn-f-body)}
+.sw .m{padding:8px 10px;font-size:12.5px;line-height:1.4}
+.sw .m b{font:700 14px var(--ccn-f-display);display:block}
+.theme{padding:16px;border-radius:12px;margin-bottom:14px}
+/* fig 3 */
+.div{height:26px;border-radius:13px;background:linear-gradient(90deg,#2e5cc7,#f4f4f4 50%,#fa8f2b)}
+.ticks{display:flex;justify-content:space-between;font:12px var(--ccn-f-mono);color:var(--ccn-soft);margin-top:4px}
+/* fig 4 */
+.spec .big{font:700 52px/1.05 var(--ccn-f-display);letter-spacing:-.015em}
+.spec .h2{font:700 30px/1.15 var(--ccn-f-display);letter-spacing:-.01em}
+.spec .body{font:400 17px/1.6 var(--ccn-f-body);max-width:72ch}
+.spec .code{font:400 14px/1.6 var(--ccn-f-mono);background:var(--ccn-code);border:1px solid var(--ccn-line);border-radius:8px;padding:10px 14px}
+.spec .meta{font:600 11.5px var(--ccn-f-mono);color:var(--ccn-orange-ink);letter-spacing:.08em;text-transform:uppercase}
+/* fig 5 */
+.mark{width:72px;height:72px;border-radius:16px;background:var(--ccn-orange);display:grid;place-items:center;color:#17202b;font:700 44px/1 var(--ccn-f-display)}
+.mark.s{width:28px;height:28px;border-radius:7px;font-size:17px}
+.wm{font:700 26px/1.1 var(--ccn-f-display);letter-spacing:-.01em;white-space:nowrap}
+.wm b{color:var(--ccn-orange-ink)}
+.cr{font-size:13px;color:var(--ccn-soft)}
+/* fig 6 */
+.hdr{display:flex;align-items:baseline;gap:14px;padding:10px 16px;border-bottom:1px solid var(--ccn-line);background:var(--ccn-page)}
+.hdr .wm{font-size:20px}
+.tabs{display:flex;align-items:center;gap:6px;padding:8px 10px 2px}
+.tabs .b{width:30px;height:30px;border:1px solid var(--ccn-line);border-radius:6px;display:grid;place-items:center;color:var(--ccn-soft)}
+.tabs .t{font-size:13.5px;padding:6px 11px;border-radius:999px;color:var(--ccn-soft);white-space:nowrap}
+.tabs .t.on{border:1px solid var(--ccn-orange);color:var(--ccn-ink);background:var(--ccn-panel)}
+.slider{height:12px;margin:4px 10px 8px;border-radius:6px;background:rgba(127,127,127,.16);position:relative}
+.slider i{position:absolute;left:30%;width:35%;top:2px;bottom:2px;border-radius:5px;background:rgba(127,127,127,.6)}
+.readmore{display:flex;gap:14px;align-items:center;padding:9px 14px;border:1px solid var(--ccn-line);border-left:3px solid var(--ccn-orange);border-radius:8px;background:var(--ccn-panel);font-size:14px}
+.readmore a{color:var(--ccn-orange-ink);text-decoration:none}
+.check{border-left:3px solid var(--ccn-orange);background:var(--ccn-orange-tint);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14.5px}
+.cell{display:grid;grid-template-columns:70px 1fr;gap:8px;font:13.5px/1.55 var(--ccn-f-mono)}
+.cell .l{font:italic 12.5px Georgia,serif;color:var(--ccn-orange-ink);text-align:right;padding-top:6px}
+.cell pre{margin:0;padding:8px 12px;background:var(--ccn-code);border:1px solid var(--ccn-line);border-radius:6px;border-left:3px solid var(--ccn-orange)}
+.cell pre.o{border-left:1px solid var(--ccn-line);background:var(--ccn-panel)}
+.btn{font:600 14px var(--ccn-f-body);padding:8px 16px;border-radius:8px;border:1px solid var(--ccn-line);background:var(--ccn-panel);color:var(--ccn-ink)}
+.btn.p{background:var(--ccn-orange);border-color:var(--ccn-orange);color:#17202b}
+.key{font:14px var(--ccn-f-mono);padding:8px 12px;border:1px solid var(--ccn-line);border-radius:8px;background:var(--ccn-panel);min-width:220px;color:var(--ccn-soft)}
+dl.read{display:grid;grid-template-columns:1fr auto;gap:4px 18px;margin:0;font-size:14.5px}
+dl.read dd{margin:0;font-family:var(--ccn-f-mono)}
+.hand{padding:10px 14px 10px 34px;background:#fff8f1;border:1px solid #f3dcc6;border-left:4px solid var(--ccn-orange);border-radius:6px;font-size:14.5px}
+.hand li::marker{color:var(--ccn-orange-ink);font-weight:600}
+</style>
+</head>
+<body>
+
+<section class="fig" id="f1"><h3>Fig. 1 · Brand architecture</h3>
+<div class="arch">
+ <div class="lbl">ONE CORE</div>
+ <div class="core">
+  <div><b>Name &amp; marks</b>Computational Classnotes · CCN, monogram, wordmarks, copyright line</div>
+  <div><b>Colour</b>CCN orange, steel blue, ink and paper, light and dark</div>
+  <div><b>Type</b>Bricolage Grotesque · IBM Plex Sans · JetBrains Mono</div>
+  <div><b>Space &amp; shape</b>4 px grid, 10 px radius, 1 px lines</div>
+  <div><b>Figures</b>Fig. n captions, diverging curvature scale, real 3D</div>
+  <div><b>Voice</b>short sentences, numbers, worked by hand</div>
+ </div>
+ <div class="lbl">THREE REGISTERS</div>
+ <div class="regs">
+  <div class="reg"><span class="tag">CLASSNOTES</span><b>Documents &amp; notebooks</b>write-ups (md · PDF · HTML), Wolfram notebooks, programmer’s manuals, Claude Docs</div>
+  <div class="reg"><span class="tag">LAB</span><b>Interactive tools</b>Laplacian Curvature Lab, Laplacian Programmable Lab, String Diagrams, Tutu Cat, MAXIT, CCN Cloud Kit apps</div>
+  <div class="reg"><span class="tag">STORY</span><b>Narrative work</b>CCN Comic Kit (CARTELS!), Justice Node tutorials, revived literature as conversational-constructs</div>
+ </div>
+ <div class="lbl">ONE SHARED KIT</div>
+ <div class="kit"><b>ccn-brand</b><span class="mono">ccn-tokens.css · ccn-ui.js · ccn-pdf.css · CCNStyle.wl · fonts/ · marks/ · templates/ (README, CONTEXT, STYLE, LICENSE)</span></div>
+</div></section>
+
+<section class="fig" id="f2"><h3>Fig. 2 · Core palette, light and dark</h3>
+<div class="theme" style="background:#f3f5f8;color-scheme:light">
+ <div class="pal" style="color-scheme:light">
+  <div class="sw"><div class="c" style="background:#fa8f2b;color:#17202b">#FA8F2B</div><div class="m"><b>CCN Orange</b>fills, highlights, marks on dark · ink on it 7.07:1</div></div>
+  <div class="sw"><div class="c" style="background:#a35206;color:#fff">#A35206</div><div class="m"><b>Orange Ink</b>text, links, thin lines · 5.57:1 on white</div></div>
+  <div class="sw"><div class="c" style="background:#d4701a;color:#fff">#D4701A</div><div class="m"><b>Orange Mark</b>chart lines and icons · 3.42:1</div></div>
+  <div class="sw"><div class="c" style="background:#fff3e6;color:#a35206">#FFF3E6</div><div class="m"><b>Orange Tint</b>callouts, active state</div></div>
+  <div class="sw"><div class="c" style="background:#2e5cc7;color:#fff">#2E5CC7</div><div class="m"><b>Steel Blue</b>negative values · 6.05:1</div></div>
+  <div class="sw"><div class="c" style="background:#17202b;color:#fff">#17202B</div><div class="m"><b>Ink</b>body text · 16.4:1 on white</div></div>
+  <div class="sw"><div class="c" style="background:#566273;color:#fff">#566273</div><div class="m"><b>Soft</b>secondary text · 5.67:1 on page</div></div>
+  <div class="sw"><div class="c" style="background:#f3f5f8;color:#566273">#F3F5F8 · #FFFFFF</div><div class="m"><b>Page · Panel</b>ground and cards, lines #D9DFE7</div></div>
+ </div></div>
+<div class="theme" style="background:#0e131a;color:#e5eaf0;color-scheme:dark">
+ <div class="pal" style="color-scheme:dark">
+  <div class="sw" style="background:#151c25;border-color:#263241"><div class="c" style="background:#fa8f2b;color:#17202b">#FA8F2B</div><div class="m"><b>CCN Orange</b>8.01:1 on dark page</div></div>
+  <div class="sw" style="background:#151c25;border-color:#263241"><div class="c" style="background:#ffb26b;color:#17202b">#FFB26B</div><div class="m"><b>Orange Ink</b>10.5:1</div></div>
+  <div class="sw" style="background:#151c25;border-color:#263241"><div class="c" style="background:#6f97ff;color:#0e131a">#6F97FF</div><div class="m"><b>Steel Blue</b>6.70:1</div></div>
+  <div class="sw" style="background:#151c25;border-color:#263241"><div class="c" style="background:#0e131a;color:#e5eaf0;border-bottom:1px solid #263241">#0E131A · #151C25</div><div class="m"><b>Page · Panel</b>ink #E5EAF0 15.4:1</div></div>
+ </div></div>
+</section>
+
+<section class="fig" id="f3"><h3>Fig. 3 · Data colour</h3>
+<div class="card" style="margin-bottom:16px"><div style="font:600 14px var(--ccn-f-body);margin-bottom:8px">Diverging scale — every signed quantity (curvature, error sign, gain/loss)</div>
+ <div class="div"></div><div class="ticks"><span>−s · Steel Blue #2E5CC7</span><span>0 · Zero #F4F4F4</span><span>+s · CCN Orange #FA8F2B</span></div>
+ <div class="mono" style="font-size:12.5px;color:var(--ccn-soft);margin-top:8px">Wolfram: Blend[{RGBColor[0.18, 0.36, 0.78], GrayLevel[0.96], RGBColor[0.98, 0.56, 0.17]}, (1 + Clip[k/s, {−1, 1}])/2]</div></div>
+<div class="row">
+ <div class="card" style="flex:1"><div style="font:600 14px var(--ccn-f-body);margin-bottom:6px">Categorical series, light</div>
+  <svg viewBox="0 0 520 150" width="100%"><g stroke-width="3" fill="none">
+   <path d="M10 130 C 120 110, 200 60, 510 20" stroke="#d4701a"/><path d="M10 135 C 120 120, 220 80, 510 45" stroke="#2e5cc7"/>
+   <path d="M10 140 C 140 128, 240 100, 510 70" stroke="#177373"/><path d="M10 142 C 150 134, 260 115, 510 92" stroke="#7a4bb0"/>
+   <path d="M10 144 C 160 138, 280 128, 510 112" stroke="#566273"/><path d="M10 146 C 170 142, 300 138, 510 130" stroke="#8a6d0b"/></g></svg>
+  <div class="mono" style="font-size:12px;color:var(--ccn-soft)">c1 #D4701A · c2 #2E5CC7 · c3 #177373 · c4 #7A4BB0 · c5 #566273 · c6 #8A6D0B</div></div>
+ <div class="card" style="flex:1;background:#151c25;border-color:#263241;color:#e5eaf0"><div style="font:600 14px var(--ccn-f-body);margin-bottom:6px">Categorical series, dark</div>
+  <svg viewBox="0 0 520 150" width="100%"><g stroke-width="3" fill="none">
+   <path d="M10 130 C 120 110, 200 60, 510 20" stroke="#fa8f2b"/><path d="M10 135 C 120 120, 220 80, 510 45" stroke="#6f97ff"/>
+   <path d="M10 140 C 140 128, 240 100, 510 70" stroke="#5fc4c4"/><path d="M10 142 C 150 134, 260 115, 510 92" stroke="#c9a6ff"/>
+   <path d="M10 144 C 160 138, 280 128, 510 112" stroke="#9aa7b6"/><path d="M10 146 C 170 142, 300 138, 510 130" stroke="#e8c35a"/></g></svg>
+  <div class="mono" style="font-size:12px;color:#9aa7b6">c1 #FA8F2B · c2 #6F97FF · c3 #5FC4C4 · c4 #C9A6FF · c5 #9AA7B6 · c6 #E8C35A</div></div>
+</div></section>
+
+<section class="fig" id="f4"><h3>Fig. 4 · Type</h3>
+<div class="card spec" style="display:grid;gap:14px">
+ <div class="meta">Display · Bricolage Grotesque 700</div>
+ <div class="big">Laplacian <span style="color:var(--ccn-orange-ink)">Curvature</span> Lab</div>
+ <div class="h2">Comparing two ball averages measures Ricci curvature</div>
+ <div class="meta">Body · IBM Plex Sans 400 / 500 / 600</div>
+ <div class="body">Positive curvature brings averages together. On a sphere, a small ball slid along a geodesic lands with every point moving less than the centres, so κ &gt; 0. <i>Italic for terms.</i> <b>Semibold for emphasis.</b></div>
+ <div class="meta">Code &amp; numbers · JetBrains Mono 400 / 600</div>
+ <div class="code">κLLY[HypercubeGraph[3], {1, 2}]   (* 2/3 *)<br>0.12496  −0.12504  1.0033400</div>
+</div></section>
+
+<section class="fig" id="f5"><h3>Fig. 5 · Name and marks</h3>
+<div class="row" style="align-items:center;gap:28px">
+ <div class="card" style="display:flex;gap:18px;align-items:center"><div class="mark">C</div><div class="mark s">C</div><div><b style="font:700 18px var(--ccn-f-display)">CCN monogram</b><div class="cr">Bricolage “C”, ink on CCN Orange, 22% corner radius</div></div></div>
+ <div class="card" style="display:grid;gap:10px">
+  <div class="wm">Laplacian <b>Curvature</b> Lab</div>
+  <div class="wm">Laplacian <b>Programmable</b> Lab</div>
+  <div class="wm">CCN <b>Cloud</b> Pass</div>
+  <div class="cr">Product wordmark: Bricolage 700, one distinguishing word in Orange Ink</div></div>
+ <div class="card" style="max-width:360px"><div style="font:600 14px var(--ccn-f-body)">Required lines</div>
+  <div class="cr" style="margin-top:6px">© Computational Classnotes · CC BY-NC-SA 4.0</div>
+  <div class="cr" style="margin-top:6px">Credits: Principal Investigator Lucval · Oversight Directorate Zil · Editors Dara, Lucia, Zil · Software FreeFormer · Agent Kirari-chan (キラリちゃん)</div>
+  <div class="cr" style="margin-top:6px">Justice Node seal 正義節点 · CCN 制作</div></div>
+</div></section>
+
+<section class="fig" id="f6"><h3>Fig. 6 · Interface components</h3>
+<div class="card" style="padding:0;overflow:hidden">
+ <div class="hdr"><div class="wm">Laplacian <b>Curvature</b> Lab</div><span class="cr">Connected · Wolfram 14.3</span><span style="margin-left:auto;font-size:14px;color:var(--ccn-orange-ink);text-decoration:underline">← Laplacian Programmable Lab</span></div>
+ <div class="tabs"><span class="b">‹</span><span class="t">Meshes</span><span class="t">Graph curvatures</span><span class="t">Curve shortening</span><span class="t on">Ollivier on manifolds</span><span class="t">All the instances</span><span class="t">Self-check</span><span class="b" style="margin-left:auto">›</span></div>
+ <div class="slider"><i></i></div>
+ <div style="padding:16px;display:grid;grid-template-columns:1.2fr 1fr;gap:16px">
+  <div style="display:grid;gap:12px">
+   <div class="readmore"><b>Ollivier Curvature</b><a>Read the write-up</a><a>PDF</a><a>Open the notebook (.nb)</a></div>
+   <div class="cell"><div class="l">In[1]:=</div><pre>κLLY[HypercubeGraph[3], {1, 2}]</pre><div class="l">Out[1]=</div><pre class="o">2/3</pre></div>
+   <ol class="hand" style="margin:0"><li>Use κ<sub>LLY</sub> = 2κ<sub>1/2</sub> on an edge of Q₃.</li><li>Move ⅓ from x to y, then ⅙ + ⅙ a distance 1: W₁ = 2/3.</li><li>κ<sub>LLY</sub> = 2/3 — <i style="color:var(--ccn-orange-ink)">Out[1]</i>.</li></ol>
+  </div>
+  <div style="display:grid;gap:12px;align-content:start">
+   <div class="card"><b style="font:700 17px var(--ccn-f-display)">Readings</b><dl class="read" style="margin-top:8px"><dt>κ/ε² at ε = 0.05</dt><dd>0.12496</dd><dt>K/8</dt><dd>0.125</dd></dl></div>
+   <div class="check">Notebook §8: κ/ε² = 0.12496 (sphere), 0 (plane), −0.12504 (hyperbolic plane).</div>
+   <div class="row" style="gap:8px;align-items:center"><span class="key">CCN-KEY ••••••••</span><button class="btn p">Connect</button><button class="btn">Copy</button></div>
+  </div>
+ </div>
+</div></section>
+
+<section class="fig" id="f7"><h3>Fig. 7 · 2D chart standard</h3>
+<div class="card" style="max-width:760px">
+<svg viewBox="0 0 700 330" width="100%" font-family="IBM Plex Sans, sans-serif">
+ <g stroke="#d9dfe7" stroke-dasharray="3 4">
+  <line x1="70" y1="40" x2="680" y2="40"/><line x1="70" y1="110" x2="680" y2="110"/><line x1="70" y1="180" x2="680" y2="180"/><line x1="70" y1="250" x2="680" y2="250"/>
+  <line x1="223" y1="20" x2="223" y2="280"/><line x1="376" y1="20" x2="376" y2="280"/><line x1="529" y1="20" x2="529" y2="280"/></g>
+ <g stroke="#566273" stroke-width="1"><line x1="70" y1="280" x2="680" y2="280"/><line x1="70" y1="20" x2="70" y2="280"/></g>
+ <g fill="#566273" font-size="12" font-family="JetBrains Mono, monospace"><text x="58" y="44" text-anchor="end">1</text><text x="58" y="114" text-anchor="end">1e−2</text><text x="58" y="184" text-anchor="end">1e−4</text><text x="58" y="254" text-anchor="end">1e−6</text>
+  <text x="70" y="298" text-anchor="middle">0.01</text><text x="223" y="298" text-anchor="middle">0.03</text><text x="376" y="298" text-anchor="middle">0.1</text><text x="529" y="298" text-anchor="middle">0.3</text><text x="680" y="298" text-anchor="middle">1</text></g>
+ <text x="375" y="322" fill="#566273" font-size="13" text-anchor="middle">radius r</text>
+ <path d="M70 262 L680 52" stroke="#d4701a" stroke-width="2.5" fill="none"/>
+ <path d="M70 274 L680 70" stroke="#2e5cc7" stroke-width="2.5" fill="none"/>
+ <path d="M70 250 L680 30" stroke="#566273" stroke-width="1.5" stroke-dasharray="6 5" fill="none"/>
+ <g fill="#d4701a"><circle cx="223" cy="209" r="4"/><circle cx="376" cy="157" r="4"/><circle cx="529" cy="104" r="4"/></g>
+ <g fill="#2e5cc7"><circle cx="223" cy="223" r="4"/><circle cx="376" cy="172" r="4"/><circle cx="529" cy="121" r="4"/></g>
+ <g font-size="13" fill="#17202b"><rect x="90" y="30" width="12" height="3" fill="#d4701a"/><text x="108" y="35">surface error</text><rect x="210" y="30" width="12" height="3" fill="#2e5cc7"/><text x="228" y="35">ball error</text><rect x="314" y="30" width="12" height="2" fill="#566273"/><text x="332" y="35">slope 2 guide</text></g>
+</svg>
+<div style="font-size:14px;margin-top:6px"><b style="color:var(--ccn-orange-ink)">Fig. n.</b> Caption states what to see: both errors fall like r², parallel to the dashed guide.</div>
+</div></section>
+
+<section class="fig" id="f8"><h3>Fig. 8 · 3D standard</h3>
+<div class="card" style="display:grid;grid-template-columns:440px 1fr;gap:20px;align-items:center">
+ <canvas data-fig3d="ollivier-sphere" style="width:440px;height:380px"></canvas>
+ <div style="font-size:15px;line-height:1.6">
+  <b style="font:700 18px var(--ccn-f-display)">Real 3D, always</b>
+  <ul style="margin:8px 0 0;padding-left:18px">
+   <li>Drag or swipe to rotate; the initial view faces the subject.</li>
+   <li>Neutral grey body; data in the diverging scale; ink outlines.</li>
+   <li>Back faces fade to 18%; no drop shadows or textures.</li>
+   <li>Print gets a static fallback picture with the same Fig. number.</li>
+   <li>Wolfram: Graphics3D with Lighting → "Neutral", Boxed → False, SphericalRegion → True.</li>
+  </ul></div>
+</div></section>
+
+<script src="../tools/series/fig3d.js"></script>
+<script>
+const f = new URLSearchParams(location.search).get('fig');
+if (f) { document.body.classList.add('one'); document.getElementById('f' + f).classList.add('on'); }
+</script>
+</body>
+</html>
