@@ -117,8 +117,8 @@ dumbbell = Graph[UndirectedEdge @@@ Join[List @@@ EdgeList[CompleteGraph[5]], (L
    Graphics[{{Black, Thickness[0.012], Line[{pos[x], pos[y]}]},
      Table[With[{a = m[[1, 1]], b = m[[1, 2]], w = m[[2]]},
        {RGBColor[0.98, 0.56, 0.17], Thickness[0.006], Arrowheads[0.06],
-        Arrow[{pos[a], pos[b]}, 0.08], Black, Text[Style[w, 10, Background -> White], (pos[a] + pos[b])/2]}], {m, moves}]}],
-   PlotLabel -> Style[Row[{label, ":  W₁ = ", W1[G, μ[G, x, 0], μ[G, y, 0]], ",  κ₀ = ", κ[G, {x, y}, 0]}], 10]]];
+        Arrow[{pos[a], pos[b]}, 0.08], Black, Text[Style[w, 10, Background -> White], pos[a] + 0.3 (pos[b] - pos[a])]}], {m, moves}]}],
+   PlotLabel -> Style[Row[{label, ":  W₁ = ", W1[G, μ[G, x, 0], μ[G, y, 0]], ",  κ₀ = ", κ[G, {x, y}, 0]}], 10], ImagePadding -> {{10, 10}, {10, 34}}]];
 Row[{planPicture[CompleteGraph[5], {1, 2}, "K₅"], planPicture[CycleGraph[6], {1, 2}, "C₆"], planPicture[tree, {2, 4}, "binary tree"]}, "  "]"""),
 ("Figure", "Optimal transport plans for one edge of K₅, C₆ and the binary tree; the edge is black, moved mass is orange."),
 ("Text", "What to see: in K₅ one arrow of mass ¼; in C₆ two arrows of mass ½; in the tree some mass has to cross the edge and travel 3."),
@@ -156,7 +156,7 @@ Grid[Prepend[{#[[1]], #[[2]], Union[Select[Transpose[{as, #[[3]]}], Function[p, 
 """edgePlot[G_, label_] := With[{ks = κLLY[G, List @@ #] & /@ EdgeList[G]},
   Graph[G, EdgeStyle -> Thread[EdgeList[G] -> (Directive[κColour[#, 1.25], Thickness[0.012]] & /@ ks)],
    VertexSize -> 0.15, VertexStyle -> GrayLevel[0.35], ImageSize -> 175,
-   PlotLabel -> Style[Row[{label, "  min ", Min[ks]}], 9]]];
+   PlotLabel -> Style[Row[{label, "  min ", Min[ks]}], 9], ImagePadding -> {{6, 6}, {6, 30}}]];
 fam = {{"tree", tree}, {"C₆", CycleGraph[6]}, {"Q₃", HypercubeGraph[3]}, {"K₅", CompleteGraph[5]}, {"Petersen", PetersenGraph[]}, {"grid 4×4", GridGraph[{4, 4}]}, {"dumbbell", dumbbell}};
 Legended[Grid[Partition[edgePlot[#[[2]], #[[1]]] & /@ fam, 4, 4, {1, 1}, ""]], κLegend[1.25, Subscript["κ", "LLY"]]]"""),
 ("Figure", "Seven graphs with every edge coloured by κ_LLY."),

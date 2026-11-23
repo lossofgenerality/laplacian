@@ -149,8 +149,8 @@ planPicture[G_, {x_, y_}, label_] := Module[{pl = plan[G, μ[G, x, 0], μ[G, y, 
    Graphics[{{Black, Thickness[0.012], Line[{pos[x], pos[y]}]},
      Table[With[{a = m[[1, 1]], b = m[[1, 2]], w = m[[2]]},
        {RGBColor[0.98, 0.56, 0.17], Thickness[0.006], Arrowheads[0.06],
-        Arrow[{pos[a], pos[b]}, 0.08], Black, Text[Style[w, 10, Background -> White], (pos[a] + pos[b])/2]}], {m, moves}]}],
-   PlotLabel -> Style[Row[{label, ":  W₁ = ", W1[G, μ[G, x, 0], μ[G, y, 0]], ",  κ₀ = ", κ[G, {x, y}, 0]}], 10]]];
+        Arrow[{pos[a], pos[b]}, 0.08], Black, Text[Style[w, 10, Background -> White], pos[a] + 0.3 (pos[b] - pos[a])]}], {m, moves}]}],
+   PlotLabel -> Style[Row[{label, ":  W₁ = ", W1[G, μ[G, x, 0], μ[G, y, 0]], ",  κ₀ = ", κ[G, {x, y}, 0]}], 10], ImagePadding -> {{10, 10}, {10, 34}}]];
 Row[{planPicture[CompleteGraph[5], {1, 2}, "K₅"], planPicture[CycleGraph[6], {1, 2}, "C₆"], planPicture[tree, {2, 4}, "binary tree"]}, "  "]
 
 (* ::Text:: *)
@@ -200,7 +200,7 @@ ListLinePlot[Table[Append[Transpose[{as, t[[3]]}], {1, 0}], {t, idle}], PlotMark
 edgePlot[G_, label_] := With[{ks = κLLY[G, List @@ #] & /@ EdgeList[G]},
   Graph[G, EdgeStyle -> Thread[EdgeList[G] -> (Directive[κColour[#, 1.25], Thickness[0.012]] & /@ ks)],
    VertexSize -> 0.15, VertexStyle -> GrayLevel[0.35], ImageSize -> 175,
-   PlotLabel -> Style[Row[{label, "  min ", Min[ks]}], 9]]];
+   PlotLabel -> Style[Row[{label, "  min ", Min[ks]}], 9], ImagePadding -> {{6, 6}, {6, 30}}]];
 fam = {{"tree", tree}, {"C₆", CycleGraph[6]}, {"Q₃", HypercubeGraph[3]}, {"K₅", CompleteGraph[5]}, {"Petersen", PetersenGraph[]}, {"grid 4×4", GridGraph[{4, 4}]}, {"dumbbell", dumbbell}};
 Legended[Grid[Partition[edgePlot[#[[2]], #[[1]]] & /@ fam, 4, 4, {1, 1}, ""]], κLegend[1.25, Subscript["κ", "LLY"]]]
 
