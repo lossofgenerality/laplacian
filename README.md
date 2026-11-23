@@ -2,6 +2,8 @@
 
 **Live lab:** https://lossofgenerality.github.io/laplacian/ (GitHub Pages; opens `lab/Laplacian_Curvature_Lab.html`)
 
+**Programmer’s manual:** https://lossofgenerality.github.io/laplacian/manual.html (one page per CCN Wolfram function, with verified examples)
+
 Every standard notion of curvature, on smooth surfaces and manifolds, on triangle meshes and on graphs, can be read off the Laplacian. This repository collects those instances, with a computed check for each one.
 
 It is a companion to **Laplacian Lab** and the Computational Classnotes notebook *Where did Laplacian come from? Laplacian things… Computational conception of Laplacian Operator (fully coded) β1.0* (DOI 10.13140/RG.2.2.33742.01600).
@@ -21,6 +23,8 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | `tools/cells.py`, `tools/additions.py`, `tools/build.py` | Notebook source and builder: edit `cells.py`, then `python3 tools/build.py notebooks` |
 | `lab/laplacian-curvature-lab.html` | **Laplacian Curvature Lab**: single-page interactive lab (14 hash-routed benches: surfaces coloured by K and H, Ricci flow, curved mean values, heat trace, Bochner and comparison, torus mesh, seven graph curvatures, curve shortening, Ollivier on manifolds, reference sheet, self-check, Ask the TA, Wolfram cells). Built from `lab/template.html` + `lab/core.js` + `lab/app.js` by `python3 lab/build_lab.py`; `node lab/test-core.js` checks the core against the notebook values |
 | `lab/Laplacian_Curvature_Lab.html` | **Standalone** Laplacian Curvature Lab: open in any browser. Set `WOLFRAM_URL` (your LaplacianLabKernel URL) in the settings block at the top, then type your CCN-KEY in the Wolfram Language section and press Connect. Wolfram cells and Ask the TA run through CCN's Wolfram Cloud kernel; no key is stored in the file |
+| `manual.html` | **Programmer’s manual**: standalone reference for the CCN Wolfram code (65 function pages, 9 guides, index, search; every example evaluated on the kernel) |
+| `tools/manual/` | Manual sources: `spec_curvature.py` (content), `build_manual.py` (renderer), `gen.py` (kernel verification scripts), `outputs_*.json`, `img/`; also builds the Laplacian Lab manual (`make_lab.py`) |
 | `STYLE.md` | House style for Computational Classnotes math documents |
 | `CONTEXT.md` | Working context for the Laplacian Lab project: deliverables, decisions, lessons, open issues |
 

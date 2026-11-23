@@ -109,6 +109,18 @@ A sibling of Laplacian Lab for the curvature material, same tokens (cool paper/i
 - The standalone page now points `WOLFRAM_URL` at **TUTUKernel** (`https://www.wolframcloud.com/obj/ccn2/TUTUKernel`, same CCN Cloud protocol), with TUTUKernel's CCN-KEY typed on the page. `build_lab.py` reads `CCN_WOLFRAM_URL` (default TUTUKernel; set it to "" for an empty-settings build). Hosted on GitHub Pages at https://lossofgenerality.github.io/laplacian/ (root `index.html` redirects to the lab; `.nojekyll`); Pages must be enabled in repo Settings → Pages (main, / root) — the session's GitHub access cannot enable it.
 - A new chat key can go in a new private object or replace `LaplacianLab/apikey` (which the deployed kernel reads; no redeploy needed).
 
+### 2c. Programmer’s manuals (23 Nov 2026)
+
+Two standalone single-page HTML manuals modelled on the structure of a documentation center (CCN branding, not Wolfram’s): one reference page per CCN Wolfram function (our code only, not built-ins), guide pages, an alphabetical index and a search box (`/` focuses it); hash routes `#/ref/<slug>`, `#/guide/<id>`, `#/index`.
+
+- **Curvature manual:** `manual.html` in this repo → https://lossofgenerality.github.io/laplacian/manual.html. 65 pages (59 notebook functions + 6 Lab snippet functions), 9 guides, 97 examples.
+- **Laplacian Lab manual:** `manual.html` in lossofgenerality/Laplacian-lab → https://lossofgenerality.github.io/Laplacian-lab/manual.html. 18 pages (Δ-notation prelude: 𝒶𝓇ℊ𝓈, 𝒹, 𝒞enter, ℋelp, lapToExpr, lapN, Δ, 𝜟, CircleTimes; snippets sphere, ball, g; laplacianSteps, laplacianStepsColumn; LaplacianLabKernel and its helpers b64s, fromB64, chatCall), 3 guides, 50 examples.
+- Each page: kind tag, “Defined in”, usage table, Details and Options, Examples (Basic Examples / Scope / Options / Properties & Relations / Possible Issues) as In[n]:= / Out[n]= cells with Copy, Definition (the CCN source), See Also, Related Guides, History.
+- **Every Out was produced on the Wolfram kernel**, not typed: `tools/manual/gen.py` builds a self-contained verification script per batch (only the definitions each example needs, examples wrapped in Block for their own variables); the script is sent zlib+base64-packed (`ToExpression[…RawUncompress…]`); results are saved in `tools/manual/outputs_*.json`, pictures in `tools/manual/img/`. Builders: `python3 tools/manual/make_curvature.py`, `python3 tools/manual/make_lab.py` (writes `../laplacian-lab/manual.html`); content lives in `spec_curvature.py` and `spec_lab.py`; renderer `build_manual.py`.
+- The LaplacianLabKernel page’s examples call `kernelAPI`, a local undeployed copy of the same APIFunction with the demo secret `demo-secret` (no chat key, so `chat_ready` is False).
+- Fixes found while verifying: the notebook’s point-cloud cell now uses `tPC`/`sPC` (it reused `t` and `s`); the §10 Weitzenböck cell’s `d1` is now `dS2` (it clashed with the §4 pole value `d1`). The Petersen example uses the edge {1, 3}: Wolfram’s PetersenGraph has no edge {1, 2}.
+- **User’s own next task (23 Nov):** cloud libraries for these functions with CloudPut/CloudGet — the user will do this mostly on their own; the Definition sections are the source to package.
+
 ---
 
 ## 3. Page structure (all versions)
@@ -230,6 +242,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 
 ## 9. Suggested next steps
 
+- Cloud libraries (CloudPut/CloudGet) for the manual’s functions — the user is doing this.
 - Fix open issue 1 in both standalone files and both artifacts (ask before touching the original artifact).
 - Deploy the new LaplacianLabKernel and run the three `URLExecute` checks.
 - Bring the tutorial in line with version 2 (CCN-KEY field, Connect button, chat through the kernel).

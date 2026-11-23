@@ -223,10 +223,10 @@ Dataset@Map[Function[G, With[{s = spec[G], kL = Min[κLLY[G, #] & /@ edges[G]], 
 ("Text", "Belkin–Niyogi: on points sampled from a manifold, the heat-kernel graph Laplacian (weighted mean − value)/t converges to Δ. "
          "Check on 20 000 points of S² with f = z, for which Δf = −2f: the fitted ratio should be close to 1."),
 ("Input",
-"""pts = SpherePoints[20000]; t = 0.002; nf = Nearest[pts];
-Lpc[p_] := Module[{q = nf[p, {All, 6 Sqrt[t]}], w}, w = Exp[-SquaredEuclideanDistance[p, #]/(4 t)] & /@ q;
-   (w . q[[All, 3]]/Total[w] - p[[3]])/t];
-s = pts[[;; ;; 200]]; lhs = Lpc /@ s; rhs = -2 s[[All, 3]];
+"""pts = SpherePoints[20000]; tPC = 0.002; nf = Nearest[pts];
+Lpc[p_] := Module[{q = nf[p, {All, 6 Sqrt[tPC]}], w}, w = Exp[-SquaredEuclideanDistance[p, #]/(4 tPC)] & /@ q;
+   (w . q[[All, 3]]/Total[w] - p[[3]])/tPC];
+sPC = pts[[;; ;; 200]]; lhs = Lpc /@ sPC; rhs = -2 sPC[[All, 3]];
 <|"fitted ratio" -> (lhs . rhs)/(rhs . rhs), "correlation" -> Correlation[lhs, rhs]|>"""),
 
 # ---------------------------------------------------------------- 10

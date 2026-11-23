@@ -264,10 +264,10 @@ ADD[10] = [
   TT = Table[D[T[[i, j]], 𝓍[[k]]] - Sum[Γ[[m, k, i]] T[[m, j]] + Γ[[m, k, j]] T[[i, m]], {m, n}], {i, n}, {j, n}, {k, n}];
   Table[-Sum[gi[[j, k]] TT[[i, j, k]], {j, n}, {k, n}], {i, n}]];
 ΔS2 = laplaceBeltrami[gS2, 𝓍S2];
-d1[h_] := {D[h, θ], D[h, φ]};                       (* dh as a covector *)
+dS2[h_] := {D[h, θ], D[h, φ]};                       (* dh as a covector *)
 star1[{a_, b_}] := {-b/Sin[θ], a Sin[θ]};           (* Hodge star on 1-forms of S² *)
-ω1 = d1[𝒻[θ, φ]] + star1[d1[𝒽[θ, φ]]];
-ΔHodge = d1[-ΔS2[𝒻[θ, φ]]] + star1[d1[-ΔS2[𝒽[θ, φ]]]];
+ω1 = dS2[𝒻[θ, φ]] + star1[dS2[𝒽[θ, φ]]];
+ΔHodge = dS2[-ΔS2[𝒻[θ, φ]]] + star1[dS2[-ΔS2[𝒽[θ, φ]]]];
 Simplify[ΔHodge - (roughLaplacian1[gS2, 𝓍S2][ω1] + 1 ω1)]   (* K = 1 on the unit sphere *)"""),
 
 ("Subsection", "10.2 Ricci flow ∂g/∂t = −2Ric"),
