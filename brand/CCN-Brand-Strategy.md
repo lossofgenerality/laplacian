@@ -182,7 +182,7 @@ In Wolfram, `ccnColour[k, s]` is `Blend[{RGBColor[0.18, 0.36, 0.78], GrayLevel[0
 - **Cards.** A Panel background, a 1 px Line border, 10 px radius and 16–18 px padding. A **check callout** has an Orange left rule on Orange Tint, for verified numbers.
 - **Code cells.** In[n]:= / Out[n]= labels in italic serif Orange Ink. The input has an Orange left rule, and the output sits on Panel. Every cell has a Copy button.
 - **Buttons.** The primary button is ink on CCN Orange; the secondary is ink on Panel with a Line border. There is one primary per view.
-- **Keys and secrets.** A single masked CCN-KEY field with Connect and an optional “Remember on this device”. Keys are never stored in files.
+- **Keys and secrets.** A single masked CCN-KEY field with Connect and an optional “Remember on this device”. The field ignores spaces and quotation marks (straight or curly) around a pasted key, so a key copied from Wolfram code with its quotes still works. Keys are never stored in files.
 - **Worked by Hand.** Numbered steps on a warm tint with an Orange left rule, ending at a highlighted Out[n]. Every manual page and write-up has one.
 
 ## 10. Experience principles
