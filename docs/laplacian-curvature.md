@@ -14,7 +14,7 @@ Curvature is what the Laplacian sees beyond its flat value. On smooth surfaces a
 
 ![Fig. 1](relationship-map.png)
 
-**Fig. 1.** Each smooth Laplacian–curvature identity has a discrete twin. The highlighted row is the thread from Laplacian Lab Section 1: the mean-value origin of Δ is also where curvature first appears, both on manifolds and on graphs.
+**Fig. 1.** Each smooth Laplacian–curvature identity has a discrete twin. The highlighted row is the thread from Laplacian Programmable Lab, Section 1 (Mean-value origin): the mean-value origin of Δ is also where curvature first appears, both on manifolds and on graphs.
 
 ## 1. Gauss curvature is a Laplacian
 
@@ -36,9 +36,9 @@ So a surface is minimal exactly when its coordinate functions are harmonic (Taka
 
 **Checked (notebook §3):** sphere of radius 3 gives H = 1/3; torus (R = 2, r = 1) gives H = 2cos²(v/2)/(2 + cos v); catenoid gives H = 0.
 
-## 3. Mean values and volumes: where Laplacian Lab Section 1 meets curvature
+## 3. Mean values and volumes: where the mean-value origin of Δ meets curvature
 
-Laplacian Lab Section 1 obtains Δ from the flat sphere mean, $M_{r}$ f = f + r²Δf/(2n) + …. On a curved space the same expansion carries curvature from order r⁴ on (Gray–Willmore 1982). On a surface of constant curvature K the geodesic-circle mean is:
+[Laplacian Programmable Lab, Section 1: Mean-value origin](https://lossofgenerality.github.io/Laplacian-lab/#origin) obtains Δ from the flat sphere mean, $M_{r}$ f = f + r²Δf/(2n) + …. On a curved space the same expansion carries curvature from order r⁴ on (Gray–Willmore 1982). On a surface of constant curvature K the geodesic-circle mean is:
 
 $$M_r f = f + \frac{r^2}{4}\Delta f + r^4\Big(\frac{\Delta^2 f}{64} + \frac{K\,\Delta f}{96}\Big) + r^6\Big(\frac{\Delta^3 f}{2304} + \frac{K\,\Delta^2 f}{1152} + \frac{K^2\Delta f}{1440}\Big) + O(r^8)$$
 
