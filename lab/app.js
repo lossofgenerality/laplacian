@@ -594,7 +594,7 @@ for (const [id, items] of Object.entries(READ)) {
   const sec = document.getElementById(id); if (!sec) continue;
   const box = document.createElement("div"); box.className = "readmore";
   box.innerHTML = items.map(([doc, nb, title]) => `<span class="rm-title">${title}</span>` +
-    `<a href="${SERIES_REPO}docs/series/${doc}.md" target="_blank" rel="noopener">Read the write-up</a>` +
+    `<a href="${SERIES_BASE}docs/series/${doc}.html" target="_blank" rel="noopener">Read the write-up</a>` +
     `<a href="${SERIES_BASE}docs/series/${doc}.pdf" target="_blank" rel="noopener">PDF</a>` +
     `<a href="${SERIES_BASE}notebooks/series/${nb}.nb" download>Open the notebook (.nb)</a>`).join("<br>");
   const lede = sec.querySelector(".lede"); (lede || sec.querySelector("h2")).after(box);

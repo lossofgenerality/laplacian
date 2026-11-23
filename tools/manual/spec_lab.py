@@ -1,7 +1,7 @@
 # Reference content for the Laplacian Lab (version 2) programmer's manual.
-TITLE = "Laplacian Lab"
-LABNAME = "Laplacian Lab"
-SUBTITLE = "Wolfram Language reference for the CCN code behind Laplacian Lab: the Δ notation, the mean-value snippets, the staged derivation laplacianSteps and the LaplacianLabKernel cloud API."
+TITLE = "Laplacian Programmable Lab"
+LABNAME = "Laplacian Programmable Lab"
+SUBTITLE = "Wolfram Language reference for the CCN code behind Laplacian Programmable Lab: the Δ notation, the mean-value snippets, the staged derivation laplacianSteps and the LaplacianLabKernel cloud API."
 INTRO = "The Δ notation is prepended to every Wolfram cell of the Lab page; the page also rewrites Δ²f, Δ(3)f, Δ^n f and ∇²f into Δ[n]@f before sending, so the examples below use the forms the kernel receives."
 REPO = "https://github.com/lossofgenerality/Laplacian-lab"
 SITE = "https://lossofgenerality.github.io/Laplacian-lab/"

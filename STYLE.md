@@ -60,3 +60,10 @@ Writing: short plain sentences (under 25 words), paragraphs of three sentences o
 
 - Commits authored and committed as Noor Hoshino <noor@compclassnotes.com>, with no Co-Authored-By or Claude-Session lines.
 - `CONTEXT.md` (project state) and `STYLE.md` (this file) live at the repo root.
+
+## 6. Rules added 23 November 2026 (from the user)
+
+- **Worked by hand, everywhere.** Every programmer’s-manual page has a **Worked by Hand** section: a short derivation, done as one would on paper, of at least one example on that page, ending at the same value as its Out[n]. Every write-up section on a definition also works its examples by hand before computing them (as in `docs/series/07-ollivier.md` §4). The user called this section “excellent” and “most beautiful”; never omit it.
+- **Index every figure.** Every figure carries a number and a caption: **Fig. n.** in write-ups (md, PDF, HTML) and in notebooks (a bold “Fig. n.” caption cell after the figure; series notebooks use explicit `("Figure", caption)` cells). Text refers to figures by number.
+- **No A_B pseudo-subscripts.** Never write κ_LLY, K_BE, μ_x and so on as plain text. Use real subscripts: LaTeX `$\kappa_{\mathrm{LLY}}$` in markdown, `<sub>` in HTML, inline `SubscriptBox` cells in notebook Text cells (the builders convert X_Y and X_{Y} automatically), and `Subscript["κ", "LLY"]` in Wolfram code (plot labels, legends, table headers). Underscores are Wolfram pattern syntax and must not appear in names.
+- **HTML counterpart with real 3D.** Each write-up also has an HTML version; every 3D figure in it is genuinely 3D (rotatable), not a static picture.

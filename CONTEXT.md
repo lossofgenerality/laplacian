@@ -47,7 +47,7 @@ The page has three layers:
 | `laplacianSteps.wl` | Staged, self-checking derivation of Δ from the sphere or ball mean. |
 | `Laplacian_Lab_Tutorial.md` / `.pdf` | User tutorial for the standalone .html (16 pages, A4). Reworded for CCN Cloud; contains no references to Claude, Anthropic, or the key variable names. |
 
-**Laplacian Lab version 2 is hosted on GitHub Pages** at https://lossofgenerality.github.io/Laplacian-lab/ (repo `lossofgenerality/Laplacian-lab`, page title "Laplacian Lab_version2"); the Curvature Lab is at https://lossofgenerality.github.io/laplacian/. The two are cross-linked (23 Nov): the old Lab has a "Companion lab → Laplacian Curvature Lab" sidebar entry and footer line; the Curvature Lab has "← Laplacian Lab" in its header and a footer line. Each stays its own single-page site.
+**Laplacian Lab version 2 is hosted on GitHub Pages** at https://lossofgenerality.github.io/Laplacian-lab/ (repo `lossofgenerality/Laplacian-lab`, page title "Laplacian Programmable Lab", formerly "Laplacian Lab_version2"); the Curvature Lab is at https://lossofgenerality.github.io/laplacian/. The two are cross-linked (23 Nov): the old Lab has a "Companion lab → Laplacian Curvature Lab" sidebar entry and footer line; the Curvature Lab has "← Laplacian Lab" in its header and a footer line. Each stays its own single-page site.
 
 The Lab files above were made in a temporary session scratchpad; the user holds the delivered copies. They are **not** in the GitHub repo yet.
 
@@ -121,6 +121,13 @@ Two standalone single-page HTML manuals modelled on the structure of a documenta
 - Fixes found while verifying: the notebook’s point-cloud cell now uses `tPC`/`sPC` (it reused `t` and `s`); the §10 Weitzenböck cell’s `d1` is now `dS2` (it clashed with the §4 pole value `d1`). The Petersen example uses the edge {1, 3}: Wolfram’s PetersenGraph has no edge {1, 2}.
 - **User’s own next task (23 Nov):** cloud libraries for these functions with CloudPut/CloudGet — the user will do this mostly on their own; the Definition sections are the source to package.
 
+### 2d. Curvature from the Laplacian — worked series (23 Nov 2026)
+
+One worked notebook and one write-up per definition, plus a master index notebook (to come). Model: **Ollivier** — `notebooks/series/07-Ollivier.nb/.wl` (source `tools/series/ollivier.py`, built by `tools/series/build_series.py ollivier`), `docs/series/07-ollivier.md/.pdf/.html` (HTML by `tools/series/build_html.py`, rotatable Fig. 1 from `tools/series/fig3d.js`). Sections: idea, definition with duality, worked by hand (Kₙ, Cₙ, tree), laziness and Lin–Lu–Yau, gallery, consequences (local-to-global, diameter, spectral gap), ε-balls on surfaces (Kε²/8 − K²ε⁴/64 + 11K³ε⁶/46080; S³ gives ε²/5), exercises, verified table, references opened. Lab benches #ollivier and #graphs link to it. The user approved the model (“Worked by hand is excellent”); remaining 13 definitions follow the same structure.
+- Builders now turn X_Y in notebook Text cells into inline SubscriptBox cells, number figures (Fig. n), and write `.wl` comments with linear-syntax subscripts; `tools/series/mdsub.py` converts prose subscripts in markdown to LaTeX.
+- Both programmer’s manuals have a **Worked by Hand** section on every page (`tools/manual/hand_curvature.py`, `hand_lab.py`; the builder refuses a page without one).
+- Laplacian Lab version 2 is now titled **Laplacian Programmable Lab** (header in Bricolage Grotesque with “Programmable” in CCN orange, matching “Laplacian Curvature Lab”).
+
 ---
 
 ## 3. Page structure (all versions)
@@ -192,6 +199,8 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 ---
 
 ## 6. Conventions and user preferences
+
+- **Standing rules (23 Nov, see STYLE.md §6):** a *Worked by Hand* section on every manual page and in every write-up; every figure numbered **Fig. n.** with a caption; no A_B pseudo-subscripts anywhere (real subscripts in md/HTML/notebooks, `Subscript[]` in code); each write-up has an HTML counterpart whose 3D figures are truly 3D.
 
 - Every deliverable carries "© Computational Classnotes · CC BY-NC-SA 4.0" (dated where requested).
 - The user's own copy of the notebook is credited in the page footer with its DOI.

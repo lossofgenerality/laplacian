@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>The Laplacian and Curvature — Instances and Relationships — Computational Classnotes</title><style>@page { size: A4; margin: 20mm 18mm 22mm 18mm;
+  @bottom-center { content: "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"; } }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1d2430; }
+h1 { font-size: 20pt; margin: 0 0 4pt; color: #11161f; }
+h2 { font-size: 13.5pt; margin: 18pt 0 6pt; padding-bottom: 3pt; border-bottom: 2px solid rgb(250,143,43); break-after: avoid; }
+p, li { orphans: 3; widows: 3; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 9pt; }
+table { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin: 8pt 0; break-inside: auto; }
+th, td { border: 1px solid #c9d0db; padding: 3pt 5pt; vertical-align: top; text-align: left; }
+th { background: #eef1f6; }
+tr { break-inside: avoid; }
+img { max-width: 100%; max-height: 105mm; display: block; margin: 4pt auto; }
+figure { margin: 6pt 0; }
+figcaption { display: none; }
+math { font-family: "Latin Modern Math", "STIX Two Math", serif; }
+math[display="block"] { display: block; margin: 8pt 0; font-size: 11pt; }
+a { color: #1f5fbf; text-decoration: none; }
+hr { border: 0; border-top: 1px solid #c9d0db; margin: 16pt 0 8pt; }
+
+body{max-width:860px;margin:0 auto;padding:28px 22px 60px;background:#fff}
+img{max-width:100%;height:auto}
+canvas[data-fig3d]{width:100%;max-width:520px;height:440px;display:block;margin:6px auto;cursor:grab;touch-action:none}
+.fig3d-note{text-align:center;font-size:9pt;color:#666;margin-top:-2px}
+nav.wtop{font-size:10pt;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
+nav.wtop a{color:rgb(212,86,28)}
+@media print{canvas[data-fig3d]{display:none}.fig3d-fallback{display:block!important}}
+</style></head><body><nav class="wtop"><a href="laplacian-curvature.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/laplacian-curvature.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a></nav><h1 id="the-laplacian-and-curvature-instances-and-relationships">The
+Laplacian and Curvature — Instances and Relationships</h1>
+<p>23 November 2026 · Computational Classnotes · Laplacian Lab</p>
+<p>Curvature is what the Laplacian sees beyond its flat value. On smooth
+surfaces and manifolds, on triangle meshes and on graphs, every standard
+notion of curvature can be read off the Laplacian, its mean values, its
+heat flow, its Bochner identity or its spectrum. This write-up lists
+those instances. Each one has a matching section and check in the
+companion notebook <code>notebooks/LaplacianCurvature.nb</code>, and
+every check below was run on a Wolfram kernel. The notebook also draws
+each instance: surfaces coloured by K and H, error plots for the curved
+mean value, heat traces of two same-area drums, a torus mesh, and seven
+example graphs coloured by each graph curvature.</p>
+<h2 id="scope-and-conventions">Scope and conventions</h2>
+<ul>
+<li><strong>Sign.</strong> Δ = div grad (the analyst’s sign), so Δ ≤ 0
+on a closed manifold and its eigenvalues are written −λ with λ ≥ 0.</li>
+<li><strong>Graphs.</strong> Δf(x) = (mean of f over the neighbours of
+x) − f(x), the random-walk normalisation. Its spectrum is that of the
+normalised Laplacian I − D^(−1/2) A D^(−1/2), up to sign.</li>
+<li><strong>Notebook map.</strong> Sections 1–8 here ↔︎ notebook Sections
+2–9; Section 10 ↔︎ notebook Section 10. Notebook Section 1 is a shared
+Riemannian toolkit: Laplace–Beltrami, Christoffel symbols, covariant
+Hessian, Gauss curvature.</li>
+</ul>
+<h2 id="at-a-glance">At a glance</h2>
+<figure>
+<img src="relationship-map.png" alt="Fig. 1" />
+<figcaption aria-hidden="true">Fig. 1</figcaption>
+</figure>
+<p><strong>Fig. 1.</strong> Each smooth Laplacian–curvature identity has
+a discrete twin. The highlighted row is the thread from Laplacian Lab
+Section 1: the mean-value origin of Δ is also where curvature first
+appears, both on manifolds and on graphs.</p>
+<h2 id="gauss-curvature-is-a-laplacian">1. Gauss curvature is a
+Laplacian</h2>
+<p>In isothermal coordinates, Gauss curvature is the flat Laplacian of
+the log conformal factor, rescaled. For g = e^(2u)(dx² + dy²):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>K</mi><mo>=</mo><mo>−</mo><msup><mi>e</mi><mrow><mo>−</mo><mn>2</mn><mi>u</mi></mrow></msup><mspace width="0.167em"></mspace><msub><mi>Δ</mi><mn>0</mn></msub><mi>u</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>Δ</mi><mn>0</mn></msub><mi>u</mi><mo>+</mo><mi>K</mi><msup><mi>e</mi><mrow><mn>2</mn><mi>u</mi></mrow></msup><mo>=</mo><mn>0</mn><mspace width="0.278em"></mspace><mspace width="0.278em"></mspace><mrow><mtext mathvariant="normal">(Liouville’s equation when </mtext><mspace width="0.333em"></mspace></mrow><mi>K</mi><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is constant)</mtext></mrow></mrow><annotation encoding="application/x-tex">K = -e^{-2u}\,\Delta_0 u, \qquad \Delta_0 u + K e^{2u} = 0 \;\; \text{(Liouville&#39;s equation when } K \text{ is constant)}</annotation></semantics></math></p>
+<p>The same identity gives the 2-D Ricci flow ∂u/∂t = e^(−2u)Δ₀u = −K, a
+nonlinear heat equation, and in dimension n it generalises to the Yamabe
+equation for prescribed scalar curvature.</p>
+<p><strong>Checked (notebook §2):</strong> stereographic sphere K = 1,
+Poincaré half-plane and disc K = −1, and agreement with the
+Riemann-tensor computation for an arbitrary u(x, y).</p>
+<h2 id="mean-curvature-is-a-laplacian">2. Mean curvature is a
+Laplacian</h2>
+<p>Applied to the position vector of an immersed surface, the
+Laplace–Beltrami operator returns the mean-curvature vector:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Δ</mi><mi>g</mi></msub><mi>X</mi><mo>=</mo><mo>−</mo><mn>2</mn><mi>H</mi><mspace width="0.167em"></mspace><mi>𝐧</mi></mrow><annotation encoding="application/x-tex">\Delta_g X = -2H\,\mathbf{n}</annotation></semantics></math></p>
+<p>So a surface is minimal exactly when its coordinate functions are
+harmonic (Takahashi), and mean-curvature flow ∂X/∂t = ΔX is the heat
+equation for the embedding. The tangential part of ΔX is identically
+zero.</p>
+<p><strong>Checked (notebook §3):</strong> sphere of radius 3 gives H =
+1/3; torus (R = 2, r = 1) gives H = 2cos²(v/2)/(2 + cos v); catenoid
+gives H = 0.</p>
+<h2
+id="mean-values-and-volumes-where-laplacian-lab-section-1-meets-curvature">3.
+Mean values and volumes: where Laplacian Lab Section 1 meets
+curvature</h2>
+<p>Laplacian Lab Section 1 obtains Δ from the flat sphere mean,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>M</mi><mi>r</mi></msub><annotation encoding="application/x-tex">M_{r}</annotation></semantics></math>
+f = f + r²Δf/(2n) + …. On a curved space the same expansion carries
+curvature from order r⁴ on (Gray–Willmore 1982). On a surface of
+constant curvature K the geodesic-circle mean is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>M</mi><mi>r</mi></msub><mi>f</mi><mo>=</mo><mi>f</mi><mo>+</mo><mfrac><msup><mi>r</mi><mn>2</mn></msup><mn>4</mn></mfrac><mi>Δ</mi><mi>f</mi><mo>+</mo><msup><mi>r</mi><mn>4</mn></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mfrac><mrow><msup><mi>Δ</mi><mn>2</mn></msup><mi>f</mi></mrow><mn>64</mn></mfrac><mo>+</mo><mfrac><mrow><mi>K</mi><mspace width="0.167em"></mspace><mi>Δ</mi><mi>f</mi></mrow><mn>96</mn></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo><mo>+</mo><msup><mi>r</mi><mn>6</mn></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mfrac><mrow><msup><mi>Δ</mi><mn>3</mn></msup><mi>f</mi></mrow><mn>2304</mn></mfrac><mo>+</mo><mfrac><mrow><mi>K</mi><mspace width="0.167em"></mspace><msup><mi>Δ</mi><mn>2</mn></msup><mi>f</mi></mrow><mn>1152</mn></mfrac><mo>+</mo><mfrac><mrow><msup><mi>K</mi><mn>2</mn></msup><mi>Δ</mi><mi>f</mi></mrow><mn>1440</mn></mfrac><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo><mo>+</mo><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>r</mi><mn>8</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">M_r f = f + \frac{r^2}{4}\Delta f + r^4\Big(\frac{\Delta^2 f}{64} + \frac{K\,\Delta f}{96}\Big) + r^6\Big(\frac{\Delta^3 f}{2304} + \frac{K\,\Delta^2 f}{1152} + \frac{K^2\Delta f}{1440}\Big) + O(r^8)</annotation></semantics></math></p>
+<p>The coefficients come from the series of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>P</mi><mi>l</mi></msub><annotation encoding="application/x-tex">P_{l}</annotation></semantics></math>(cos
+r), the eigenvalue of the circle-mean operator on spherical harmonics,
+rewritten in λ = −l(l+1). Volumes carry curvature at order r²:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>π</mi><msup><mi>r</mi><mn>2</mn></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mi>K</mi><msup><mi>r</mi><mn>2</mn></msup></mrow><mn>12</mn></mfrac><mo>+</mo><mfrac><mrow><msup><mi>K</mi><mn>2</mn></msup><msup><mi>r</mi><mn>4</mn></msup></mrow><mn>360</mn></mfrac><mo>−</mo><mi>…</mi><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mo>Vol</mo><msub><mi>B</mi><mi>r</mi></msub><mo>=</mo><msub><mi>ω</mi><mi>n</mi></msub><msup><mi>r</mi><mi>n</mi></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mn>1</mn><mo>−</mo><mfrac><mrow><mi>S</mi><mspace width="0.167em"></mspace><msup><mi>r</mi><mn>2</mn></msup></mrow><mrow><mn>6</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>+</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>+</mo><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>r</mi><mn>4</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">A(r) = \pi r^2\Big(1 - \frac{K r^2}{12} + \frac{K^2 r^4}{360} - \dots\Big), \qquad \operatorname{Vol} B_r = \omega_n r^n\Big(1 - \frac{S\,r^2}{6(n+2)} + O(r^4)\Big)</annotation></semantics></math></p>
+<p>Here S is the scalar curvature. Ollivier’s curvature (Section 7) is
+the same idea applied to two nearby balls: on a manifold, comparing
+averages over balls of radius ε at points a distance δ apart along v
+gives κ ≈ ε² Ric(v, v)/(2(n+2)).</p>
+<p><strong>Checked (notebook §4):</strong> the Legendre coefficients
+1/64, 1/96, 1/2304, 1/1152 and 1/1440 are exact. A direct average of the
+non-symmetric function eˣ(1+z)² + yz³ over geodesic circles on S²
+matches the formula through r⁶ with zero remainder. The disc-area series
+and the S³ ball-volume coefficient −1/5 = −6/(6·5) also match.</p>
+<h2 id="heat-kernel-and-spectrum-curvature-is-audible">4. Heat kernel
+and spectrum: curvature is audible</h2>
+<p>The trace of the heat semigroup encodes curvature in its short-time
+expansion (Minakshisundaram–Pleijel; McKean–Singer 1967):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>Tr</mo><msup><mi>e</mi><mrow><mi>t</mi><mi>Δ</mi></mrow></msup><mo>=</mo><munder><mo>∑</mo><mi>k</mi></munder><msup><mi>e</mi><mrow><mo>−</mo><msub><mi>λ</mi><mi>k</mi></msub><mi>t</mi></mrow></msup><mo>∼</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mn>4</mn><mi>π</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo>−</mo><mi>n</mi><mi>/</mi><mn>2</mn></mrow></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mo>Vol</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>M</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mfrac><mi>t</mi><mn>6</mn></mfrac><msub><mo>∫</mo><mi>M</mi></msub><mi>S</mi><mo>+</mo><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>t</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\operatorname{Tr} e^{t\Delta} = \sum_k e^{-\lambda_k t} \sim (4\pi t)^{-n/2}\Big(\operatorname{Vol}(M) + \frac{t}{6}\int_M S + O(t^2)\Big)</annotation></semantics></math></p>
+<p>The local coefficient is S(x)/6. For a surface, ∫S = 2∫K = 4πχ, so
+the eigenvalues determine the Euler characteristic. Weyl’s law is the
+leading term.</p>
+<p><strong>Checked (notebook §5):</strong> on the unit S² (eigenvalues
+l(l+1), multiplicity 2l+1), t·Tr e^(tΔ) = 1.003340 at t = 0.01, against
+1 + t/3 + t²/15 = 1.003340.</p>
+<h2 id="bochner-formula-and-its-consequences">5. Bochner formula and its
+consequences</h2>
+<p>Bochner’s identity ties the Laplacian of the energy density to Ricci
+curvature:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mspace width="0.167em"></mspace><mi>Δ</mi><msup><mrow><mo stretchy="true" form="prefix">|</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">|</mo><mo>Hess</mo><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>+</mo><mo stretchy="false" form="prefix">⟨</mo><mi>∇</mi><mi>f</mi><mo>,</mo><mi>∇</mi><mi>Δ</mi><mi>f</mi><mo stretchy="false" form="postfix">⟩</mo><mo>+</mo><mo>Ric</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mi>f</mi><mo>,</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tfrac12\,\Delta|\nabla f|^2 = |\operatorname{Hess} f|^2 + \langle \nabla f, \nabla \Delta f\rangle + \operatorname{Ric}(\nabla f, \nabla f)</annotation></semantics></math></p>
+<p>In Bakry–Émery’s Γ-calculus it reads Γ₂(f) = |Hess f|² + Ric(∇f, ∇f),
+and the bound Ric ≥ K becomes Γ₂ ≥ KΓ + (Δf)²/n. This is the form graphs
+copy (Section 7). Consequences:</p>
+<ul>
+<li><strong>Lichnerowicz:</strong> Ric ≥ (n−1)k &gt; 0 gives λ₁ ≥ nk,
+with equality only on the round sphere (Obata).</li>
+<li><strong>Laplacian comparison:</strong> Ric ≥ 0 gives Δr ≤ (n−1)/r
+for the distance r. Δr is the mean curvature of geodesic spheres, which
+leads to Bishop–Gromov volume comparison.</li>
+<li><strong>Li–Yau gradient estimate</strong> for positive heat
+solutions under Ric ≥ 0.</li>
+<li><strong>Weitzenböck on 1-forms:</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msub><annotation encoding="application/x-tex">\Delta_{\mathrm{Hodge}}</annotation></semantics></math>
+= ∇*∇ + Ric, so Ric &gt; 0 forces b₁ = 0 (Bochner’s theorem). Forman’s
+graph curvature (Section 7) discretises this splitting.</li>
+</ul>
+<p><strong>Checked (notebook §6):</strong> Bochner holds symbolically
+for an arbitrary f(θ, φ) on S². λ₁(S²) = 2 = nk, the equality case. Δr =
+cot r ≤ 1/r on (0, π).</p>
+<h2 id="discrete-surfaces-the-cotangent-laplacian">6. Discrete surfaces:
+the cotangent Laplacian</h2>
+<p>On a triangle mesh the cotangent Laplacian, divided by the vertex
+area, discretises Δ (Pinkall–Polthier; Meyer–Desbrun–Schröder–Barr):</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mn>2</mn><msub><mi>A</mi><mi>i</mi></msub></mrow></mfrac><munder><mo>∑</mo><mrow><mi>j</mi><mo>∼</mo><mi>i</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">(</mo><mo>cot</mo><msub><mi>α</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo>+</mo><mo>cot</mo><msub><mi>β</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>f</mi><mi>j</mi></msub><mo>−</mo><msub><mi>f</mi><mi>i</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>Δ</mi><msub><mi>X</mi><mi>i</mi></msub><mo>≈</mo><mo>−</mo><mn>2</mn><msub><mi>H</mi><mi>i</mi></msub><mspace width="0.167em"></mspace><msub><mi>𝐧</mi><mi>i</mi></msub><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>K</mi><mi>i</mi></msub><mo>≈</mo><mfrac><mrow><mn>2</mn><mi>π</mi><mo>−</mo><mo>∑</mo><msub><mi>θ</mi><mi>i</mi></msub></mrow><msub><mi>A</mi><mi>i</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">(\Delta f)_i = \frac{1}{2A_i}\sum_{j\sim i}(\cot\alpha_{ij} + \cot\beta_{ij})(f_j - f_i), \qquad \Delta X_i \approx -2H_i\,\mathbf{n}_i, \qquad K_i \approx \frac{2\pi - \sum \theta_i}{A_i}</annotation></semantics></math></p>
+<p>The angle defect sums to exactly 2πχ, a discrete Gauss–Bonnet
+theorem. No discrete Laplacian keeps every smooth property at once:
+symmetry, locality, linear precision, semidefiniteness and the maximum
+principle (Wardetzky et al. 2007). This connects to the Lab’s Section 5
+“orthonormal mandate”.</p>
+<p><strong>Checked (notebook §7), 400-vertex sphere mesh:</strong> Σ
+defect/2π = 2.000000, mean K = 1.014, mean H = 1.006.</p>
+<h2 id="graph-curvatures-and-the-graph-laplacian">7. Graph curvatures
+and the graph Laplacian</h2>
+<p>Every graph curvature in use copies one smooth relationship from
+Sections 1–5, and each is computed from Δ, its random walk, or its
+pseudoinverse.</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Curvature</th>
+<th>Smooth relationship it copies</th>
+<th>Defined on</th>
+<th>Built from the Laplacian via</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Ollivier (2009)</td>
+<td>Ball means at nearby points (§3)</td>
+<td>edges, pairs</td>
+<td>W₁ distance between random-walk measures
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>x</mi></msub><annotation encoding="application/x-tex">\mu_{x}</annotation></semantics></math>
+= averaging kernel of Δ</td>
+</tr>
+<tr class="even">
+<td>Lin–Lu–Yau (2011)</td>
+<td>same, infinitesimal laziness</td>
+<td>edges</td>
+<td>κ = inf { ∇_xy Δf : f 1-Lipschitz, ∇_yx f = 1 } (Münch–Wojciechowski
+2019)</td>
+</tr>
+<tr class="odd">
+<td>Bakry–Émery CD(K,N) (Lin–Yau 2010)</td>
+<td>Bochner, Γ₂ ≥ KΓ + (Δf)²/N (§5)</td>
+<td>vertices</td>
+<td>Γ, Γ₂ computed from Δ on the 2-ball</td>
+</tr>
+<tr class="even">
+<td>CDE / CDE′ (Bauer et al. 2015)</td>
+<td>Bochner + chain rule, for Li–Yau</td>
+<td>vertices</td>
+<td>modified Γ₂ with Δ√f</td>
+</tr>
+<tr class="odd">
+<td>Forman (2003)</td>
+<td>Weitzenböck: Hodge = rough + curvature (§5)</td>
+<td>edges, cells</td>
+<td>diagonal of the 1-form Hodge Laplacian; 4 −
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>x</mi></msub><annotation encoding="application/x-tex">d_{x}</annotation></semantics></math>
+−
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>y</mi></msub><annotation encoding="application/x-tex">d_{y}</annotation></semantics></math>
++ 3·#triangles</td>
+</tr>
+<tr class="even">
+<td>Entropic (Erbar–Maas 2012)</td>
+<td>Ricci ⇔ entropy convexity (Lott–Sturm–Villani)</td>
+<td>whole chain</td>
+<td>heat flow e^(tΔ) as a gradient flow of entropy</td>
+</tr>
+<tr class="odd">
+<td>Resistance (Devriendt–Lambiotte 2022)</td>
+<td>Gauss–Bonnet (§6)</td>
+<td>vertices, edges</td>
+<td>effective resistance from L⁺;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>i</mi></msub><annotation encoding="application/x-tex">p_{i}</annotation></semantics></math>
+= 1 − ½
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mrow><mi>j</mi><mo>∼</mo><mi>i</mi></mrow></msub><annotation encoding="application/x-tex">\Sigma_{j\sim i}</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ω</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">\omega_{ij}</annotation></semantics></math></td>
+</tr>
+<tr class="even">
+<td>Steinerberger (2023)</td>
+<td>Bonnet–Myers / mean distance</td>
+<td>vertices</td>
+<td>D·K = n·1 with D the distance matrix</td>
+</tr>
+<tr class="odd">
+<td>Combinatorial (Higuchi 2001)</td>
+<td>Gauss–Bonnet on polyhedra</td>
+<td>vertices</td>
+<td>1 − d/2 + Σ 1/face size; total = χ</td>
+</tr>
+</tbody>
+</table>
+<p>Two results make the link to Section 3 explicit. Ollivier curvature
+compares averages over two neighbouring balls, as the smooth expansion
+does. Münch–Wojciechowski turn it into an optimisation of ∇Δf, so
+curvature is literally the gradient of the Laplacian of a test function.
+Foster’s theorem
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Σ</mi><mrow><mi mathvariant="normal">e</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi><mi mathvariant="normal">s</mi></mrow></msub><annotation encoding="application/x-tex">\Sigma_{\mathrm{edges}}</annotation></semantics></math>
+ω = n − 1 makes Σ
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>p</mi><mi>i</mi></msub><annotation encoding="application/x-tex">p_{i}</annotation></semantics></math>
+= 1 on every connected graph.</p>
+<h2
+id="spectral-consequences-on-graphs-and-the-limit-back-to-manifolds">8.
+Spectral consequences on graphs, and the limit back to manifolds</h2>
+<p>Graph curvature lower bounds give Lichnerowicz-type bounds on the
+normalised Laplacian, as in Section 5:</p>
+<ul>
+<li><strong>Ollivier / Lin–Lu–Yau:</strong> κ ≥ k &gt; 0 on all edges
+gives λ₁ ≥ k. With κ₀ the non-lazy Ollivier curvature,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>λ</mi><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow></msub><annotation encoding="application/x-tex">\lambda_{\mathrm{max}}</annotation></semantics></math>
+≤ 2 − κ₀ (Ollivier; Bauer–Jost–Liu, with t-step refinements).</li>
+<li><strong>Bakry–Émery:</strong> CD(K, ∞) gives λ₁ ≥ K, and CD(K, n)
+gives λ₁ ≥ nK/(n−1) (Lin–Yau; Bauer–Chung–Lin–Liu).</li>
+<li><strong>Diameter:</strong> positive curvature bounds diameter
+(discrete Bonnet–Myers: Lin–Lu–Yau; Liu–Münch–Peyerimhoff).</li>
+<li><strong>Heat flow:</strong> CDE(0, n) gives a Li–Yau inequality and
+polynomial volume growth (Bauer–Horn–Lin–Lippner–Mangoubi–Yau).</li>
+</ul>
+<p>The link runs the other way too. On points sampled from a manifold,
+the heat-kernel graph Laplacian (weighted mean − value)/t converges to Δ
+and its eigenvectors converge to eigenfunctions (Belkin–Niyogi). So the
+graph-side quantities above are discretisations of Sections 1–5, not
+only analogies.</p>
+<p><strong>Checked (notebook §9):</strong> all three spectral
+inequalities hold on the five test graphs (Section 9 table). For 20 000
+points on S² and f = z, the point-cloud Laplacian recovers Δz = −2z with
+fitted ratio 0.9997 and correlation 0.99999.</p>
+<h2 id="verified-graph-results">9. Verified graph results</h2>
+<p>Computed in the notebook; all curvatures are minima over edges or
+vertices, and λ are eigenvalues of the normalised Laplacian. Lin–Lu–Yau
+was computed two ways (Münch–Wojciechowski linear program and
+2<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math>
+by optimal transport) and they agree on every graph.</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+<col style="width: 12%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Graph</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math></th>
+<th>κ₀ (Ollivier)</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">E</mi></mrow></msub><annotation encoding="application/x-tex">K_{\mathrm{BE}}</annotation></semantics></math>
+(CD(K,∞))</th>
+<th>Forman / augmented</th>
+<th>min resistance p</th>
+<th>λ₁</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>λ</mi><mrow><mi mathvariant="normal">m</mi><mi mathvariant="normal">a</mi><mi mathvariant="normal">x</mi></mrow></msub><annotation encoding="application/x-tex">\lambda_{\mathrm{max}}</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Complete K₅</td>
+<td>5/4</td>
+<td>3/4</td>
+<td>7/8</td>
+<td>−4 / 5</td>
+<td>0.200</td>
+<td>1.250</td>
+<td>1.250</td>
+</tr>
+<tr class="even">
+<td>Cube Q₃</td>
+<td>2/3</td>
+<td>0</td>
+<td>2/3</td>
+<td>−2 / −2</td>
+<td>0.125</td>
+<td>0.667</td>
+<td>2.000</td>
+</tr>
+<tr class="odd">
+<td>Petersen</td>
+<td>0</td>
+<td>−1/3</td>
+<td>−1/3</td>
+<td>−2 / −2</td>
+<td>0.100</td>
+<td>0.667</td>
+<td>1.667</td>
+</tr>
+<tr class="even">
+<td>Cycle C₆</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0 / 0</td>
+<td>0.167</td>
+<td>0.500</td>
+<td>2.000</td>
+</tr>
+<tr class="odd">
+<td>Grid 4×4</td>
+<td>0</td>
+<td>0</td>
+<td>0.088</td>
+<td>−4 / −4</td>
+<td>−0.112</td>
+<td>0.218</td>
+<td>2.000</td>
+</tr>
+</tbody>
+</table>
+<p>Other totals: Σ resistance curvature = 1.000 on all five graphs.
+Higuchi curvature sums to 2 on the tetrahedron, cube, dodecahedron,
+icosahedron and truncated icosahedron. K₅ attains λ₁ =
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+= 5/4 and Q₃ attains λ₁ =
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+=
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mrow><mi mathvariant="normal">B</mi><mi mathvariant="normal">E</mi></mrow></msub><annotation encoding="application/x-tex">K_{\mathrm{BE}}</annotation></semantics></math>
+= 2/3, the discrete equality cases.</p>
+<h2 id="flows-and-further-identities-worked-out-notebook-10">10. Flows
+and further identities, worked out (notebook §10)</h2>
+<p>Five more places where curvature is a Laplacian, each computed in
+notebook §10.</p>
+<ul>
+<li><strong>Weitzenböck on 1-forms.</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msub><annotation encoding="application/x-tex">\Delta_{\mathrm{Hodge}}</annotation></semantics></math>
+= ∇*∇ + Ric. On S² every 1-form is df + ⋆dh, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Δ</mi><mrow><mi mathvariant="normal">H</mi><mi mathvariant="normal">o</mi><mi mathvariant="normal">d</mi><mi mathvariant="normal">g</mi><mi mathvariant="normal">e</mi></mrow></msub><annotation encoding="application/x-tex">\Delta_{\mathrm{Hodge}}</annotation></semantics></math>
+commutes with d and ⋆, so the identity can be checked for arbitrary f
+and h. Ric &gt; 0 then leaves no harmonic 1-forms: b₁ = 0.</li>
+<li><strong>Ricci flow</strong> ∂g/∂t = −2Ric. In two dimensions, with g
+= e^(2u)(dx² + dy²), it is the heat equation ∂u/∂t = e^(−2u)Δ₀u = −K.
+The round sphere shrinks as (1 − 2t)g₀.</li>
+<li><strong>Mean-curvature flow</strong> ∂X/∂t = ΔX = −2Hn. A sphere
+shrinks as R² = R₀² − 4t. In the plane this is curve shortening, which
+rounds any embedded curve (Gage–Hamilton–Grayson), and the enclosed area
+falls at exactly 2π per unit time.</li>
+<li><strong>Ollivier curvature on a manifold.</strong> For uniform
+measures on ε-balls, sliding the surface along the geodesic carries one
+ball onto the other, and gives κ → ε²K/8 = ε² Ric/(2(n+2)).</li>
+<li><strong>Yamabe.</strong> For g̃ = u^(4/(n−2)) g, scalar curvature
+transforms by a Laplacian. In ℝ³, S̃ = −8u^(−5)Δu.</li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>∂</mi><mi>u</mi></mrow><mrow><mi>∂</mi><mi>t</mi></mrow></mfrac><mo>=</mo><msup><mi>e</mi><mrow><mo>−</mo><mn>2</mn><mi>u</mi></mrow></msup><msub><mi>Δ</mi><mn>0</mn></msub><mi>u</mi><mo>=</mo><mo>−</mo><mi>K</mi><mo>,</mo><mspace width="2.0em"></mspace><mfrac><mrow><mi>d</mi><mi>A</mi></mrow><mrow><mi>d</mi><mi>t</mi></mrow></mfrac><mo>=</mo><mo>−</mo><mo>∮</mo><mi>κ</mi><mspace width="0.167em"></mspace><mi>d</mi><mi>s</mi><mo>=</mo><mo>−</mo><mn>2</mn><mi>π</mi><mo>,</mo><mspace width="2.0em"></mspace><mover><mi>S</mi><mo accent="true">̃</mo></mover><mo>=</mo><msup><mi>u</mi><mrow><mo>−</mo><mfrac><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></mfrac></mrow></msup><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mo>−</mo><mfrac displaystyle="false"><mrow><mn>4</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></mfrac><mi>Δ</mi><mi>u</mi><mo>+</mo><mi>S</mi><mi>u</mi><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\frac{\partial u}{\partial t} = e^{-2u}\Delta_0 u = -K, \qquad \frac{dA}{dt} = -\oint \kappa\,ds = -2\pi, \qquad \tilde S = u^{-\frac{n+2}{n-2}}\Big(-\tfrac{4(n-1)}{n-2}\Delta u + S u\Big)</annotation></semantics></math></p>
+<p><strong>Checked (notebook §10):</strong> Weitzenböck on S² gives
+difference {0, 0} for arbitrary f and h. The sphere’s Ricci-flow and
+mean-curvature-flow solutions give residual 0. On a bumpy flat torus,
+max|K| falls from 4.83 at t = 0 to 0.059 at t = 2 while ∬K dA stays 0.
+Curve shortening of a 160-vertex polygon gives fitted dA/dt = −6.32
+against −2π = −6.28. Ollivier curvature gives κ/ε² = 0.12496 (sphere), 0
+(plane) and −0.12504 (hyperbolic plane) at ε = 0.05. The Yamabe factor u
+= (2/(1 + r²))^(1/2) gives S̃ = 6, the round S³.</p>
+<h2 id="references">References</h2>
+<p><strong>Smooth</strong></p>
+<ul>
+<li>Gray &amp; Willmore, Mean-value theorems for Riemannian manifolds,
+Proc. Roy. Soc. Edinburgh A 92 (1982) 343–364. Gray &amp; Vanhecke, Acta
+Math. 142 (1979). <a href="https://arxiv.org/pdf/1704.07518">Cited
+in</a></li>
+<li><a href="https://arxiv.org/abs/math/0608608">Lei Ni, Mean value
+theorems on manifolds (2006)</a></li>
+<li><a
+href="https://projecteuclid.org/download/pdf_1/euclid.jdg/1214427880">McKean
+&amp; Singer, Curvature and the eigenvalues of the Laplacian, J.
+Differential Geom. 1 (1967) 43–69</a></li>
+<li><a href="https://link.springer.com/9783319002262">Bakry, Gentil
+&amp; Ledoux, Analysis and Geometry of Markov Diffusion Operators,
+Springer Grundlehren 348 (2014)</a></li>
+<li>Chavel, Eigenvalues in Riemannian Geometry; Rosenberg, The Laplacian
+on a Riemannian Manifold; Schoen &amp; Yau, Lectures on Differential
+Geometry (standard texts; not opened for this write-up)</li>
+</ul>
+<p><strong>Discrete surfaces</strong></p>
+<ul>
+<li><a
+href="https://authors.library.caltech.edu/records/0rsjd-50h08">Meyer,
+Desbrun, Schröder &amp; Barr, Discrete Differential-Geometry Operators
+for Triangulated 2-Manifolds (2003)</a></li>
+<li><a
+href="https://www.cis.upenn.edu/~cis610/Wardetzky-Laplacian-07.pdf">Wardetzky,
+Mathur, Kälberer &amp; Grinspun, Discrete Laplace operators: No free
+lunch, SGP 2007</a></li>
+</ul>
+<p><strong>Graphs</strong></p>
+<ul>
+<li><a
+href="https://link.springer.com/book/10.1007/978-3-319-58002-9">Najman
+&amp; Romon (eds), Modern Approaches to Discrete Curvature, Springer LNM
+2184 (2017)</a></li>
+<li><a href="https://www.springer.com/book/9783030814595">Keller, Lenz
+&amp; Wojciechowski, Graphs and Discrete Dirichlet Spaces, Springer
+Grundlehren 358 (2021)</a></li>
+<li><a href="https://arxiv.org/abs/math/0701886">Ollivier, Ricci
+curvature of Markov chains on metric spaces, J. Funct. Anal. 256
+(2009)</a></li>
+<li><a href="https://www.projecteuclid.org/euclid.tmj/1325886283">Lin,
+Lu &amp; Yau, Ricci curvature of graphs, Tohoku Math. J. 63
+(2011)</a></li>
+<li><a href="https://arxiv.org/pdf/1204.3168">Lin &amp; Yau, A brief
+review on geometry and spectrum of graphs (2012)</a></li>
+<li><a href="https://arxiv.org/pdf/1105.3803">Bauer, Jost &amp; Liu,
+Ollivier-Ricci curvature and the spectrum of the normalized graph
+Laplace operator</a></li>
+<li><a href="https://www.arxiv.org/abs/1103.4037">Jost &amp; Liu,
+Ollivier’s Ricci curvature, local clustering and curvature-dimension
+inequalities on graphs, DCG 51 (2014)</a></li>
+<li><a href="https://arxiv.org/pdf/1712.00875">Münch &amp;
+Wojciechowski, Ollivier Ricci curvature for general graph Laplacians,
+Adv. Math. (2019)</a></li>
+<li><a href="https://projecteuclid.org/euclid.jdg/1424880980">Bauer,
+Horn, Lin, Lippner, Mangoubi &amp; Yau, Li-Yau inequality on graphs, J.
+Differential Geom. 99 (2015)</a></li>
+<li><a
+href="https://archive.ymsc.tsinghua.edu.cn/pacm_download/31/9017-proc13145.pdf">Bauer,
+Chung, Lin &amp; Liu, Curvature aspects of graphs, Proc. AMS
+(2017)</a></li>
+<li><a href="https://dro.dur.ac.uk/35891">Cushing, Kamtue, Liu &amp;
+Peyerimhoff, Bakry–Émery curvature on graphs as an eigenvalue problem
+(2022)</a></li>
+<li><a href="https://www.doi.org/10.1007/s00454-002-0743-x">Forman,
+Bochner’s Method for Cell Complexes and Combinatorial Ricci Curvature,
+DCG (2003)</a></li>
+<li><a href="https://arxiv.org/pdf/1111.2687">Erbar &amp; Maas, Ricci
+curvature of finite Markov chains via convexity of the entropy, ARMA 206
+(2012)</a></li>
+<li><a
+href="https://iopscience.iop.org/article/10.1088/2632-072X/ac730d">Devriendt
+&amp; Lambiotte, Discrete curvature on graphs from the effective
+resistance, J. Phys. Complex. 3 (2022)</a></li>
+<li><a href="https://ar5iv.labs.arxiv.org/html/2302.06021">Devriendt
+&amp; Ottolini, Graph curvature via resistance distance</a></li>
+<li><a href="https://arxiv.org/pdf/2404.17860">Cushing et al., A note on
+Steinerberger’s curvature for graphs (2024)</a></li>
+<li><a
+href="https://papers.nips.cc/paper/2989-convergence-of-laplacian-eigenmaps">Belkin
+&amp; Niyogi, Convergence of Laplacian Eigenmaps (NIPS 2006)</a></li>
+<li><a href="https://arxiv.org/abs/2111.14522v3">Topping et al.,
+Understanding over-squashing and bottlenecks on graphs via curvature
+(ICLR 2022)</a></li>
+<li><a href="https://www.mas.ncl.ac.uk/graph-curvature/">Graph Curvature
+Calculator</a></li>
+</ul>
+<hr />
+<p>© 2026 Computational Classnotes · CC BY-NC-SA 4.0</p>
+<footer style="margin-top:30px;font-size:9pt;color:#666">© 2026 Computational Classnotes · CC BY-NC-SA 4.0</footer><script>/* CCN rotatable 3D figures for the HTML write-ups (no libraries). © Computational Classnotes · CC BY-NC-SA 4.0 */
+(function () {
+  const ORANGE = [250, 143, 43], BLUE = [46, 92, 199];
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const rot = (p, ax, ay) => { // rotate about y (ay) then x (ax)
+    let [x, y, z] = p; const cy = Math.cos(ay), sy = Math.sin(ay);
+    [x, z] = [cy * x + sy * z, -sy * x + cy * z];
+    const cx = Math.cos(ax), sx = Math.sin(ax);
+    [y, z] = [cx * y - sx * z, sx * y + cx * z];
+    return [x, y, z];
+  };
+  const rz = (p, t) => [Math.cos(t) * p[0] - Math.sin(t) * p[1], Math.sin(t) * p[0] + Math.cos(t) * p[1], p[2]];
+  // points of the eps-ball around (1,0,0): spherical cap, Fibonacci sampling
+  function capPoints(eps, n) {
+    const out = [], c = Math.cos(eps);
+    for (let i = 0; i < n; i++) {
+      const u = 1 - (1 - c) * (i + 0.5) / n, a = i * Math.PI * (3 - Math.sqrt(5)), s = Math.sqrt(1 - u * u);
+      out.push([u, s * Math.cos(a), s * Math.sin(a)]); // axis = +x
+    }
+    return out.map(p => [p[0], p[1], p[2]]).map(p => [p[0], p[2], p[1]]).map(p => [p[0], p[1], p[2]]);
+  }
+  function ollivierSphere(cv) {
+    const delta = 0.7, eps = 0.42, pts = capPoints(eps, 90).map(p => [p[0], p[1], p[2]]);
+    // ball centred at x=(1,0,0) on the equator z=0; geodesic = equator; rotation about z by delta
+    const ball = pts.map(p => [p[0], p[2], p[1]]); // keep z as latitude direction
+    let ax = 0.45, ay = 0.0, drag = null;
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const R = Math.min(W, H) * 0.42, cx = W / 2, cy = H / 2 + 6;
+      const P = q => { const v = rz(q, -delta / 2), r = rot([v[1], v[2], v[0]], ax, ay); return [cx + R * r[0], cy - R * r[1], r[2]]; };
+      ctx.clearRect(0, 0, W, H);
+      const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R);
+      g.addColorStop(0, '#fbfaf7'); g.addColorStop(1, '#d9d6cf');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+      const seg = (pts3, style, width, dash) => { // polyline, faint when behind
+        for (let i = 0; i + 1 < pts3.length; i++) {
+          const a = P(pts3[i]), b = P(pts3[i + 1]); const front = a[2] + b[2] > 0;
+          ctx.strokeStyle = style; ctx.globalAlpha = front ? 1 : 0.18; ctx.lineWidth = width; ctx.setLineDash(dash || []);
+          ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+        }
+        ctx.globalAlpha = 1; ctx.setLineDash([]);
+      };
+      // meridians/parallels
+      for (let k = 0; k < 12; k++) { const t = k * Math.PI / 6; seg(Array.from({length: 49}, (_, i) => { const s = -Math.PI / 2 + i * Math.PI / 48; return [Math.cos(s) * Math.cos(t), Math.cos(s) * Math.sin(t), Math.sin(s)]; }), '#bdb8ae', 0.6); }
+      for (const la of [-60, -30, 30, 60]) { const s = la * Math.PI / 180; seg(Array.from({length: 73}, (_, i) => { const t = i * Math.PI / 36; return [Math.cos(s) * Math.cos(t), Math.cos(s) * Math.sin(t), Math.sin(s)]; }), '#bdb8ae', 0.6); }
+      // geodesic (equator) and cap boundaries
+      seg(Array.from({length: 81}, (_, i) => { const t = -0.4 + i * (delta + 0.8) / 80; return [Math.cos(t), Math.sin(t), 0]; }), '#333', 2.2);
+      const circ = c => Array.from({length: 73}, (_, i) => { const t = i * Math.PI / 36; return rz([Math.cos(eps), Math.sin(eps) * Math.cos(t), Math.sin(eps) * Math.sin(t)], c); }).map(p => [p[0], p[1], p[2]]);
+      seg(circ(0).map(p => [p[0], p[1], p[2]]), '#222', 1.4); seg(circ(delta), '#222', 1.4);
+      // arrows: each point slides along its latitude circle by delta; colour = cos(lambda)
+      for (const p of ball) {
+        const lam = Math.asin(Math.max(-1, Math.min(1, p[2]))), t = (Math.cos(lam) - Math.cos(eps)) / (1 - Math.cos(eps));
+        const col = 'rgb(' + mix(BLUE, ORANGE, t).join(',') + ')';
+        const path = Array.from({length: 13}, (_, i) => rz(p, delta * i / 12));
+        seg(path, col, 1.3);
+        const a = P(path[11]), b = P(path[12]);
+        if (b[2] > 0) { const ang = Math.atan2(b[1] - a[1], b[0] - a[0]); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - 6 * Math.cos(ang - 0.4), b[1] - 6 * Math.sin(ang - 0.4)); ctx.lineTo(b[0] - 6 * Math.cos(ang + 0.4), b[1] - 6 * Math.sin(ang + 0.4)); ctx.fill(); }
+      }
+      // centres
+      for (const [q, lab] of [[[1, 0, 0], 'x'], [rz([1, 0, 0], delta), 'y']]) {
+        const s = P(q); if (s[2] < 0) continue; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(s[0], s[1], 4, 0, 2 * Math.PI); ctx.fill();
+        ctx.font = 'bold 15px DejaVu Sans, sans-serif'; ctx.fillText(lab, s[0] + 7, s[1] + 16);
+      }
+    }
+    const pos = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
+    const down = e => { drag = pos(e); e.preventDefault(); };
+    const move = e => { if (!drag) return; const p = pos(e); ay += (p[0] - drag[0]) * 0.01; ax += (p[1] - drag[1]) * 0.01; ax = Math.max(-1.5, Math.min(1.5, ax)); drag = p; draw(); e.preventDefault(); };
+    cv.addEventListener('mousedown', down); addEventListener('mousemove', move); addEventListener('mouseup', () => drag = null);
+    cv.addEventListener('touchstart', down, {passive: false}); cv.addEventListener('touchmove', move, {passive: false}); cv.addEventListener('touchend', () => drag = null);
+    addEventListener('resize', draw); draw();
+  }
+  const FIGS = { 'ollivier-sphere': ollivierSphere };
+  document.querySelectorAll('canvas[data-fig3d]').forEach(cv => { const f = FIGS[cv.dataset.fig3d]; if (f) f(cv); });
+})();
+</script></body></html>

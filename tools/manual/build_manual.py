@@ -21,7 +21,8 @@ def clean_out(o):
     o = re.sub(r'`[0-9.]+', '', o)
     return o
 
-def build(spec, defs, outputs, images, out_path, brand):
+def build(spec, defs, outputs, images, out_path, brand, hand=None):
+    hand = hand or {}
     pages = {}
     for name, p in spec.P.items():
         exs, k = {}, 0
@@ -40,11 +41,13 @@ def build(spec, defs, outputs, images, out_path, brand):
             exs[sec] = rows
         pages[name] = {'name': name, 'slug': slug(name), 'guide': p['guide'], 'defined': p['defined'], 'kind': p.get('kind', 'Function'),
                        'usage': p['usage'], 'details': p['details'], 'examples': exs, 'see': [s for s in p['see'] if s in spec.P],
-                       'source': defs.get(name, '')}
+                       'source': defs.get(name, ''), 'hand': hand.get(name, [])}
     slugs = [v['slug'] for v in pages.values()]
     assert len(slugs) == len(set(slugs)), 'slug clash'
     for g in spec.GUIDES:
         for f in g[3]: assert f in pages, ('guide lists unknown', f)
+    nohand = [n for n in pages if not pages[n]['hand']]
+    assert not nohand, ('no Worked by Hand', nohand)
     missing = [n for n in pages if not any(n in g[3] for g in spec.GUIDES)]
     assert not missing, missing
     data = {'title': spec.TITLE, 'subtitle': spec.SUBTITLE, 'repo': spec.REPO, 'site': spec.SITE, 'lab': spec.LAB,
@@ -121,6 +124,10 @@ pre .fn{color:var(--link);font-weight:600}pre .str{color:#1d7a4a}pre .cmt{color:
 .src pre{margin:4px 0 16px;padding:12px 14px;background:#2a2b2f;color:#eee9df;border-radius:5px;font-size:13px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
 .src pre .fn{color:#ffb36b}.src pre .str{color:#a8d98a}.src pre .cmt{color:#9a9a9a}.src pre .num{color:#d4b3ff}
 .src .note{font-size:13px;color:var(--muted);margin:0 0 4px}
+.hand-steps{margin:2px 0 18px 4px;padding:12px 18px 12px 40px;background:#fff8f1;border:1px solid #f3dcc6;border-left:4px solid var(--accent2);border-radius:6px;counter-reset:none}
+.hand-steps li{margin:7px 0;padding-left:4px;font-size:15px;line-height:1.6}
+.hand-steps li::marker{color:var(--accent);font-weight:600}
+.outref{font:italic 13px Georgia,serif;color:var(--in);white-space:nowrap}
 .see{display:flex;flex-wrap:wrap;gap:6px 18px;margin:4px 0 18px 4px;font-family:"Source Code Pro",Menlo,monospace;font-size:14px}
 .see a:after{content:"";}
 .hist{margin:4px 0 18px 4px;color:#444}
@@ -196,8 +203,9 @@ function tpl(t) {
   rest = esc(rest).replace(/(^|[\[\s,{(+−*/^=&;])([\p{L}][\p{L}\p{N}]*)/gu, (a, p, id) => P[id] ? p + '<a href="#/ref/' + P[id].slug + '"><b>' + id + '</b></a>' : (/^(Graph|True|False|All|None|Automatic)$/.test(id) ? p + id : p + '<i>' + id + '</i>'));
   return '<b>' + esc(m[1]) + '</b>' + rest;
 }
-const SUBRE = /(?<![A-Za-z0-9\u0370-\u03FF])([A-Za-z\u0370-\u03FF])_(\{[^}]*\}|[A-Za-z0-9\u0370-\u03FF½ℝ³²]+)/gu;
-const subs = h => h.replace(SUBRE, (m, b, x) => b + '<sub>' + (x[0] === '{' ? x.slice(1, -1) : x) + '</sub>');
+const SUBRE = /(?<![A-Za-z0-9\u0370-\u03FF\u2202\u2207])([A-Za-z\u0370-\u03FF\u2200-\u22FF])_(\{[^}]*\}|[A-Za-z0-9\u0370-\u03FF½ℝ³²]+)/gu;
+const SUPRE = /\^(\{[^}]*\}|[A-Za-z0-9\u0370-\u03FF])/gu;
+const subs = h => h.replace(SUBRE, (m, b, x) => b + '<sub>' + (x[0] === '{' ? x.slice(1, -1) : x) + '</sub>').replace(SUPRE, (m, x) => '<sup>' + (x[0] === '{' ? x.slice(1, -1) : x) + '</sup>');
 function inline(s) {
   return subs(esc(s)).replace(/(^|[\s(“"])([\p{L}][\p{L}\p{N}]*)(?=[\s,.;:)”"]|$)/gu, (a, p, id) => P[id] ? p + '<a class="mono" href="#/ref/' + P[id].slug + '">' + id + '</a>' : a);
 }
@@ -233,6 +241,7 @@ function ref(name) {
   let h = '<div class="reftype"><span class="tag ' + tagc + '">' + esc(p.kind) + '</span><span style="font-size:13px;color:var(--muted)">Defined in ' + esc(p.defined) + '</span></div>';
   h += '<h1 class="sym">' + esc(name) + '</h1><div class="usage">' + p.usage.map(u => '<div class="row"><div class="tpl">' + tpl(u[0]) + '</div><div class="txt">' + inline(u[1]) + '</div></div>').join('') + '</div>';
   if (p.details.length) h += '<details class="sec"><summary>Details and Options</summary><ul class="detail-list">' + p.details.map(d => '<li>' + inline(d) + '</li>').join('') + '</ul></details>';
+  if (p.hand.length) h += '<details class="sec hand" open><summary>Worked by Hand</summary><ol class="hand-steps">' + p.hand.map(s => '<li>' + inline(s).replace(/(Out\[\d+\])/g, '<span class="outref">$1</span>') + '</li>').join('') + '</ol></details>';
   let total = 0; Object.values(p.examples).forEach(l => total += l.length);
   h += '<details class="sec" open><summary>Examples <span class="n">(' + total + ')</span></summary>';
   let n = 0, first = true;

@@ -4,6 +4,7 @@ from build import CELLS
 from wlparse import statements, lhs_name
 import spec_curvature as S
 from build_manual import build
+from hand_curvature import HAND
 defs = {}
 for style, text in CELLS:
     if style != 'Input': continue
@@ -17,4 +18,4 @@ miss = [n for n in S.P if n not in defs]
 print('no source:', miss)
 outs = json.load(open('outputs_curvature.json', encoding='utf-8'))
 imgs = {k: f'img/{k}.png' for k in ['curvsurf', 'legend', 'edgeplot', 'vertexplot', 'edgepic', 'row']}
-print(build(S, defs, outs, imgs, '/home/claude/laplacian/manual.html', 'CCN'))
+print(build(S, defs, outs, imgs, '/home/claude/laplacian/manual.html', 'CCN', HAND))

@@ -2,6 +2,8 @@
 
 **Live lab:** https://lossofgenerality.github.io/laplacian/ (GitHub Pages; opens `lab/Laplacian_Curvature_Lab.html`)
 
+**Write-ups:** [The Laplacian and Curvature](https://lossofgenerality.github.io/laplacian/docs/laplacian-curvature.html) · [Ollivier Curvature](https://lossofgenerality.github.io/laplacian/docs/series/07-ollivier.html) (HTML with rotatable 3D figures; PDF and markdown alongside)
+
 **Programmer’s manual:** https://lossofgenerality.github.io/laplacian/manual.html (one page per CCN Wolfram function, with verified examples)
 
 Every standard notion of curvature, on smooth surfaces and manifolds, on triangle meshes and on graphs, can be read off the Laplacian. This repository collects those instances, with a computed check for each one.

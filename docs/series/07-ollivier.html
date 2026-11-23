@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ollivier Curvature — Computational Classnotes</title><style>@page { size: A4; margin: 20mm 18mm 22mm 18mm;
+  @bottom-center { content: "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"; } }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1d2430; }
+h1 { font-size: 20pt; margin: 0 0 4pt; color: #11161f; }
+h2 { font-size: 13.5pt; margin: 18pt 0 6pt; padding-bottom: 3pt; border-bottom: 2px solid rgb(250,143,43); break-after: avoid; }
+p, li { orphans: 3; widows: 3; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 9pt; }
+table { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin: 8pt 0; break-inside: auto; }
+th, td { border: 1px solid #c9d0db; padding: 3pt 5pt; vertical-align: top; text-align: left; }
+th { background: #eef1f6; }
+tr { break-inside: avoid; }
+img { max-width: 100%; max-height: 105mm; display: block; margin: 4pt auto; }
+figure { margin: 6pt 0; }
+figcaption { display: none; }
+math { font-family: "Latin Modern Math", "STIX Two Math", serif; }
+math[display="block"] { display: block; margin: 8pt 0; font-size: 11pt; }
+a { color: #1f5fbf; text-decoration: none; }
+hr { border: 0; border-top: 1px solid #c9d0db; margin: 16pt 0 8pt; }
+
+body{max-width:860px;margin:0 auto;padding:28px 22px 60px;background:#fff}
+img{max-width:100%;height:auto}
+canvas[data-fig3d]{width:100%;max-width:520px;height:440px;display:block;margin:6px auto;cursor:grab;touch-action:none}
+.fig3d-note{text-align:center;font-size:9pt;color:#666;margin-top:-2px}
+nav.wtop{font-size:10pt;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
+nav.wtop a{color:rgb(212,86,28)}
+@media print{canvas[data-fig3d]{display:none}.fig3d-fallback{display:block!important}}
+</style></head><body><nav class="wtop"><a href="07-ollivier.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/series/07-ollivier.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a></nav><h1 id="ollivier-curvature">Ollivier Curvature</h1>
+<p>23 November 2026 · Computational Classnotes · Curvature from the
+Laplacian, write-up 7</p>
+<p>Positive curvature brings averages together. Ollivier’s curvature
+measures exactly that: κ(x, y) = 1 −
+W₁(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mi>x</mi></msub><annotation encoding="application/x-tex">m_{x}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mi>y</mi></msub><annotation encoding="application/x-tex">m_{y}</annotation></semantics></math>)/d(x,
+y), how much closer two averaging measures are than their centres. It
+needs only a distance and an averaging rule, so the same definition
+works on graphs and on manifolds, and on a surface with ε-balls it gives
+back the Gauss curvature as κ ≈ Kε²/8. This write-up states and explains
+each part; the notebook <code>notebooks/series/07-Ollivier.nb</code>
+proves each one on examples, with the same section numbers.</p>
+<h2 id="scope-and-conventions">Scope and conventions</h2>
+<ul>
+<li><strong>Distances.</strong> On graphs d is the shortest-path
+distance; on surfaces, geodesic distance.</li>
+<li><strong>Averaging.</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>μ</mi><mi>α</mi></msub><annotation encoding="application/x-tex">\mu_{\alpha}</annotation></semantics></math>(x)
+is the α-lazy simple random walk: mass α stays at x, and 1 − α is spread
+evenly over the neighbours.
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mi>α</mi></msub><annotation encoding="application/x-tex">\kappa_{\alpha}</annotation></semantics></math>
+is the curvature it gives; κ₀ is the non-lazy one.</li>
+<li><strong>Laplacian.</strong> Δf(v) = (mean of f over the neighbours
+of v) − f(v), the random-walk normalisation, as in the rest of the
+series.</li>
+<li><strong>Numbering.</strong> Sections 2–10 here match notebook
+Sections 2–10; notebook Section 1 is the toolkit. Every number quoted
+below was returned by the Wolfram kernel.</li>
+<li><strong>Repository.</strong>
+https://github.com/lossofgenerality/laplacian · Lab bench: <a
+href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#ollivier">Ollivier
+on manifolds</a>.</li>
+</ul>
+<h2 id="at-a-glance">At a glance</h2>
+<p><strong>On a sphere, a ball slid along a geodesic lands with every
+point moving less than the centres: κ &gt; 0.</strong></p>
+<figure>
+<canvas data-fig3d="ollivier-sphere" aria-label="Rotatable 3D figure"></canvas><img class="fig3d-fallback" style="display:none" src="img/ollivier-sphere.png" alt=""><div class="fig3d-note">3D: drag to rotate</div>
+<figcaption aria-hidden="true">Fig. 1</figcaption>
+</figure>
+<p><strong>Fig. 1.</strong> The ε-ball at x on the unit sphere slid by a
+rotation onto the ε-ball at y. A point at distance λ from the geodesic
+travels δ cos λ, not δ. Averaging cos λ over the ball gives the
+curvature (§8, Fig. 5).</p>
+<h2 id="positive-curvature-brings-averages-together">2. Positive
+curvature brings averages together</h2>
+<p>On a round sphere, geodesics leaving nearby points in parallel bend
+towards each other. So a small ball around x, slid to a nearby point y,
+needs less transport than the distance between the centres. On a plane
+every point travels exactly d(x, y). On a saddle, points off the
+geodesic travel more.</p>
+<p>Ollivier turned this into a definition that needs no derivatives:
+curvature is how much closer the two averaging measures are than their
+centres.</p>
+<h2 id="definition">3. Definition</h2>
+<p>Give each point x a probability measure
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mi>x</mi></msub><annotation encoding="application/x-tex">m_{x}</annotation></semantics></math>.
+The Wasserstein-1 distance is the least average distance needed to move
+one measure onto another:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>,</mo><mi>m</mi><mi>′</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munder><mo>min</mo><mi>π</mi></munder><mspace width="0.222em"></mspace><munder><mo>∑</mo><mrow><mi>a</mi><mo>,</mo><mi>b</mi></mrow></munder><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>π</mi><mo>≥</mo><mn>0</mn><mo>,</mo><mspace width="0.222em"></mspace><mspace width="0.222em"></mspace><munder><mo>∑</mo><mi>b</mi></munder><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="0.222em"></mspace><mspace width="0.222em"></mspace><munder><mo>∑</mo><mi>a</mi></munder><mi>π</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>m</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+W_1(m,m&#39;) \;=\; \min_{\pi}\ \sum_{a,b}\pi(a,b)\,d(a,b),\qquad \pi\ge 0,\ \ \textstyle\sum_b\pi(a,b)=m(a),\ \ \sum_a\pi(a,b)=m&#39;(b).
+</annotation></semantics></math></p>
+<p>Ollivier’s curvature of a pair x ≠ y is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><mn>1</mn><mo>−</mo><mfrac><mrow><msub><mi>W</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>m</mi><mi>x</mi></msub><mo>,</mo><msub><mi>m</mi><mi>y</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\kappa(x,y) \;=\; 1-\frac{W_1(m_x,m_y)}{d(x,y)} .
+</annotation></semantics></math></p>
+<p>Kantorovich–Rubinstein duality gives the same W₁ as a maximum over
+1-Lipschitz test functions:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>m</mi><mo>,</mo><mi>m</mi><mi>′</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.278em"></mspace><mo>=</mo><mspace width="0.278em"></mspace><munder><mo>max</mo><mrow><mrow><mo stretchy="true" form="prefix">|</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">|</mo></mrow><mo>≤</mo><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo>,</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></munder><mspace width="0.222em"></mspace><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><munder><mo>∑</mo><mi>a</mi></munder><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>m</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>a</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><munder><mo>∑</mo><mi>b</mi></munder><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.167em"></mspace><mi>m</mi><mi>′</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>b</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo><mi>.</mi></mrow><annotation encoding="application/x-tex">
+W_1(m,m&#39;) \;=\; \max_{|f(a)-f(b)|\le d(a,b)}\ \Big(\sum_a f(a)\,m(a)-\sum_b f(b)\,m&#39;(b)\Big).
+</annotation></semantics></math></p>
+<p>So a transport plan bounds W₁ above (κ below), and a 1-Lipschitz
+function bounds W₁ below (κ above). When the two meet, the value is
+proved.</p>
+<p><strong>Checked (notebook §3):</strong> primal and dual linear
+programs agree on five edges — C₆ 1 = 1, K₅ 1/4 = 1/4, binary tree 5/3 =
+5/3, Petersen 4/3 = 4/3, cube Q₃ 1 = 1.</p>
+<h2 id="worked-by-hand">4. Worked by hand</h2>
+<p><strong>Complete graph Kₙ.</strong> The walks at adjacent x and y
+share the n − 2 common neighbours, each with mass 1/(n − 1). Only the
+mass on y must move to x, a distance 1. The test function f = 1 at y, 0
+elsewhere gives the same 1/(n − 1), so</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub><mo>=</mo><mfrac><mn>1</mn><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>κ</mi><mn>0</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+W_1=\frac{1}{n-1},\qquad \kappa_0(K_n)=\frac{n-2}{n-1}.
+</annotation></semantics></math></p>
+<p><strong>Long cycles are flat.</strong> On Cₙ with n ≥ 4, take x = 1,
+y = 2. Move the ½ on 0 to 1 and the ½ on 2 to 3: W₁ ≤ 1. The function f
+= 1 on {0, 2}, 0 elsewhere, gives exactly 1. So κ₀(Cₙ) = 0, and κ₀(C₃) =
+½.</p>
+<p><strong>Trees spread out.</strong> On an interior edge of the binary
+tree (both degrees 3), one optimal plan moves ⅓ a distance 1, another ⅓
+a distance 1, and the last ⅓ across the edge a distance 3:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub><mo>=</mo><mfrac displaystyle="false"><mn>1</mn><mn>3</mn></mfrac><mo>+</mo><mfrac displaystyle="false"><mn>1</mn><mn>3</mn></mfrac><mo>+</mo><mn>1</mn><mo>=</mo><mfrac displaystyle="false"><mn>5</mn><mn>3</mn></mfrac><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>κ</mi><mn>0</mn></msub><mo>=</mo><mo>−</mo><mfrac displaystyle="false"><mn>2</mn><mn>3</mn></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+W_1=\tfrac13+\tfrac13+1=\tfrac53,\qquad \kappa_0=-\tfrac23 .
+</annotation></semantics></math></p>
+<figure>
+<img src="img/ollivier-plans.png" alt="Fig. 2" />
+<figcaption aria-hidden="true">Fig. 2</figcaption>
+</figure>
+<p><strong>Fig. 2.</strong> Optimal transport plans on K₅, C₆ and the
+binary tree. The edge is black; orange arrows are the mass moved,
+labelled by amount.</p>
+<p><strong>Checked (notebook §4):</strong> κ₀(Kₙ) = 1/2, 2/3, 3/4, 4/5,
+5/6 for n = 3…7, equal to (n − 2)/(n − 1); κ₀(Cₙ) = 1/2, 0, 0, 0, 0, 0
+for n = 3…8; tree edge (2, 4): κ₀ = −2/3 with plan {1→9: ⅓, 4→8: ⅓, 5→2:
+⅓}.</p>
+<h2 id="laziness-and-the-linluyau-curvature">5. Laziness and the
+Lin–Lu–Yau curvature</h2>
+<p>The non-lazy walk misreads bipartite graphs. On the cube Q₃ the walk
+at x lives on odd vertices and the walk at y on even ones, so every unit
+of mass must move and κ₀ = 0. Laziness repairs this.</p>
+<p>The idleness function α ↦
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mi>α</mi></msub><annotation encoding="application/x-tex">\kappa_{\alpha}</annotation></semantics></math>(x,
+y) is concave and piecewise linear. On
+[1/(max{<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>x</mi></msub><annotation encoding="application/x-tex">d_{x}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>y</mi></msub><annotation encoding="application/x-tex">d_{y}</annotation></semantics></math>}
++ 1), 1] it is linear and vanishes at α = 1 (Bourne, Cushing, Liu, Münch
+and Peyerimhoff). Lin, Lu and Yau defined
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+= lim
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mi>α</mi></msub><annotation encoding="application/x-tex">\kappa_{\alpha}</annotation></semantics></math>/(1
+− α) as α → 1, so for every α in that interval</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><msub><mi>κ</mi><mi>α</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>1</mn><mo>−</mo><mi>α</mi></mrow></mfrac><mo>,</mo><mspace width="2.0em"></mspace><mtext mathvariant="normal">in particular</mtext><mspace width="1.0em"></mspace><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><mo>=</mo><mn>2</mn><mspace width="0.167em"></mspace><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\kappa_{\mathrm{LLY}}(x,y)=\frac{\kappa_\alpha(x,y)}{1-\alpha},\qquad\text{in particular}\quad \kappa_{\mathrm{LLY}}=2\,\kappa_{1/2}.
+</annotation></semantics></math></p>
+<p>Münch and Wojciechowski removed the limit. The Lin–Lu–Yau curvature
+is a formula in the graph Laplacian:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mo>inf</mo><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">{</mo><mspace width="0.167em"></mspace><msub><mi>∇</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mi>Δ</mi><mi>f</mi><mspace width="0.278em"></mspace><mo>:</mo><mspace width="0.278em"></mspace><mi>f</mi><mspace width="0.222em"></mspace><mtext mathvariant="normal">1-Lipschitz</mtext><mo>,</mo><mspace width="0.222em"></mspace><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>1</mn><mspace width="0.167em"></mspace><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">}</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>∇</mi><mrow><mi>x</mi><mi>y</mi></mrow></msub><mi>g</mi><mo>=</mo><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>g</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\kappa_{\mathrm{LLY}}(x,y)=\inf\big\{\,\nabla_{xy}\Delta f \;:\; f\ \text{1-Lipschitz},\ f(y)-f(x)=1\,\big\},\qquad \nabla_{xy}g=g(x)-g(y).
+</annotation></semantics></math></p>
+<figure>
+<img src="img/ollivier-idleness.png" alt="Fig. 3" />
+<figcaption aria-hidden="true">Fig. 3</figcaption>
+</figure>
+<p><strong>Fig. 3.</strong> Idleness functions on seven edges. Each one
+is linear from the black dot at α = 1/(d + 1) to zero at α = 1. K₅ peaks
+at κ = 1 exactly there.</p>
+<p><strong>Checked (notebook §5):</strong> on seven edges
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mi>α</mi></msub><annotation encoding="application/x-tex">\kappa_{\alpha}</annotation></semantics></math>/(1
+− α) takes one value for every α ≥ 1/(d + 1), and it equals the
+Laplacian formula — K₅ 5/4, C₆ 0, Q₃ 2/3, Petersen 0, binary tree −2/3,
+dumbbell bridge −3/5, star K₁,₄ 1/2.</p>
+<h2 id="a-gallery-of-graphs">6. A gallery of graphs</h2>
+<figure>
+<img src="img/ollivier-gallery.png" alt="Fig. 4" />
+<figcaption aria-hidden="true">Fig. 4</figcaption>
+</figure>
+<p><strong>Fig. 4.</strong> Seven graphs with every edge coloured by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>.
+Complete graphs and cubes are positive. Cycles and grid interiors are
+flat, while grid boundary edges are positive. Trees and the dumbbell’s
+bridge path are negative; the bridge is the most negative part of its
+graph.</p>
+<h2 id="what-a-lower-bound-on-κ-buys">7. What a lower bound on κ
+buys</h2>
+<p><strong>Local to global.</strong> On a graph it is enough to bound κ
+on edges. W₁ is a metric, so the triangle inequality adds up along a
+geodesic (Ollivier, Proposition 19).</p>
+<p><strong>Bonnet–Myers.</strong> If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+≥ k &gt; 0 on every edge, the graph is finite and</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>diam</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>G</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≤</mo><mfrac><mn>2</mn><mi>k</mi></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\operatorname{diam}(G)\le \frac{2}{k}.
+</annotation></semantics></math></p>
+<p><strong>Lichnerowicz.</strong> Under the same hypothesis, the first
+non-zero eigenvalue of the normalised Laplacian satisfies</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>λ</mi><mn>1</mn></msub><mo>≥</mo><mi>k</mi><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\lambda_1 \ge k ,
+</annotation></semantics></math></p>
+<p>and Ollivier proves the same with his κ (Corollary 30).</p>
+<p>The cube is extremal for both. Ollivier’s own example is the lazy
+walk on {0, 1}ᴺ, with κ = 1/N on neighbours.</p>
+<p><strong>Checked (notebook §7):</strong></p>
+<ul>
+<li><strong>Local to global:</strong> on Q₃ with the ½-lazy walk, pairs
+at distance 1, 2 and 3 all have
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math>
+= 1/3.</li>
+<li><strong>Diameter:</strong> K₅ has k = 5/4 and diam 1 ≤ 8/5. Q₃ has k
+= 2/3 and diam 3 = 3, equality. The star has k = 1/2 and diam 2 ≤ 4;
+K₃,₃ has k = 2/3 and diam 2 ≤ 3.</li>
+<li><strong>Spectral gap:</strong> K₅ λ₁ = 1.25 =
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+and Q₃ λ₁ = 0.6667 =
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>,
+both equality; the star has λ₁ = 1 ≥ 1/2.</li>
+</ul>
+<h2 id="back-on-a-surface-κ-kε²8">8. Back on a surface: κ ≈ Kε²/8</h2>
+<p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>m</mi><mi>x</mi></msub><annotation encoding="application/x-tex">m_{x}</annotation></semantics></math>
+be the uniform measure on the geodesic ε-ball around x, on a surface of
+constant curvature K, and let y lie a small distance δ along a geodesic.
+Slide the ball along the geodesic. The Jacobi equation J″ + KJ = 0 says
+a point at signed distance λ from the geodesic is displaced by δ cos(√K
+λ) + o(δ). Averaging over the ball,</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>W</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>m</mi><mi>x</mi></msub><mo>,</mo><msub><mi>m</mi><mi>y</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>≤</mo><mi>δ</mi><mspace width="0.167em"></mspace><mi>𝔼</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">[</mo><mo>cos</mo><mrow><mo stretchy="true" form="prefix">(</mo><msqrt><mi>K</mi></msqrt><mspace width="0.167em"></mspace><mi>λ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">]</mo><mo>+</mo><mi>o</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>δ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mi>κ</mi><mspace width="0.278em"></mspace><mo>≥</mo><mspace width="0.278em"></mspace><mn>1</mn><mo>−</mo><mi>𝔼</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">[</mo><mo>cos</mo><mrow><mo stretchy="true" form="prefix">(</mo><msqrt><mi>K</mi></msqrt><mspace width="0.167em"></mspace><mi>λ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">]</mo><mo>=</mo><mfrac><mi>K</mi><mn>2</mn></mfrac><mspace width="0.167em"></mspace><mi>𝔼</mi><mrow><mo stretchy="true" form="prefix">[</mo><msup><mi>λ</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>ε</mi><mn>4</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+W_1(m_x,m_y)\le \delta\,\mathbb E\big[\cos(\sqrt K\,\lambda)\big]+o(\delta),
+\qquad
+\kappa \;\ge\; 1-\mathbb E\big[\cos(\sqrt K\,\lambda)\big]=\frac K2\,\mathbb E[\lambda^2]+O(\varepsilon^4).
+</annotation></semantics></math></p>
+<p>On a flat disc of radius ε, 𝔼[λ²] = ε²/4, so κ ≈ Kε²/8. Ollivier
+shows the sliding coupling is optimal at this order (Example 7). In
+dimension N the same computation gives</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>κ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><msup><mi>ε</mi><mn>2</mn></msup><mspace width="0.167em"></mspace><mrow><mi mathvariant="normal">R</mi><mi mathvariant="normal">i</mi><mi mathvariant="normal">c</mi></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>v</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>2</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>+</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>+</mo><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>ε</mi><mn>3</mn></msup><mo>+</mo><msup><mi>ε</mi><mn>2</mn></msup><mi>δ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\kappa(x,y)=\frac{\varepsilon^2\,\mathrm{Ric}(v,v)}{2(N+2)}+O(\varepsilon^3+\varepsilon^2\delta).
+</annotation></semantics></math></p>
+<p>In polar coordinates (ρ, α) at x, spherical trigonometry gives sin(√K
+λ) = sin(√K ρ) sin α, so the sliding value is an exact integral. Its
+series, for any K, is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>κ</mi><mtext mathvariant="normal">slide</mtext></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>ε</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>K</mi><msup><mi>ε</mi><mn>2</mn></msup></mrow><mn>8</mn></mfrac><mo>−</mo><mfrac><mrow><msup><mi>K</mi><mn>2</mn></msup><msup><mi>ε</mi><mn>4</mn></msup></mrow><mn>64</mn></mfrac><mo>+</mo><mfrac><mrow><mn>11</mn><msup><mi>K</mi><mn>3</mn></msup><msup><mi>ε</mi><mn>6</mn></msup></mrow><mn>46080</mn></mfrac><mo>+</mo><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>ε</mi><mn>8</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\kappa_{\text{slide}}(\varepsilon)=\frac{K\varepsilon^2}{8}-\frac{K^2\varepsilon^4}{64}+\frac{11K^3\varepsilon^6}{46080}+O(\varepsilon^8).
+</annotation></semantics></math></p>
+<p>The ε⁴ and higher terms belong to this coupling: they bound κ from
+below but are not claimed to be the exact W₁.</p>
+<figure>
+<img src="img/ollivier-k8.png" alt="Fig. 5" />
+<figcaption aria-hidden="true">Fig. 5</figcaption>
+</figure>
+<p><strong>Fig. 5.</strong> κ/ε² against ε for the sphere (K = 1), the
+plane and the hyperbolic plane (K = −1), tending to K/8.</p>
+<p><strong>Checked (notebook §8):</strong></p>
+<ul>
+<li>𝔼[λ²] = ε²/4 exactly.</li>
+<li>The series above, symbolic in K.</li>
+<li>On the unit 3-sphere (Ric = 2): ε²/5 − 2ε⁴/75, whose leading term is
+ε²·2/(2·5).</li>
+<li>At ε = 0.05: κ/ε² = 0.12496 (sphere), 0 (plane), −0.12504
+(hyperbolic plane).</li>
+<li>Series and quadrature agree at ε = 0.3 to 3 × 10⁻⁸.</li>
+</ul>
+<h2 id="exercises">9. Exercises</h2>
+<ol type="1">
+<li>Show by a plan and a test function that κ₀ = 0 on every edge of
+K₃,₃.</li>
+<li>Compute
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math>
+on an edge of C₄ and of C₅. <em>(1/2 and 1/4.)</em></li>
+<li>A tree edge with degrees
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>x</mi></msub><annotation encoding="application/x-tex">d_{x}</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>y</mi></msub><annotation encoding="application/x-tex">d_{y}</annotation></semantics></math>
+has
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+=
+2/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>x</mi></msub><annotation encoding="application/x-tex">d_{x}</annotation></semantics></math>
++
+2/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>d</mi><mi>y</mi></msub><annotation encoding="application/x-tex">d_{y}</annotation></semantics></math>
+− 2. Check the star K₁,₄ and both kinds of binary-tree edge. <em>(1/2;
+−2/3 interior, 2/3 at a leaf.)</em></li>
+<li>Show
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+= 2/n on the hypercube Qₙ, so the diameter bound is attained for every
+n.</li>
+<li>Prove 𝔼[λ²] = ε²/4 on a flat disc and deduce K/8.</li>
+</ol>
+<p><strong>Checked (notebook §9):</strong> κ₀(K₃,₃) = 0;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math>(C₄)
+= 1/2 and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math>(C₅)
+= 1/4; the tree formula holds on all three edges;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>(Qₙ)
+= 1, 2/3, 1/2, 2/5 with diam = 2, 3, 4, 5 for n = 2…5.</p>
+<h2 id="verified-results">Verified results</h2>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Graph and edge</th>
+<th>κ₀</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math></th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math></th>
+<th>λ₁</th>
+<th>diam</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>K₅</td>
+<td>3/4</td>
+<td>5/8</td>
+<td>5/4</td>
+<td>1.25</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>C₆</td>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>0.5</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>Q₃</td>
+<td>0</td>
+<td>1/3</td>
+<td>2/3</td>
+<td>0.667</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Petersen, edge {1, 3}</td>
+<td>−1/3</td>
+<td>0</td>
+<td>0</td>
+<td>0.667</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td>Binary tree, interior edge</td>
+<td>−2/3</td>
+<td>−1/3</td>
+<td>−2/3</td>
+<td>0.057</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>Dumbbell, bridge {5, 6}</td>
+<td>−3/5</td>
+<td>−3/10</td>
+<td>−3/5</td>
+<td>0.029</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Star K₁,₄</td>
+<td>0</td>
+<td>1/4</td>
+<td>1/2</td>
+<td>1</td>
+<td>2</td>
+</tr>
+</tbody>
+</table>
+<p>In every row
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+=
+2<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow></msub><annotation encoding="application/x-tex">\kappa_{1/2}</annotation></semantics></math>.
+Where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+&gt; 0 the spectral bound holds (K₅ and Q₃ with equality), and Q₃ meets
+the diameter bound
+2/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+= 3.</p>
+<h2 id="references">References</h2>
+<p><strong>Ollivier curvature</strong></p>
+<ul>
+<li>Y. Ollivier, <em>Ricci curvature of Markov chains on metric
+spaces</em>, J. Funct. Anal. 256 (2009) 810–864. <a
+href="https://arxiv.org/abs/math/0701886">arXiv:math/0701886</a>.
+Example 7 (ε-balls), Example 8 (cube), Proposition 19 (local to global),
+Proposition 23 (diameter), Corollary 30 (spectral gap).</li>
+</ul>
+<p><strong>Lin–Lu–Yau curvature and laziness</strong></p>
+<ul>
+<li>Y. Lin, L. Lu, S.-T. Yau, <em>Ricci curvature of graphs</em>, Tohoku
+Math. J. 63 (2011) 605–627. <a
+href="https://www.projecteuclid.org/euclid.tmj/1325886283">Project
+Euclid</a> (record page opened; full text not reachable from here).</li>
+<li>D. P. Bourne, D. Cushing, S. Liu, F. Münch, N. Peyerimhoff,
+<em>Ollivier–Ricci idleness functions of graphs</em>, SIAM J. Discrete
+Math. 32 (2018) 1408–1424. <a
+href="https://arxiv.org/abs/1704.04398">arXiv:1704.04398</a>.</li>
+<li>F. Münch, R. K. Wojciechowski, <em>Ollivier Ricci curvature for
+general graph Laplacians</em>, Adv. Math. 356 (2019) 106759. <a
+href="https://arxiv.org/abs/1712.00875">arXiv:1712.00875</a>. Theorem
+2.1 (limit-free formula).</li>
+</ul>
+<p><strong>Consequences</strong></p>
+<ul>
+<li>X. Huang, S. Liu, Q. Xia, <em>Bounding the diameter and eigenvalues
+of amply regular graphs via Lin–Lu–Yau curvature</em>. <a
+href="https://arxiv.org/abs/2210.02988">arXiv:2210.02988</a>. Theorem
+1.2 states the discrete Bonnet–Myers bound and the Lichnerowicz
+estimate.</li>
+</ul>
+<p>© Computational Classnotes · CC BY-NC-SA 4.0</p>
+<footer style="margin-top:30px;font-size:9pt;color:#666">© 2026 Computational Classnotes · CC BY-NC-SA 4.0</footer><script>/* CCN rotatable 3D figures for the HTML write-ups (no libraries). © Computational Classnotes · CC BY-NC-SA 4.0 */
+(function () {
+  const ORANGE = [250, 143, 43], BLUE = [46, 92, 199];
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const rot = (p, ax, ay) => { // rotate about y (ay) then x (ax)
+    let [x, y, z] = p; const cy = Math.cos(ay), sy = Math.sin(ay);
+    [x, z] = [cy * x + sy * z, -sy * x + cy * z];
+    const cx = Math.cos(ax), sx = Math.sin(ax);
+    [y, z] = [cx * y - sx * z, sx * y + cx * z];
+    return [x, y, z];
+  };
+  const rz = (p, t) => [Math.cos(t) * p[0] - Math.sin(t) * p[1], Math.sin(t) * p[0] + Math.cos(t) * p[1], p[2]];
+  // points of the eps-ball around (1,0,0): spherical cap, Fibonacci sampling
+  function capPoints(eps, n) {
+    const out = [], c = Math.cos(eps);
+    for (let i = 0; i < n; i++) {
+      const u = 1 - (1 - c) * (i + 0.5) / n, a = i * Math.PI * (3 - Math.sqrt(5)), s = Math.sqrt(1 - u * u);
+      out.push([u, s * Math.cos(a), s * Math.sin(a)]); // axis = +x
+    }
+    return out.map(p => [p[0], p[1], p[2]]).map(p => [p[0], p[2], p[1]]).map(p => [p[0], p[1], p[2]]);
+  }
+  function ollivierSphere(cv) {
+    const delta = 0.7, eps = 0.42, pts = capPoints(eps, 90).map(p => [p[0], p[1], p[2]]);
+    // ball centred at x=(1,0,0) on the equator z=0; geodesic = equator; rotation about z by delta
+    const ball = pts.map(p => [p[0], p[2], p[1]]); // keep z as latitude direction
+    let ax = 0.45, ay = 0.0, drag = null;
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const R = Math.min(W, H) * 0.42, cx = W / 2, cy = H / 2 + 6;
+      const P = q => { const v = rz(q, -delta / 2), r = rot([v[1], v[2], v[0]], ax, ay); return [cx + R * r[0], cy - R * r[1], r[2]]; };
+      ctx.clearRect(0, 0, W, H);
+      const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R);
+      g.addColorStop(0, '#fbfaf7'); g.addColorStop(1, '#d9d6cf');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+      const seg = (pts3, style, width, dash) => { // polyline, faint when behind
+        for (let i = 0; i + 1 < pts3.length; i++) {
+          const a = P(pts3[i]), b = P(pts3[i + 1]); const front = a[2] + b[2] > 0;
+          ctx.strokeStyle = style; ctx.globalAlpha = front ? 1 : 0.18; ctx.lineWidth = width; ctx.setLineDash(dash || []);
+          ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+        }
+        ctx.globalAlpha = 1; ctx.setLineDash([]);
+      };
+      // meridians/parallels
+      for (let k = 0; k < 12; k++) { const t = k * Math.PI / 6; seg(Array.from({length: 49}, (_, i) => { const s = -Math.PI / 2 + i * Math.PI / 48; return [Math.cos(s) * Math.cos(t), Math.cos(s) * Math.sin(t), Math.sin(s)]; }), '#bdb8ae', 0.6); }
+      for (const la of [-60, -30, 30, 60]) { const s = la * Math.PI / 180; seg(Array.from({length: 73}, (_, i) => { const t = i * Math.PI / 36; return [Math.cos(s) * Math.cos(t), Math.cos(s) * Math.sin(t), Math.sin(s)]; }), '#bdb8ae', 0.6); }
+      // geodesic (equator) and cap boundaries
+      seg(Array.from({length: 81}, (_, i) => { const t = -0.4 + i * (delta + 0.8) / 80; return [Math.cos(t), Math.sin(t), 0]; }), '#333', 2.2);
+      const circ = c => Array.from({length: 73}, (_, i) => { const t = i * Math.PI / 36; return rz([Math.cos(eps), Math.sin(eps) * Math.cos(t), Math.sin(eps) * Math.sin(t)], c); }).map(p => [p[0], p[1], p[2]]);
+      seg(circ(0).map(p => [p[0], p[1], p[2]]), '#222', 1.4); seg(circ(delta), '#222', 1.4);
+      // arrows: each point slides along its latitude circle by delta; colour = cos(lambda)
+      for (const p of ball) {
+        const lam = Math.asin(Math.max(-1, Math.min(1, p[2]))), t = (Math.cos(lam) - Math.cos(eps)) / (1 - Math.cos(eps));
+        const col = 'rgb(' + mix(BLUE, ORANGE, t).join(',') + ')';
+        const path = Array.from({length: 13}, (_, i) => rz(p, delta * i / 12));
+        seg(path, col, 1.3);
+        const a = P(path[11]), b = P(path[12]);
+        if (b[2] > 0) { const ang = Math.atan2(b[1] - a[1], b[0] - a[0]); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - 6 * Math.cos(ang - 0.4), b[1] - 6 * Math.sin(ang - 0.4)); ctx.lineTo(b[0] - 6 * Math.cos(ang + 0.4), b[1] - 6 * Math.sin(ang + 0.4)); ctx.fill(); }
+      }
+      // centres
+      for (const [q, lab] of [[[1, 0, 0], 'x'], [rz([1, 0, 0], delta), 'y']]) {
+        const s = P(q); if (s[2] < 0) continue; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(s[0], s[1], 4, 0, 2 * Math.PI); ctx.fill();
+        ctx.font = 'bold 15px DejaVu Sans, sans-serif'; ctx.fillText(lab, s[0] + 7, s[1] + 16);
+      }
+    }
+    const pos = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
+    const down = e => { drag = pos(e); e.preventDefault(); };
+    const move = e => { if (!drag) return; const p = pos(e); ay += (p[0] - drag[0]) * 0.01; ax += (p[1] - drag[1]) * 0.01; ax = Math.max(-1.5, Math.min(1.5, ax)); drag = p; draw(); e.preventDefault(); };
+    cv.addEventListener('mousedown', down); addEventListener('mousemove', move); addEventListener('mouseup', () => drag = null);
+    cv.addEventListener('touchstart', down, {passive: false}); cv.addEventListener('touchmove', move, {passive: false}); cv.addEventListener('touchend', () => drag = null);
+    addEventListener('resize', draw); draw();
+  }
+  const FIGS = { 'ollivier-sphere': ollivierSphere };
+  document.querySelectorAll('canvas[data-fig3d]').forEach(cv => { const f = FIGS[cv.dataset.fig3d]; if (f) f(cv); });
+})();
+</script></body></html>
