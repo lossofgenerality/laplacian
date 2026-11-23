@@ -121,6 +121,10 @@ Two standalone single-page HTML manuals modelled on the structure of a documenta
 - Fixes found while verifying: the notebook’s point-cloud cell now uses `tPC`/`sPC` (it reused `t` and `s`); the §10 Weitzenböck cell’s `d1` is now `dS2` (it clashed with the §4 pole value `d1`). The Petersen example uses the edge {1, 3}: Wolfram’s PetersenGraph has no edge {1, 2}.
 - **User’s own next task (23 Nov):** cloud libraries for these functions with CloudPut/CloudGet — the user will do this mostly on their own; the Definition sections are the source to package.
 
+### 2e. Site search (23 Nov 2026)
+
+`search.html` at the site root (https://lossofgenerality.github.io/laplacian/search.html) searches 161 sections: every write-up section, every page and guide of both manuals, and every bench of both Labs. Index `search-index.json` is built by `tools/build_search.py` (reads ../laplacian-lab too). Matching is case- and accent-insensitive, partial words count, hyphens = spaces, -ise = -ize, subscript digits = digits; quotes require a phrase; `?q=` links work. Linked from the Curvature Lab top bar, the Programmable Lab sidebar, both manuals’ nav, every write-up and the series index.
+
 ### 2d. Curvature from the Laplacian — worked series (23 Nov 2026)
 
 One worked notebook and one write-up per definition, plus a master index notebook (to come). Model: **Ollivier** — `notebooks/series/07-Ollivier.nb/.wl` (source `tools/series/ollivier.py`, built by `tools/series/build_series.py ollivier`), `docs/series/07-ollivier.md/.pdf/.html` (HTML by `tools/series/build_html.py`, rotatable Fig. 1 from `tools/series/fig3d.js`). Sections: idea, definition with duality, worked by hand (Kₙ, Cₙ, tree), laziness and Lin–Lu–Yau, gallery, consequences (local-to-global, diameter, spectral gap), ε-balls on surfaces (Kε²/8 − K²ε⁴/64 + 11K³ε⁶/46080; S³ gives ε²/5), exercises, verified table, references opened. Lab benches #ollivier and #graphs link to it. The user approved the model (“Worked by hand is excellent”); remaining 13 definitions follow the same structure.
