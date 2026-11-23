@@ -70,10 +70,20 @@ if (LAB2 / 'manual.html').exists():
 # 3. Labs: one entry per bench / section
 def lab(path, base, name, prefix=''):
     s = path.read_text(encoding='utf-8')
-    for m in re.finditer(r'<section[^>]*id="([a-z0-9-]+)"[^>]*>(.*?)</section>', s, re.S):
-        sid, inner = m.group(1), m.group(2)
+    # menu labels: <a href="#id" ...><span class="n">5</span><span>Label</span></a>
+    menu = {m.group(1): (m.group(2), text(m.group(3))) for m in
+            re.finditer(r'<a href="#([a-z0-9-]+)"[^>]*><span class="n">([^<]*)</span><span>(.*?)</span></a>', s)}
+    for k, m in enumerate(re.finditer(r'<section([^>]*)id="([a-z0-9-]+)"([^>]*)>(.*?)</section>', s, re.S), 1):
+        attrs, sid, inner = m.group(1) + m.group(3), m.group(2), m.group(4)
+        hid = sid[len(prefix):]
         hm = re.search(r'<h[12][^>]*>(.*?)</h[12]>', inner, re.S)
-        add('Lab', name, text(hm.group(1)) if hm else sid, base + '#' + sid[len(prefix):], text(inner)[:6000])
+        inner_h = text(hm.group(1)) if hm else ''
+        num, label = menu.get(hid, (str(k), ''))
+        if not label:
+            dt = re.search(r'data-title="([^"]*)"', attrs)
+            label = html.unescape(dt.group(1)) if dt else hid
+        head = (num + '. ' if num and num.strip().isdigit() else '') + label + (' — ' + inner_h if inner_h and inner_h != label else '')
+        add('Lab', name, head, base + '#' + hid, text(inner)[:6000])
 
 
 lab(ROOT / 'lab/Laplacian_Curvature_Lab.html', SITE + 'lab/Laplacian_Curvature_Lab.html', 'Laplacian Curvature Lab')

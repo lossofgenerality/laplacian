@@ -81,7 +81,7 @@ On a triangle mesh the cotangent Laplacian, divided by the vertex area, discreti
 
 $$(\Delta f)_i = \frac{1}{2A_i}\sum_{j\sim i}(\cot\alpha_{ij} + \cot\beta_{ij})(f_j - f_i), \qquad \Delta X_i \approx -2H_i\,\mathbf{n}_i, \qquad K_i \approx \frac{2\pi - \sum \theta_i}{A_i}$$
 
-The angle defect sums to exactly 2πχ, a discrete Gauss–Bonnet theorem. No discrete Laplacian keeps every smooth property at once: symmetry, locality, linear precision, semidefiniteness and the maximum principle (Wardetzky et al. 2007). This connects to the Lab's Section 5 "orthonormal mandate".
+The angle defect sums to exactly 2πχ, a discrete Gauss–Bonnet theorem. No discrete Laplacian keeps every smooth property at once: symmetry, locality, linear precision, semidefiniteness and the maximum principle (Wardetzky et al. 2007). The smooth analogue of this tension is the *orthonormal mandate* of the Laplacian notebook (Theorem 7.4): an average over stencil points h**u**, h**v** in the plane gives h²∇ᵀ(**uu**ᵀ + **vv**ᵀ)∇f, which is h²Δf only when the axes are orthonormal; skewed axes add a cross term 2M₁₂ ∂ₓ∂ᵧf. A mesh has no orthonormal axes, and the cotangent weights are what correct for that. See [Laplacian Programmable Lab, Section 5: Stencils and the orthonormal mandate](https://lossofgenerality.github.io/Laplacian-lab/#discrete).
 
 **Checked (notebook §7), 400-vertex sphere mesh:** Σ defect/2π = 2.000000, mean K = 1.014, mean H = 1.006.
 
