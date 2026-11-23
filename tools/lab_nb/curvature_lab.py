@@ -59,6 +59,7 @@ CELLS = [
 
 ("Section", "0. The page’s readouts, and a comparison table"),
 ("Text", "The association page holds what the page shows at its default settings (and, where the page has a selector, for every choice): it is produced by running lab/core.js under Node exactly as lab/app.js runs it in the browser (tools/lab_nb/js_readouts.js). cmpGrid lays a page value beside the Wolfram value."),
+("Input", "ClearAll[\"Global`*\"];  (* start from a clean kernel: values left from an earlier run (such as t) would break later sections *)"),
 ("Input", page_data()),
 ("Input", HELPERS),
 
@@ -92,6 +93,7 @@ cmpGrid[Join @@ (surfRows /@ Keys[surf])]"""),
 ("Section", "2. Ricci flow is a heat equation for the conformal factor (page: #ricci)"),
 ("Text", "Page claims: with g = e^{2u}(dx² + dy²), Ricci flow ∂g/∂t = −2Ric is ∂u/∂t = e^{−2u}Δ₀u = −K; on the flat torus a bumpy metric is ironed out and ∬K dA stays exactly 0."),
 ("Text", "The page’s snippet (Liouville form of K, and the shrinking sphere):"),
+("Input", "ClearAll[t];  (* t is a variable here, not a value *)"),
 ("Input", snippet("ricci")),
 ("Text", "Expected: {1, −1, 0}: the stereographic sphere has K = 1, the half-plane K = −1, and (1 − 2t)g_{S²} solves ∂g/∂t = −2Ric = −2g."),
 ("Input", r"""(* the conformal form: g = e^(2w) g0 and ∂g/∂t = −2 K g give ∂w/∂t = −K = e^(−2w) Δ0 w *)
@@ -262,6 +264,7 @@ Table[With[{G = graphOf[g]}, {g, normSpec[G][[2]] >= Min[val[g, "lly"]] - 10^-9,
 ("Section", "8. Mean-curvature flow: a curve rounds itself off (page: #flows)"),
 ("Text", "Page claims: ∂X/∂t = ΔX = κN; in the plane any embedded curve becomes convex, then round, and shrinks to a point (Gage–Hamilton–Grayson); the area falls at exactly 2π per unit time because ∮κ ds = 2π. The page moves each vertex of a polygon by k(t_f − t_b) with k = 2/(ℓ_f + ℓ_b) (ℓ the edge lengths, t the unit edge directions), the cycle-graph Laplacian weighted by arc length. Since 23 Nov 2026 its time steps are at most 0.2 × (shortest edge)², the stability limit of an explicit heat step; every 20 steps it checks the polygon and resamples it by arc length only when needed: when 160 × (perimeter/initial perimeter) vertices (at least 24) is under 85% of the current count, or when the longest edge exceeds three times the shortest. Each resampling cuts corners and loses a little area, so it is done as rarely as this. Before this the step was a fixed 2 × 10⁻⁴; as the curve shrank its edges fell below that limit, the polygon broke into a zig-zag (“prickly”) at the end, and the mean dA/dt read about −5.6 instead of −2π."),
 ("Text", "The page’s snippet (exact flows: the round sphere under Ricci flow, and a sphere of radius √(R₀² − 4t) under mean-curvature flow; both residuals 0):"),
+("Input", "ClearAll[t];  (* t is a variable here, not a value *)"),
 ("Input", snippet("flows")),
 ("Text", "The page’s polygon flow in Wolfram Language, run on all four starting curves until the area falls below 8% of its start; the mean dA/dt should be −2π = −6.2832:"),
 ("Input", r"""curveInit[kind_, n_: 160] := Module[{f = <|"wiggle" -> (1 + 0.35 Cos[3 #] + 0.2 Sin[5 #] &), "star" -> (1 + 0.45 Cos[5 #] &),
