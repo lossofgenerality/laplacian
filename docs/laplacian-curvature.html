@@ -17,6 +17,7 @@ math { font-family: "Latin Modern Math", "STIX Two Math", serif; }
 math[display="block"] { display: block; margin: 8pt 0; font-size: 11pt; }
 a { color: #1f5fbf; text-decoration: none; }
 hr { border: 0; border-top: 1px solid #c9d0db; margin: 16pt 0 8pt; }
+table { break-inside: avoid; }
 
 body{max-width:860px;margin:0 auto;padding:28px 22px 60px;background:#fff}
 img{max-width:100%;height:auto}
@@ -25,7 +26,7 @@ canvas[data-fig3d]{width:100%;max-width:520px;height:440px;display:block;margin:
 nav.wtop{font-size:10pt;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
 nav.wtop a{color:rgb(212,86,28)}
 @media print{canvas[data-fig3d]{display:none}.fig3d-fallback{display:block!important}}
-</style></head><body><nav class="wtop"><a href="laplacian-curvature.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/laplacian-curvature.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a></nav><h1 id="the-laplacian-and-curvature-instances-and-relationships">The
+</style></head><body><nav class="wtop"><a href="laplacian-curvature.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/laplacian-curvature.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a><a href="https://lossofgenerality.github.io/laplacian/docs/series/">All write-ups</a><a href="https://lossofgenerality.github.io/laplacian/search.html">Search</a></nav><h1 id="the-laplacian-and-curvature-instances-and-relationships">The
 Laplacian and Curvature — Instances and Relationships</h1>
 <p>23 November 2026 · Computational Classnotes · Laplacian Lab</p>
 <p>Curvature is what the Laplacian sees beyond its flat value. On smooth
@@ -122,9 +123,11 @@ consequences</h2>
 <p>Bochner’s identity ties the Laplacian of the energy density to Ricci
 curvature:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mspace width="0.167em"></mspace><mi>Δ</mi><msup><mrow><mo stretchy="true" form="prefix">|</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">|</mo><mo>Hess</mo><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>+</mo><mo stretchy="false" form="prefix">⟨</mo><mi>∇</mi><mi>f</mi><mo>,</mo><mi>∇</mi><mi>Δ</mi><mi>f</mi><mo stretchy="false" form="postfix">⟩</mo><mo>+</mo><mo>Ric</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mi>f</mi><mo>,</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tfrac12\,\Delta|\nabla f|^2 = |\operatorname{Hess} f|^2 + \langle \nabla f, \nabla \Delta f\rangle + \operatorname{Ric}(\nabla f, \nabla f)</annotation></semantics></math></p>
-<p>In Bakry–Émery’s Γ-calculus it reads Γ₂(f) = |Hess f|² + Ric(∇f, ∇f),
-and the bound Ric ≥ K becomes Γ₂ ≥ KΓ + (Δf)²/n. This is the form graphs
-copy (Section 7). Consequences:</p>
+<p>In Bakry–Émery’s Γ-calculus, built on the <em>carré du champ</em>
+Γ(f) = ½(Δ(f²) − 2fΔf) = |∇f|² and its iterate Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf)
+(both defined from Δ alone; see the Bakry–Émery write-up, §2), it reads
+Γ₂(f) = |Hess f|² + Ric(∇f, ∇f), and the bound Ric ≥ K becomes Γ₂ ≥ KΓ +
+(Δf)²/n. This is the form graphs copy (Section 7). Consequences:</p>
 <ul>
 <li><strong>Lichnerowicz:</strong> Ric ≥ (n−1)k &gt; 0 gives λ₁ ≥ nk,
 with equality only on the round sphere (Obata).</li>
@@ -566,7 +569,52 @@ Calculator</a></li>
     cv.addEventListener('touchstart', down, {passive: false}); cv.addEventListener('touchmove', move, {passive: false}); cv.addEventListener('touchend', () => drag = null);
     addEventListener('resize', draw); draw();
   }
-  const FIGS = { 'ollivier-sphere': ollivierSphere };
+  // Bakry–Émery: slack of CD(1,2) on the unit sphere for g = z + (x^2 - y^2); slack = 8 - 8 sin^2 t + sin^4 t (1 + cos 4p)
+  function beSphere(cv) {
+    const ctx = cv.getContext('2d'); let ax = 0.35, ay = -0.6, drag = null;
+    const ST = [[250, 250, 250], [255, 158, 51], [235, 97, 0], [128, 51, 0]];
+    const col = v => { const u = Math.pow(Math.max(0, Math.min(1, v / 8)), 0.8) * 3, i = Math.min(2, Math.floor(u)); return mix(ST[i], ST[i + 1], u - i); };
+    const slack = (t, p) => { const s = Math.sin(t) ** 2; return 8 - 8 * s + s * s * (1 + Math.cos(4 * p)); };
+    const pt = (t, p) => [Math.sin(t) * Math.cos(p), Math.sin(t) * Math.sin(p), Math.cos(t)];
+    const NT = 36, NP = 72;
+    function draw() {
+      const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const R = Math.min(W, H) * 0.40, cx = W / 2, cy = H / 2;
+      const P = q => { const r = rot([q[1], q[2], q[0]], ax, ay); return [cx + R * r[0], cy - R * r[1], r[2]]; };
+      const quads = [];
+      for (let i = 0; i < NT; i++) for (let j = 0; j < NP; j++) {
+        const t0 = Math.PI * i / NT, t1 = Math.PI * (i + 1) / NT, p0 = 2 * Math.PI * j / NP, p1 = 2 * Math.PI * (j + 1) / NP;
+        const c = [P(pt(t0, p0)), P(pt(t1, p0)), P(pt(t1, p1)), P(pt(t0, p1))], z = (c[0][2] + c[1][2] + c[2][2] + c[3][2]) / 4;
+        if (z < -0.05) continue;
+        quads.push([z, c, slack((t0 + t1) / 2, (p0 + p1) / 2)]);
+      }
+      quads.sort((a, b) => a[0] - b[0]);
+      for (const [z, c, v] of quads) {
+        const k = 0.72 + 0.28 * Math.max(0, z), rgb = col(v).map(x => Math.round(x * k));
+        ctx.fillStyle = ctx.strokeStyle = 'rgb(' + rgb.join(',') + ')'; ctx.lineWidth = 0.6;
+        ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let n = 1; n < 4; n++) ctx.lineTo(c[n][0], c[n][1]); ctx.closePath(); ctx.fill(); ctx.stroke();
+      }
+      // equator, faint behind
+      for (let i = 0; i < 120; i++) { const a = P(pt(Math.PI / 2, i * Math.PI / 60)), b = P(pt(Math.PI / 2, (i + 1) * Math.PI / 60));
+        if (a[2] + b[2] < 0) continue; ctx.strokeStyle = '#566273'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+      // the four zeros
+      for (let k = 0; k < 4; k++) { const s = P(pt(Math.PI / 2, Math.PI / 4 + k * Math.PI / 2)); if (s[2] < 0) continue;
+        ctx.fillStyle = '#17202b'; ctx.beginPath(); ctx.arc(s[0], s[1], 4.5, 0, 2 * Math.PI); ctx.fill(); }
+      // legend
+      const lx = W - 34, ly = cy - R * 0.8, lh = R * 1.6;
+      for (let i = 0; i < 60; i++) { ctx.fillStyle = 'rgb(' + col(8 * (1 - i / 60)).join(',') + ')'; ctx.fillRect(lx, ly + lh * i / 60, 12, lh / 60 + 1); }
+      ctx.strokeStyle = '#566273'; ctx.strokeRect(lx, ly, 12, lh); ctx.fillStyle = '#17202b'; ctx.font = '12px IBM Plex Sans, DejaVu Sans, sans-serif';
+      ctx.fillText('8', lx - 12, ly + 8); ctx.fillText('0', lx - 12, ly + lh); ctx.fillText('slack', lx - 22, ly - 8);
+    }
+    const pos = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
+    const down = e => { drag = pos(e); e.preventDefault(); };
+    const move = e => { if (!drag) return; const p = pos(e); ay += (p[0] - drag[0]) * 0.01; ax += (p[1] - drag[1]) * 0.01; ax = Math.max(-1.5, Math.min(1.5, ax)); drag = p; draw(); e.preventDefault(); };
+    cv.addEventListener('mousedown', down); addEventListener('mousemove', move); addEventListener('mouseup', () => drag = null);
+    cv.addEventListener('touchstart', down, {passive: false}); cv.addEventListener('touchmove', move, {passive: false}); cv.addEventListener('touchend', () => drag = null);
+    addEventListener('resize', draw); draw();
+  }
+  const FIGS = { 'ollivier-sphere': ollivierSphere, 'be-sphere': beSphere };
   document.querySelectorAll('canvas[data-fig3d]').forEach(cv => { const f = FIGS[cv.dataset.fig3d]; if (f) f(cv); });
 })();
 </script></body></html>

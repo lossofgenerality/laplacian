@@ -57,7 +57,19 @@ CELLS = [
 ("Input", TOOLKIT),
 
 # ------------------------------------------------------------------ 2
-("Section", "2. Bochner’s formula on the sphere"),
+("Section", "2. The carré du champ, and Bochner’s formula on the sphere"),
+("Text", "Carré du champ (French: square of the field) is the operator that recovers |∇f|² from the Laplacian alone. Since Δ(f²) = 2fΔf + 2|∇f|², define, for any Laplacian, "
+         "Γ(f, g) = ½(Δ(fg) − fΔg − gΔf) and Γ(f) = Γ(f, f). On a manifold Γ(f, g) = ⟨∇f, ∇g⟩; on a graph Γ(f)(v) = ½ mean (f(w) − f(v))² over the neighbours w. "
+         "The iterated carré du champ is Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf). The check below confirms the definition on the sphere (for any F), on the Petersen graph (symbolic values), and on the line for f = x²."),
+("Input",
+"""ClearAll[Δs, Γs];
+Δs[f_] := 1/Sin[θ] D[Sin[θ] D[f, θ], θ] + 1/Sin[θ]^2 D[f, {φ, 2}];
+Γs[f_, g_] := D[f, θ] D[g, θ] + 1/Sin[θ]^2 D[f, φ] D[g, φ];
+With[{G = PetersenGraph[], fa = Association[Thread[Range[10] -> Array[a, 10]]]},
+ {Simplify[1/2 (Δs[F[θ, φ]^2] - 2 F[θ, φ] Δs[F[θ, φ]]) - Γs[F[θ, φ], F[θ, φ]]],
+  Simplify[1/2 (Δg[G, Map[#^2 &, fa]][1] - 2 fa[1] Δg[G, fa][1]) - Γq[G, fa, fa][1]],
+  With[{u = x^2}, Simplify[1/2 (D[u^2, {x, 2}] - 2 u D[u, {x, 2}])]]}]"""),
+("Text", "Check: {0, 0, 4x²}. Bochner’s formula follows."),
 ("Text", "On a Riemannian manifold, ½Δ|∇f|² = ⟨∇f, ∇Δf⟩ + |Hess f|² + Ric(∇f, ∇f). In Γ-notation, with Γ(f) = |∇f|² and Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf), this reads "
          "Γ₂(f) = |Hess f|² + Ric(∇f, ∇f). On the unit sphere S², Ric = 1, so Γ₂ − Γ = |Hess f|². The check below proves it for an arbitrary function F(θ, φ)."),
 ("Input", SPHERE),

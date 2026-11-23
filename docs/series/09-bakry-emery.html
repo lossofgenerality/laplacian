@@ -31,12 +31,12 @@ nav.wtop a{color:rgb(212,86,28)}
 Laplacian, write-up 9</p>
 <p>Ricci curvature is what is left over in Bochner’s formula: Γ₂(f) =
 |Hess f|² + Ric(∇f, ∇f). Bakry and Émery noticed that both sides can be
-written with the Laplacian alone, through the carré du champ Γ and its
-iterate Γ₂. So the inequality Γ₂ ≥ (1/N)(Δf)² + KΓ makes sense wherever
-there is a Laplacian, including on a graph, and the best K is a
-curvature. On the round sphere it recovers Ric = 1 in dimension 2, and
-on graphs it is a small, exact eigenvalue problem. This write-up
-explains each part; the notebook
+written with the Laplacian alone, through the <em>carré du champ</em> Γ
+and its iterate Γ₂, defined in §2. So the inequality Γ₂ ≥ (1/N)(Δf)² +
+KΓ makes sense wherever there is a Laplacian, including on a graph, and
+the best K is a curvature. On the round sphere it recovers Ric = 1 in
+dimension 2, and on graphs it is a small, exact eigenvalue problem. This
+write-up explains each part; the notebook
 <code>notebooks/series/09-Bakry-Emery.nb</code> proves each one on
 examples, with the same section numbers.</p>
 <h2 id="scope-and-conventions">Scope and conventions</h2>
@@ -44,9 +44,9 @@ examples, with the same section numbers.</p>
 <li><strong>Laplacian.</strong> Δf(v) = (mean of f over the neighbours
 of v) − f(v), the random-walk normalisation used throughout the
 series.</li>
-<li><strong>Γ-calculus.</strong> Γ(f, g) = ½(Δ(fg) − fΔg − gΔf) and
-Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf). On a graph, Γ(f)(v) = ½ mean (f(w) − f(v))²
-over the neighbours w.</li>
+<li><strong>Γ-calculus.</strong> Γ is the carré du champ and Γ₂ its
+iterate, both defined from Δ alone in §2. On a graph, Γ(f)(v) = ½ mean
+(f(w) − f(v))² over the neighbours w.</li>
 <li><strong>Curvature.</strong>
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
 is the largest K with Γ₂(f)(x) ≥ (1/N)(Δf(x))² + K Γ(f)(x) for all f;
@@ -74,10 +74,47 @@ g.</strong></p>
 the unit sphere for g = z + (x² − y²). It is zero only at the four
 equator points marked in black, and largest, 8, at the poles (§2). In
 the HTML version the sphere can be rotated.</p>
-<h2 id="bochners-formula-written-with-the-laplacian">2. Bochner’s
-formula, written with the Laplacian</h2>
-<p>On a Riemannian manifold, ½Δ|∇f|² = ⟨∇f, ∇Δf⟩ + |Hess f|² + Ric(∇f,
-∇f). With Γ(f) = |∇f|² and Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf) this reads</p>
+<h2
+id="the-carré-du-champ-and-bochners-formula-written-with-the-laplacian">2.
+The carré du champ, and Bochner’s formula written with the
+Laplacian</h2>
+<p><strong>The carré du champ.</strong> <em>Carré du champ</em> is
+French for “square of the field”. It is the operator that recovers the
+squared length of the gradient, |∇f|², from the Laplacian alone. The
+Laplacian is not a derivation: on a manifold the product rule gives</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>f</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>2</mn><mi>f</mi><mspace width="0.167em"></mspace><mi>Δ</mi><mi>f</mi><mo>+</mo><mn>2</mn><msup><mrow><mo stretchy="true" form="prefix">|</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\Delta(f^2)=2f\,\Delta f+2|\nabla f|^2 ,
+</annotation></semantics></math></p>
+<p>so the failure of Δ to obey Leibniz’s rule on f² is exactly twice
+|∇f|². Bakry and Émery take this as the definition, for any operator Δ,
+and polarise it for two functions:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>,</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mi>Δ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>f</mi><mspace width="0.167em"></mspace><mi>Δ</mi><mi>g</mi><mo>−</mo><mi>g</mi><mspace width="0.167em"></mspace><mi>Δ</mi><mi>f</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>,</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma(f,g)=\tfrac12\big(\Delta(fg)-f\,\Delta g-g\,\Delta f\big),\qquad \Gamma(f)=\Gamma(f,f).
+</annotation></semantics></math></p>
+<p>On a manifold Γ(f, g) = ⟨∇f, ∇g⟩. On a graph the same formula gives
+the mean squared difference across the edges at v: Δ(f²)(v) − 2f(v)Δf(v)
+= mean (f(w)² − f(v)²) − 2f(v) mean (f(w) − f(v)) = mean (f(w) − f(v))²,
+so</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mspace width="0.167em"></mspace><msub><mo>mean</mo><mrow><mi>w</mi><mo>∼</mo><mi>v</mi></mrow></msub><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>w</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><msup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma(f)(v)=\tfrac12\,\operatorname{mean}_{w\sim v}\big(f(w)-f(v)\big)^2 .
+</annotation></semantics></math></p>
+<p><strong>The iterated carré du champ.</strong> Γ₂ repeats the
+construction with Γ in place of the product fg:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>,</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mi>Δ</mi><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>,</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>,</mo><mi>Δ</mi><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><mi>f</mi><mo>,</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mi>Δ</mi><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo>,</mo><mi>Δ</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_2(f,g)=\tfrac12\big(\Delta\Gamma(f,g)-\Gamma(f,\Delta g)-\Gamma(\Delta f,g)\big),\qquad \Gamma_2(f)=\tfrac12\Delta\Gamma(f)-\Gamma(f,\Delta f).
+</annotation></semantics></math></p>
+<p><strong>Worked by hand on the line.</strong> Take Δ = d²/dx² and f =
+x². Then Δf = 2 and Δ(f²) = Δ(x⁴) = 12x², so Γ(f) = ½(12x² − 2·x²·2) =
+4x², which is (f′)² = (2x)². Next, Γ(f) = 4x² gives ΔΓ(f) = 8 and Γ(f,
+Δf) = Γ(x², 2) = 0, so Γ₂(f) = 4 = (f″)² = |Hess f|²: on the flat line
+Ric = 0 and Bochner’s formula below reads Γ₂ = |Hess f|².</p>
+<p><strong>Checked (notebook §2):</strong> ½(Δ(F²) − 2FΔF) − Γ(F)
+simplifies to 0 on S² for an arbitrary F(θ, φ) and on the Petersen graph
+for symbolic values at all ten vertices; for f = x² on the line it gives
+4x².</p>
+<p><strong>Bochner’s formula.</strong> On a Riemannian manifold, ½Δ|∇f|²
+= ⟨∇f, ∇Δf⟩ + |Hess f|² + Ric(∇f, ∇f). With Γ(f) = |∇f|² and Γ₂(f) =
+½ΔΓ(f) − Γ(f, Δf) this reads</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">|</mo><mo>Hess</mo><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>+</mo><mo>Ric</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mi>f</mi><mo>,</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
 \Gamma_2(f)=|\operatorname{Hess} f|^2+\operatorname{Ric}(\nabla f,\nabla f).
 </annotation></semantics></math></p>
@@ -95,10 +132,10 @@ everywhere: Γ₂(z) = 1 + z², Γ(z) = 1 − z² and (Δz)²/2 = 2z². For g = 
 \Gamma_2(g)-\Gamma(g)-\tfrac12(\Delta g)^2=8-8\sin^2\theta+\sin^4\theta\,(1+\cos4\varphi),
 </annotation></semantics></math></p>
 <p>which vanishes only where sin θ = 1 and cos 4φ = −1 (Fig. 1).</p>
-<p><strong>Checked (notebook §2):</strong> Γ₂ − Γ − |Hess F|² simplifies
-to 0 for an arbitrary F(θ, φ); for z the slack is exactly 0; for g the
-slack equals the formula above, ranges over [0, 8], and is 1 + cos 4φ on
-the equator.</p>
+<p><strong>Checked (notebook §2), Bochner:</strong> Γ₂ − Γ − |Hess F|²
+simplifies to 0 for an arbitrary F(θ, φ); for z the slack is exactly 0;
+for g the slack equals the formula above, ranges over [0, 8], and is 1 +
+cos 4φ on the equator.</p>
 <h2 id="definition-on-graphs">3. Definition on graphs</h2>
 <p>A graph has no Hessian and no Ricci tensor, but it has a Laplacian,
 so Γ and Γ₂ are defined. Bakry–Émery curvature imposes the Bochner

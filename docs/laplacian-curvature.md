@@ -66,7 +66,7 @@ Bochner's identity ties the Laplacian of the energy density to Ricci curvature:
 
 $$\tfrac12\,\Delta|\nabla f|^2 = |\operatorname{Hess} f|^2 + \langle \nabla f, \nabla \Delta f\rangle + \operatorname{Ric}(\nabla f, \nabla f)$$
 
-In Bakry–Émery's Γ-calculus it reads Γ₂(f) = |Hess f|² + Ric(∇f, ∇f), and the bound Ric ≥ K becomes Γ₂ ≥ KΓ + (Δf)²/n. This is the form graphs copy (Section 7). Consequences:
+In Bakry–Émery's Γ-calculus, built on the *carré du champ* Γ(f) = ½(Δ(f²) − 2fΔf) = |∇f|² and its iterate Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf) (both defined from Δ alone; see the Bakry–Émery write-up, §2), it reads Γ₂(f) = |Hess f|² + Ric(∇f, ∇f), and the bound Ric ≥ K becomes Γ₂ ≥ KΓ + (Δf)²/n. This is the form graphs copy (Section 7). Consequences:
 
 - **Lichnerowicz:** Ric ≥ (n−1)k > 0 gives λ₁ ≥ nk, with equality only on the round sphere (Obata).
 - **Laplacian comparison:** Ric ≥ 0 gives Δr ≤ (n−1)/r for the distance r. Δr is the mean curvature of geodesic spheres, which leads to Bishop–Gromov volume comparison.

@@ -2,12 +2,12 @@
 
 23 November 2026 · Computational Classnotes · Curvature from the Laplacian, write-up 9
 
-Ricci curvature is what is left over in Bochner’s formula: Γ₂(f) = |Hess f|² + Ric(∇f, ∇f). Bakry and Émery noticed that both sides can be written with the Laplacian alone, through the carré du champ Γ and its iterate Γ₂. So the inequality Γ₂ ≥ (1/N)(Δf)² + KΓ makes sense wherever there is a Laplacian, including on a graph, and the best K is a curvature. On the round sphere it recovers Ric = 1 in dimension 2, and on graphs it is a small, exact eigenvalue problem. This write-up explains each part; the notebook `notebooks/series/09-Bakry-Emery.nb` proves each one on examples, with the same section numbers.
+Ricci curvature is what is left over in Bochner’s formula: Γ₂(f) = |Hess f|² + Ric(∇f, ∇f). Bakry and Émery noticed that both sides can be written with the Laplacian alone, through the *carré du champ* Γ and its iterate Γ₂, defined in §2. So the inequality Γ₂ ≥ (1/N)(Δf)² + KΓ makes sense wherever there is a Laplacian, including on a graph, and the best K is a curvature. On the round sphere it recovers Ric = 1 in dimension 2, and on graphs it is a small, exact eigenvalue problem. This write-up explains each part; the notebook `notebooks/series/09-Bakry-Emery.nb` proves each one on examples, with the same section numbers.
 
 ## Scope and conventions
 
 - **Laplacian.** Δf(v) = (mean of f over the neighbours of v) − f(v), the random-walk normalisation used throughout the series.
-- **Γ-calculus.** Γ(f, g) = ½(Δ(fg) − fΔg − gΔf) and Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf). On a graph, Γ(f)(v) = ½ mean (f(w) − f(v))² over the neighbours w.
+- **Γ-calculus.** Γ is the carré du champ and Γ₂ its iterate, both defined from Δ alone in §2. On a graph, Γ(f)(v) = ½ mean (f(w) − f(v))² over the neighbours w.
 - **Curvature.** $K_{N}(x)$ is the largest K with Γ₂(f)(x) ≥ (1/N)(Δf(x))² + K Γ(f)(x) for all f; $K_{\infty}$ drops the dimension term.
 - **Numbering.** Sections 2–9 here match notebook Sections 2–9; notebook Section 1 is the toolkit. Every number quoted below was returned by the Wolfram kernel.
 - **Companion.** The Ollivier write-up (07) uses the same graphs, so the two curvatures can be compared (§8).
@@ -21,9 +21,37 @@ Ricci curvature is what is left over in Bochner’s formula: Γ₂(f) = |Hess f|
 
 **Fig. 1.** The slack Γ₂ − Γ − (Δg)²/2 of CD(1, 2) on the unit sphere for g = z + (x² − y²). It is zero only at the four equator points marked in black, and largest, 8, at the poles (§2). In the HTML version the sphere can be rotated.
 
-## 2. Bochner’s formula, written with the Laplacian
+## 2. The carré du champ, and Bochner’s formula written with the Laplacian
 
-On a Riemannian manifold, ½Δ|∇f|² = ⟨∇f, ∇Δf⟩ + |Hess f|² + Ric(∇f, ∇f). With Γ(f) = |∇f|² and Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf) this reads
+**The carré du champ.** *Carré du champ* is French for “square of the field”. It is the operator that recovers the squared length of the gradient, |∇f|², from the Laplacian alone. The Laplacian is not a derivation: on a manifold the product rule gives
+
+$$
+\Delta(f^2)=2f\,\Delta f+2|\nabla f|^2 ,
+$$
+
+so the failure of Δ to obey Leibniz’s rule on f² is exactly twice |∇f|². Bakry and Émery take this as the definition, for any operator Δ, and polarise it for two functions:
+
+$$
+\Gamma(f,g)=\tfrac12\big(\Delta(fg)-f\,\Delta g-g\,\Delta f\big),\qquad \Gamma(f)=\Gamma(f,f).
+$$
+
+On a manifold Γ(f, g) = ⟨∇f, ∇g⟩. On a graph the same formula gives the mean squared difference across the edges at v: Δ(f²)(v) − 2f(v)Δf(v) = mean (f(w)² − f(v)²) − 2f(v) mean (f(w) − f(v)) = mean (f(w) − f(v))², so
+
+$$
+\Gamma(f)(v)=\tfrac12\,\operatorname{mean}_{w\sim v}\big(f(w)-f(v)\big)^2 .
+$$
+
+**The iterated carré du champ.** Γ₂ repeats the construction with Γ in place of the product fg:
+
+$$
+\Gamma_2(f,g)=\tfrac12\big(\Delta\Gamma(f,g)-\Gamma(f,\Delta g)-\Gamma(\Delta f,g)\big),\qquad \Gamma_2(f)=\tfrac12\Delta\Gamma(f)-\Gamma(f,\Delta f).
+$$
+
+**Worked by hand on the line.** Take Δ = d²/dx² and f = x². Then Δf = 2 and Δ(f²) = Δ(x⁴) = 12x², so Γ(f) = ½(12x² − 2·x²·2) = 4x², which is (f′)² = (2x)². Next, Γ(f) = 4x² gives ΔΓ(f) = 8 and Γ(f, Δf) = Γ(x², 2) = 0, so Γ₂(f) = 4 = (f″)² = |Hess f|²: on the flat line Ric = 0 and Bochner’s formula below reads Γ₂ = |Hess f|².
+
+**Checked (notebook §2):** ½(Δ(F²) − 2FΔF) − Γ(F) simplifies to 0 on S² for an arbitrary F(θ, φ) and on the Petersen graph for symbolic values at all ten vertices; for f = x² on the line it gives 4x².
+
+**Bochner’s formula.** On a Riemannian manifold, ½Δ|∇f|² = ⟨∇f, ∇Δf⟩ + |Hess f|² + Ric(∇f, ∇f). With Γ(f) = |∇f|² and Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf) this reads
 
 $$
 \Gamma_2(f)=|\operatorname{Hess} f|^2+\operatorname{Ric}(\nabla f,\nabla f).
@@ -43,7 +71,7 @@ $$
 
 which vanishes only where sin θ = 1 and cos 4φ = −1 (Fig. 1).
 
-**Checked (notebook §2):** Γ₂ − Γ − |Hess F|² simplifies to 0 for an arbitrary F(θ, φ); for z the slack is exactly 0; for g the slack equals the formula above, ranges over [0, 8], and is 1 + cos 4φ on the equator.
+**Checked (notebook §2), Bochner:** Γ₂ − Γ − |Hess F|² simplifies to 0 for an arbitrary F(θ, φ); for z the slack is exactly 0; for g the slack equals the formula above, ranges over [0, 8], and is 1 + cos 4φ on the equator.
 
 ## 3. Definition on graphs
 
