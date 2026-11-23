@@ -188,18 +188,53 @@ In every row $\kappa_{\mathrm{LLY}}$ = 2$\kappa_{1/2}$. Where $\kappa_{\mathrm{L
 
 ## References
 
-**Ollivier curvature**
+Every item below was opened (abstract or full text) on 23 November 2026; the notes say what each contributes to this write-up.
 
-- Y. Ollivier, *Ricci curvature of Markov chains on metric spaces*, J. Funct. Anal. 256 (2009) 810–864. [arXiv:math/0701886](https://arxiv.org/abs/math/0701886). Example 7 (ε-balls), Example 8 (cube), Proposition 19 (local to global), Proposition 23 (diameter), Corollary 30 (spectral gap).
+**1. The definition: Ollivier**
 
-**Lin–Lu–Yau curvature and laziness**
+- Y. Ollivier, *Ricci curvature of metric spaces*, C. R. Math. Acad. Sci. Paris 345 (2007), no. 11, 643–646. [doi:10.1016/j.crma.2007.10.041](https://doi.org/10.1016/j.crma.2007.10.041). The short announcement of the definition.
+- Y. Ollivier, *Ricci curvature of Markov chains on metric spaces*, J. Funct. Anal. 256 (2009), no. 3, 810–864. [doi:10.1016/j.jfa.2008.11.001](https://doi.org/10.1016/j.jfa.2008.11.001), [arXiv:math/0701886](https://arxiv.org/abs/math/0701886). The main paper: Example 7 (ε-balls, §8 here), Example 8 (cube), Proposition 19 (local to global), Proposition 23 (diameter), Corollary 30 (spectral gap).
+- Y. Ollivier, *A survey of Ricci curvature for metric spaces and Markov chains*, in *Probabilistic Approach to Geometry*, Adv. Stud. Pure Math. 57 (2010), 343–381. [Project Euclid](https://www.projecteuclid.org/euclid.aspm/1543086328). Background, the classical theorems it generalises, and a list of open problems.
+- A. Joulin, Y. Ollivier, *Curvature, concentration and error estimates for Markov chain Monte Carlo*, Ann. Probab. 38 (2010), no. 6, 2418–2442. [doi:10.1214/10-AOP541](https://doi.org/10.1214/10-AOP541), [arXiv:0904.1312](https://arxiv.org/abs/0904.1312). Positive curvature gives explicit error bars for Monte Carlo averages; on finite graphs it is contraction under path coupling.
+- Y. Ollivier, C. Villani, *A curved Brunn–Minkowski inequality on the discrete hypercube, or: what is the Ricci curvature of the discrete hypercube?*, SIAM J. Discrete Math. 26 (2012), 983–996. Cited from the reference list of Bourne et al. (below); not opened.
 
-- Y. Lin, L. Lu, S.-T. Yau, *Ricci curvature of graphs*, Tohoku Math. J. 63 (2011) 605–627. [Project Euclid](https://www.projecteuclid.org/euclid.tmj/1325886283) (record page opened; full text not reachable from here).
-- D. P. Bourne, D. Cushing, S. Liu, F. Münch, N. Peyerimhoff, *Ollivier–Ricci idleness functions of graphs*, SIAM J. Discrete Math. 32 (2018) 1408–1424. [arXiv:1704.04398](https://arxiv.org/abs/1704.04398).
-- F. Münch, R. K. Wojciechowski, *Ollivier Ricci curvature for general graph Laplacians*, Adv. Math. 356 (2019) 106759. [arXiv:1712.00875](https://arxiv.org/abs/1712.00875). Theorem 2.1 (limit-free formula).
+**2. Graphs: Lin–Yau, Lin–Lu–Yau and laziness**
 
-**Consequences**
+- Y. Lin, S.-T. Yau, *Ricci curvature and eigenvalue estimate on locally finite graphs*, Math. Res. Lett. 17 (2010), no. 2, 343–356. [doi:10.4310/MRL.2010.v17.n2.a13](https://doi.org/10.4310/MRL.2010.v17.n2.a13). First use of Ollivier’s curvature on graphs; Bochner-type inequalities and eigenvalue bounds.
+- Y. Lin, L. Lu, S.-T. Yau, *Ricci curvature of graphs*, Tohoku Math. J. (2) 63 (2011), no. 4, 605–627. [doi:10.2748/tmj/1325886283](https://doi.org/10.2748/tmj/1325886283). The lazy-limit curvature κ<sub>LLY</sub> (§5 here); products, random graphs, discrete Bonnet–Myers.
+- D. P. Bourne, D. Cushing, S. Liu, F. Münch, N. Peyerimhoff, *Ollivier–Ricci idleness functions of graphs*, SIAM J. Discrete Math. 32 (2018), no. 2, 1408–1424. [arXiv:1704.04398](https://arxiv.org/abs/1704.04398). κ<sub>α</sub> is concave and piecewise linear in the idleness α, linear on [1/(d+1), 1] (§5 here).
+- F. Münch, R. K. Wojciechowski, *Ollivier Ricci curvature for general graph Laplacians: heat equation, Laplacian comparison, non-explosion and diameter bounds*, Adv. Math. 356 (2019), 106759. [arXiv:1712.00875](https://arxiv.org/abs/1712.00875). Theorem 2.1, the limit-free formula used in the notebook.
 
-- X. Huang, S. Liu, Q. Xia, *Bounding the diameter and eigenvalues of amply regular graphs via Lin–Lu–Yau curvature*. [arXiv:2210.02988](https://arxiv.org/abs/2210.02988). Theorem 1.2 states the discrete Bonnet–Myers bound and the Lichnerowicz estimate.
+**3. Combinatorial bounds and exact formulas**
+
+- J. Jost, S. Liu, *Ollivier’s Ricci curvature, local clustering and curvature-dimension inequalities on graphs*, Discrete Comput. Geom. 51 (2014), no. 2, 300–322. [doi:10.1007/s00454-013-9558-1](https://doi.org/10.1007/s00454-013-9558-1), [arXiv:1103.4037](https://arxiv.org/abs/1103.4037). Upper and lower bounds through triangles (the local clustering coefficient), sharp on Kₙ.
+- B. B. Bhattacharya, S. Mukherjee, *Exact and asymptotic results on coarse Ricci curvature of graphs*, Discrete Math. 338 (2015), no. 1, 23–42. [doi:10.1016/j.disc.2014.08.012](https://doi.org/10.1016/j.disc.2014.08.012), [arXiv:1306.6741](https://arxiv.org/abs/1306.6741). Formulas for bipartite graphs and girth ≥ 5, and random graphs G(n, p). **Caution:** see Kelly, next.
+- C. Kelly, *Exact expressions and reduced linear programmes for the Ollivier curvature in graphs*. [arXiv:1909.12156](https://arxiv.org/abs/1909.12156). Counterexamples to the Bhattacharya–Mukherjee formulas, the error located, and reduced linear programmes in their place.
+- S.-H. Paeng, *Volume and diameter of a graph and Ollivier’s Ricci curvature* (2012). [MaRDI record](https://portal.mardi4nfdi.de/wiki/Item:Q449208). Diameter and volume bounds for finite graphs from positive curvature.
+
+**4. Spectrum and diameter**
+
+- F. Bauer, J. Jost, S. Liu, *Ollivier–Ricci curvature and the spectrum of the normalized graph Laplace operator*, Math. Res. Lett. 19 (2012), no. 6, 1185–1205. [arXiv:1105.3803](https://arxiv.org/abs/1105.3803). Sharpens Ollivier’s k ≤ λ₁ ≤ … ≤ λ<sub>N−1</sub> ≤ 2 − k by using neighbourhood graphs.
+- D. Cushing, S. Kamtue, J. Koolen, S. Liu, F. Münch, N. Peyerimhoff, *Rigidity of the Bonnet–Myers inequality for graphs with respect to Ollivier Ricci curvature*, Adv. Math. 369 (2020), 107188. Cited from a reference list; not opened. Which graphs attain the diameter bound.
+- X. Huang, S. Liu, Q. Xia, *Bounding the diameter and eigenvalues of amply regular graphs via Lin–Lu–Yau curvature*. [arXiv:2210.02988](https://arxiv.org/abs/2210.02988). Theorem 1.2: discrete Bonnet–Myers and the Lichnerowicz estimate (§7 here).
+- F. Münch, *Reflective graphs, Ollivier curvature, effective diameter, and rigidity*. [arXiv:2205.15857](https://arxiv.org/abs/2205.15857). A Bonnet–Myers bound for the effective diameter, with the graphs that attain it.
+
+**5. Back to manifolds**
+
+- P. van der Hoorn, W. J. Cunningham, G. Lippner, C. Trugenberger, D. Krioukov, *Ollivier–Ricci curvature convergence in random geometric graphs*, Phys. Rev. Research 3 (2021), 013211. [arXiv:2008.01209](https://arxiv.org/abs/2008.01209). Ollivier curvature of random geometric graphs converges to the Ricci curvature of the manifold.
+- P. van der Hoorn, G. Lippner, C. Trugenberger, D. Krioukov, *Ollivier curvature of random geometric graphs converges to Ricci curvature of their Riemannian manifolds*, Discrete Comput. Geom. 70 (2023), 671–712. [doi:10.1007/s00454-023-00507-y](https://doi.org/10.1007/s00454-023-00507-y), [arXiv:2009.04306](https://arxiv.org/abs/2009.04306). The full proofs. This is the rigorous version of the sampled estimate this write-up tried and dropped (it needs mesoscopic neighbourhoods).
+
+**6. Optimal transport and synthetic Ricci curvature**
+
+- C. Villani, *Optimal Transport: Old and New*, Grundlehren der mathematischen Wissenschaften 338, Springer, 2009. [doi:10.1007/978-3-540-71050-9](https://doi.org/10.1007/978-3-540-71050-9). The W₁ distance, Kantorovich duality (§3 here), and transport and Ricci curvature.
+- J. Lott, C. Villani, *Ricci curvature for metric-measure spaces via optimal transport*, Ann. of Math. (2) 169 (2009), no. 3, 903–991. [doi:10.4007/annals.2009.169.903](https://doi.org/10.4007/annals.2009.169.903). The other transport route to Ricci curvature (through entropy), for comparison.
+
+**7. Applications**
+
+- C.-C. Ni, Y.-Y. Lin, J. Gao, X. D. Gu, E. Saucan, *Ricci curvature of the Internet topology*, IEEE INFOCOM 2015, 2758–2766. [doi:10.1109/INFOCOM.2015.7218668](https://doi.org/10.1109/INFOCOM.2015.7218668), [arXiv:1501.04138](https://arxiv.org/abs/1501.04138).
+- R. Sandhu, T. Georgiou, E. Reznik, L. Zhu, I. Kolesov, Y. Senbabaoglu, A. Tannenbaum, *Graph curvature for differentiating cancer networks*, Sci. Rep. 5 (2015), 12323. [doi:10.1038/srep12323](https://doi.org/10.1038/srep12323). Cancer gene networks show higher Ollivier curvature than normal ones.
+- A. Samal, R. P. Sreejith, J. Gu, S. Liu, E. Saucan, J. Jost, *Comparative analysis of two discretizations of Ricci curvature for complex networks*, Sci. Rep. 8 (2018), 8650. [doi:10.1038/s41598-018-27001-3](https://doi.org/10.1038/s41598-018-27001-3). Ollivier and Forman curvature are highly correlated on many networks (link to the Forman write-up, 10).
+- C.-C. Ni, Y.-Y. Lin, F. Luo, J. Gao, *Community detection on networks with Ricci flow*, Sci. Rep. 9 (2019), 9984. [doi:10.1038/s41598-019-46380-9](https://doi.org/10.1038/s41598-019-46380-9). Code: [GraphRicciCurvature](https://github.com/saibalmars/GraphRicciCurvature).
+- J. Topping, F. Di Giovanni, B. P. Chamberlain, X. Dong, M. M. Bronstein, *Understanding over-squashing and bottlenecks on graphs via curvature*, ICLR 2022. [arXiv:2111.14522](https://arxiv.org/abs/2111.14522). Negatively curved edges cause over-squashing in graph neural networks; the paper uses its own balanced Forman curvature, motivated by the Ollivier picture.
 
 © Computational Classnotes · CC BY-NC-SA 4.0
