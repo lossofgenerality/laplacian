@@ -47,7 +47,7 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 
 ## Issues
 
-1. **Horizontal sliders (open, 23 Nov 2026).** The owner reports no horizontal slider on either site, in Firefox or Chrome, on a desktop. Wide content, especially the Laplacian formulas, is clipped instead of being resized or restructured, and then reads wrong. Done so far: drawn sliders (CCN Orange thumb) on every box that overflows, arrow buttons on the tab strips, tables that stack above their charts, and formulas that shrink to fit their column (down to 55%). Checks in the built-in browser at 1100 px and 640 px show no page-wide overflow, so no page slider appears. Still to settle: which spots are clipped on the owner's screen (screenshot), and whether a page-wide slider pinned to the bottom of the window is wanted. Affects https://lossofgenerality.github.io/Laplacian-lab/, https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html and both manuals.
+1. **Horizontal sliders (open, 23 Nov 2026).** Clipping is fixed: the owner confirms nothing is clipped in Firefox or Chrome, after wide formulas were made to shrink to fit their column (down to 55%) and tables to stack above their charts. Boxes that still overflow get a drawn slider with a CCN Orange thumb, and tab strips have arrow buttons. Still open: the owner sees no page-wide horizontal slider; decide whether one pinned to the bottom of the window is wanted. Affects https://lossofgenerality.github.io/Laplacian-lab/, https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html and both manuals.
 
 ## Running the notebook
 
