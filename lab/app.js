@@ -97,7 +97,7 @@ const ROWS = [
   ["surfaces", "Mean curvature", "ΔX = −2H n", "mesh", "Cotangent Laplacian", "ΔXᵢ ≈ −2Hᵢ nᵢ on meshes"],
   ["means", "Ball and circle means", "r⁴(Δ²f/64 + KΔf/96)", "graphs", "Ollivier / Lin–Lu–Yau", "compare neighbour means"],
   ["bochner", "Bochner formula", "Γ₂ = |Hess f|² + Ric", "graphs", "Bakry–Émery CD(K, N)", "Γ₂ ≥ KΓ + (Δf)²/N"],
-  ["bochner", "Weitzenböck splitting", "Δ_Hodge = ∇*∇ + Ric", "graphs", "Forman curvature", "4 − dₓ − d_y + 3·triangles"],
+  ["bochner", "Weitzenböck splitting", "Δ<tspan baseline-shift=\"sub\" font-size=\"72%\">Hodge</tspan> = ∇*∇ + Ric", "graphs", "Forman curvature", "4 − d<tspan baseline-shift=\"sub\" font-size=\"72%\">x</tspan> − d<tspan baseline-shift=\"sub\" font-size=\"72%\">y</tspan> + 3·triangles"],
   ["heat", "Heat trace, spectrum", "S/6 in Tr e^(tΔ); λ₁ ≥ nk", "graphs", "Graph spectral bounds", "λ₁ ≥ κ, λ₁ ≥ K"]
 ];
 function drawMap() {
@@ -233,7 +233,7 @@ function drawMesh() {
   render3D($("meshcv"), M.T.map(t => ({ v: t.map(i => M.P[i]), col: kcol((vals[t[0]] + vals[t[1]] + vals[t[2]]) / 3, q === "K" ? 1 : 0.7) })), MV, { wire: true });
   const tot = C.defect.reduce((a, b) => a + b, 0);
   let err = 0; for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) { const v = 2 * Math.PI * j / nv, k = Math.cos(v) / (2 + Math.cos(v)); err = Math.max(err, Math.abs(C.K[i * nv + j] - k)); }
-  $("meshread").innerHTML = `<dt>vertices</dt><dd>${M.P.length}</dd><dt>Σ angle defect</dt><dd>${fmt(tot, 12)}</dd><dt>Σ defect / 2π (= χ)</dt><dd>${fmt(tot / (2 * Math.PI), 10)}</dd><dt>max |K_mesh − K|</dt><dd>${fmt(err, 4)}</dd>`;
+  $("meshread").innerHTML = `<dt>vertices</dt><dd>${M.P.length}</dd><dt>Σ angle defect</dt><dd>${fmt(tot, 12)}</dd><dt>Σ defect / 2π (= χ)</dt><dd>${fmt(tot / (2 * Math.PI), 10)}</dd><dt>max |K<sub>mesh</sub> − K|</dt><dd>${fmt(err, 4)}</dd>`;
   const pts = [], sm = []; for (let j = 0; j < nv; j++) pts.push([2 * Math.PI * j / nv, C.K[j]]); for (let k = 0; k <= 120; k++) { const v = 2 * Math.PI * k / 120; sm.push([v, Math.cos(v) / (2 + Math.cos(v))]); }
   plot($("meshchart"), { xr: [0, 2 * Math.PI], yr: [-1.1, 0.5], xlabel: "v (around the tube)", ylabel: "K", series: [{ pts: sm, color: css("--ink"), width: 1.5, label: "smooth cos v/(2 + cos v)" }, { pts, color: POSc(), dots: true, label: "mesh defect/area" }] });
 }
@@ -250,13 +250,13 @@ const KINFO = {
   stein: { s: 1.5, edge: false, all: G => LC.steinerberger(G), name: "Steinerberger K" }
 };
 const NOTES = {
-  tree: "Interior edges have κ_LLY = −2/3 (the two neighbourhoods do not overlap); leaf edges +2/3, because a leaf sees only its parent. On a tree, resistance equals distance, so resistance and Steinerberger curvature are exactly proportional.",
+  tree: "Interior edges have κ<sub>LLY</sub> = −2/3 (the two neighbourhoods do not overlap); leaf edges +2/3, because a leaf sees only its parent. On a tree, resistance equals distance, so resistance and Steinerberger curvature are exactly proportional.",
   cycle: "Flat: Lin–Lu–Yau, Ollivier and Bakry–Émery are all 0 on C₆ — the discrete circle has no curvature.",
-  cube: "κ_LLY = K_BE = 2/3 = λ₁: the cube is an equality case of both discrete Lichnerowicz bounds.",
-  complete: "Every pair shares three neighbours, so mass can stay put: κ_LLY = 5/4 = λ₁, another equality case.",
-  petersen: "Girth 5 and 3-regular: κ_LLY = 0, κ₀ = −1/3 and K_BE = 2/d − 1 = −1/3, yet λ₁ = 2/3 is large.",
+  cube: "κ<sub>LLY</sub> = K<sub>BE</sub> = 2/3 = λ₁: the cube is an equality case of both discrete Lichnerowicz bounds.",
+  complete: "Every pair shares three neighbours, so mass can stay put: κ<sub>LLY</sub> = 5/4 = λ₁, another equality case.",
+  petersen: "Girth 5 and 3-regular: κ<sub>LLY</sub> = 0, κ₀ = −1/3 and K<sub>BE</sub> = 2/d − 1 = −1/3, yet λ₁ = 2/3 is large.",
   grid: "Zero curvature inside, as on ℤ²; the boundary carries positive Lin–Lu–Yau curvature and the corners the most.",
-  dumbbell: "The bridge is a bottleneck: its edges are negative (κ_LLY = −3/5) while the cliques are positive. This is the negative curvature behind over-squashing in graph networks."
+  dumbbell: "The bridge is a bottleneck: its edges are negative (κ<sub>LLY</sub> = −3/5) while the cliques are positive. This is the negative curvature behind over-squashing in graph networks."
 };
 let gKey = "dumbbell", kKey = "lly";
 function graphValues(G, k) {
@@ -279,8 +279,8 @@ function drawGraph() {
   const sp = LC.normLapSpectrum(G), mn = Math.min(...vals), mx = Math.max(...vals), mean = vals.reduce((a, b) => a + b, 0) / vals.length;
   const lly = Math.min(...G.edges.map(([a, b]) => LC.kappaLLY(G, a, b))), be = Math.min(...[...Array(G.n).keys()].map(v => LC.bakryEmery(G, v)));
   $("gread").innerHTML = `<dt>${I.name}: min</dt><dd>${fmt(mn)}</dd><dt>max</dt><dd>${fmt(mx)}</dd><dt>${kKey === "res" ? "sum" : "mean"}</dt><dd>${fmt(kKey === "res" ? mean * vals.length : mean)}</dd><dt>λ₁ (normalised)</dt><dd>${fmt(sp[1])}</dd><dt>λ_max</dt><dd>${fmt(sp[sp.length - 1])}</dd><dt id="gpick">selected</dt><dd id="gpickv">—</dd>`;
-  $("gcheck").innerHTML = `λ₁ = ${fmt(sp[1])} ≥ min κ_LLY = ${fmt(lly)} ${sp[1] >= lly - 1e-9 ? "✓" : "✗"} · λ₁ ≥ min K_BE = ${fmt(be)} ${sp[1] >= be - 1e-6 ? "✓" : "✗"}${kKey === "res" ? ` · Σp = ${fmt(mean * vals.length, 10)} (always 1)` : ""}`;
-  $("gnote").textContent = NOTES[gKey];
+  $("gcheck").innerHTML = `λ₁ = ${fmt(sp[1])} ≥ min κ<sub>LLY</sub> = ${fmt(lly)} ${sp[1] >= lly - 1e-9 ? "✓" : "✗"} · λ₁ ≥ min K<sub>BE</sub> = ${fmt(be)} ${sp[1] >= be - 1e-6 ? "✓" : "✗"}${kKey === "res" ? ` · Σp = ${fmt(mean * vals.length, 10)} (always 1)` : ""}`;
+  $("gnote").innerHTML = NOTES[gKey];
   svg.querySelectorAll("[data-v]").forEach(el => { const f = () => { $("gpickv").textContent = el.dataset.v; }; el.addEventListener("pointerenter", f); el.addEventListener("focus", f); el.addEventListener("click", f); });
   window.__labState = { graph: gKey, curvature: I.name, min: mn, max: mx, lambda1: sp[1] };
 }
@@ -347,7 +347,7 @@ const QUIZ = [
   ["The heat-trace coefficient that hears curvature is", ["the leading Weyl term", "the t-term, (1/6)∫S", "the t²-term only"], 1, "Tr e^{tΔ} ~ (4πt)^{−n/2}(Vol + (t/6)∫S + …); for surfaces ∫S = 4πχ."],
   ["Bakry–Émery curvature on graphs copies which smooth identity?", ["Gauss–Bonnet", "the Bochner formula, Γ₂ ≥ KΓ", "Liouville's equation"], 1, "Γ₂(f) = |Hess f|² + Ric(∇f, ∇f) is Bochner's formula in Γ-calculus."],
   ["Why is Lin–Lu–Yau curvature negative on the dumbbell's bridge?", ["its endpoints share many neighbours", "the two neighbourhoods barely overlap, so mass must travel far", "bridges always have curvature −1"], 1, "Optimal transport between the two neighbourhood measures is expensive across a bottleneck."],
-  ["What does resistance curvature always sum to on a connected graph?", ["0", "1", "the number of edges"], 1, "Foster's theorem Σ_edges ω = n − 1 gives Σ p_i = 1, a discrete Gauss–Bonnet theorem."],
+  ["What does resistance curvature always sum to on a connected graph?", ["0", "1", "the number of edges"], 1, "Foster's theorem Σ<sub>edges</sub> ω = n − 1 gives Σ p<sub>i</sub> = 1, a discrete Gauss–Bonnet theorem."],
   ["Under curve shortening, the enclosed area changes at rate", ["−2π, for every embedded curve", "−(perimeter)", "0"], 0, "dA/dt = −∮κ ds = −2π, independent of the curve."],
   ["Under 2-D Ricci flow in conformal form, ∂u/∂t equals", ["Δ₀u", "−K", "H"], 1, "∂u/∂t = e^{−2u}Δ₀u = −K: positive curvature shrinks, negative expands."]
 ];
@@ -415,7 +415,7 @@ G = HypercubeGraph[3]; A = N@AdjacencyMatrix[G]; d = Total[A];
 Table[{ε, κS2[ε]/ε^2, κH2[ε]/ε^2}, {ε, {0.05, 0.2, 0.8}}]`,
   yamabe: `(* Yamabe: u^4 times the flat metric of R^3 is the round S^3, scalar curvature 6 *)
 uY = (2/(1 + x^2 + y^2 + z^2))^(1/2); Simplify[-8 uY^-5 Laplacian[uY, {x, y, z}]]`,
-  weitzenbock: `(* Weitzenböck on S²: Δ_Hodge ω − ∇*∇ω = Ric(ω) = ω for every 1-form df + ⋆dh *)
+  weitzenbock: `(* Weitzenböck on S²: Hodge Laplacian ω − ∇*∇ω = Ric(ω) = ω for every 1-form df + ⋆dh *)
 X = {θ, φ}; g = {{1, 0}, {0, Sin[θ]^2}}; gi = Inverse[g];
 Γ = Table[1/2 Sum[gi[[i, l]] (D[g[[l, j]], X[[k]]] + D[g[[l, k]], X[[j]]] - D[g[[j, k]], X[[l]]]), {l, 2}], {i, 2}, {j, 2}, {k, 2}];
 Lap[w_] := 1/Sin[θ] (D[Sin[θ] D[w, θ], θ] + D[w, φ, φ]/Sin[θ]);
@@ -498,7 +498,7 @@ Facts verified in the companion notebook (github.com/lossofgenerality/laplacian)
 - Heat trace of S²: t·Tr e^{tΔ} = 1 + t/3 + t²/15 + …; flat torus of equal area stays at 1.
 - Bochner verified on S² and on the torus; Lichnerowicz λ₁ ≥ nk with equality on S² (λ₁ = 2); Δr = cot r, 1/r, coth r.
 - Cotangent Laplacian; angle defect sums to 2πχ exactly.
-- Graphs (min over edges/vertices): K5 κ_LLY 5/4, κ₀ 3/4, K_BE 7/8, λ₁ 5/4; Q3 2/3, 0, 2/3, λ₁ 2/3; Petersen 0, −1/3, −1/3, λ₁ 2/3; C6 all 0, λ₁ 1/2; binary tree interior edges −2/3, leaf edges +2/3; dumbbell bridge −3/5. Resistance curvature p_i = 1 − ½Σω_ij sums to 1 (Foster). On trees resistance and Steinerberger curvature are proportional.
+- Graphs (min over edges/vertices): K5 κ_LLY 5/4, κ₀ 3/4, K_BE 7/8, λ₁ 5/4; Q3 2/3, 0, 2/3, λ₁ 2/3; Petersen 0, −1/3, −1/3, λ₁ 2/3; C6 all 0, λ₁ 1/2; binary tree interior edges −2/3, leaf edges +2/3; dumbbell bridge −3/5. Resistance curvature p<sub>i</sub> = 1 − ½Σω<sub>ij</sub> sums to 1 (Foster). On trees resistance and Steinerberger curvature are proportional.
 - λ₁ ≥ κ_LLY, λ₁ ≥ K_BE, λ_max ≤ 2 − κ₀ hold on all test graphs.
 - Weitzenböck Δ_Hodge = ∇*∇ + Ric verified on S²; 2-D Ricci flow ∂u/∂t = e^{−2u}Δ₀u = −K; curve shortening dA/dt = −2π; Ollivier on ε-balls κ → ε²K/8 = ε²Ric/(2(n+2)); Yamabe in R³ S̃ = −8u^{−5}Δu, u = (2/(1+r²))^{1/2} gives S̃ = 6.
 Use the run_wolfram tool when a computation would settle a question; the kernel is stateless, so send complete code. Keep answers focused; use plain text with simple notation (no LaTeX delimiters). If something is not established, say so.`;

@@ -138,7 +138,7 @@ Lcot = W - DiagonalMatrix[Total[W]];
 ("Text", "Every notion below is defined from the graph Laplacian Δ, from the random walk it generates, or from its pseudoinverse. "
          "Test graphs: cycle C₆, complete K₅, cube Q₃, Petersen graph, 4×4 grid."),
 ("Subsection", "8.1 Ollivier / Lin–Lu–Yau curvature"),
-("Text", "Ollivier: κ_α(x,y) = 1 − W₁(μ_x^α, μ_y^α)/d(x,y), with μ_x^α the lazy random walk (stay with probability α). It compares averages over two small balls — the discrete twin of Section 4. "
+("Text", "Ollivier: κ_α(x,y) = 1 − W₁(μ_x, μ_y)/d(x,y), with μ_x the α-lazy random walk at x (stay with probability α). It compares averages over two small balls — the discrete twin of Section 4. "
          "Lin–Lu–Yau: κ = lim_{α→1} κ_α/(1−α); it equals 2κ_{1/2} for every edge. "
          "Münch–Wojciechowski limit-free formula: κ(x,y) = inf { ∇_{xy}Δf : f 1-Lipschitz, ∇_{yx}f = 1 }, a linear program in which the Laplacian appears explicitly. "
          "Both routes are computed and must agree."),
@@ -166,9 +166,9 @@ W1[G_, μ_Association, ν_Association] := Module[{A = Keys[μ], B = Keys[ν], pl
 graphs = <|"C6" -> CycleGraph[6], "K5" -> CompleteGraph[5], "Q3" -> HypercubeGraph[3],
    "Petersen" -> PetersenGraph[], "Grid4x4" -> GridGraph[{4, 4}]|>;
 edges[G_] := List @@@ EdgeList[G];
-Dataset@Map[Function[G, <|"min κ_LLY (LP)" -> Min[κLLY[G, #] & /@ edges[G]],
-     "min 2κ_1/2 (transport)" -> Min[2 κOllivier[G, #, 1/2] & /@ edges[G]],
-     "min κ_0" -> Min[κOllivier[G, #, 0] & /@ edges[G]]|>], graphs]"""),
+Dataset@Map[Function[G, <|Row[{"min ", Subscript["κ", "LLY"], " (LP)"}] -> Min[κLLY[G, #] & /@ edges[G]],
+     Row[{"min 2", Subscript["κ", "1/2"], " (transport)"}] -> Min[2 κOllivier[G, #, 1/2] & /@ edges[G]],
+     "min κ₀" -> Min[κOllivier[G, #, 0] & /@ edges[G]]|>], graphs]"""),
 ("Subsection", "8.2 Bakry–Émery curvature (the discrete Bochner formula)"),
 ("Text", "Γ(f) = ½(Δf² − 2fΔf), Γ₂(f) = ½(ΔΓ(f) − 2Γ(f, Δf)). The curvature-dimension condition CD(K, ∞) at x is Γ₂(f)(x) ≥ K Γ(f)(x) for all f. "
          "Both sides are quadratic forms in the values of f on the 2-ball of x, so the best K is the largest K with Γ₂ − KΓ positive semidefinite (found by bisection)."),
@@ -218,8 +218,8 @@ higuchiTotal[name_] := Module[{F = PolyhedronData[name, "FaceIndices"], nv = Len
 spec[G_] := Sort[Eigenvalues[normLap[G]]];
 Dataset@Map[Function[G, With[{s = spec[G], kL = Min[κLLY[G, #] & /@ edges[G]], kB = Min[bakryEmery[G, #] & /@ VertexList[G]],
       k0 = Min[κOllivier[G, #, 0] & /@ edges[G]]},
-     <|"λ1" -> s[[2]], "λmax" -> Last[s], "λ1 ≥ κ_LLY" -> s[[2]] >= kL - 10^-9,
-       "λ1 ≥ K_BE" -> s[[2]] >= kB - 10^-6, "λmax ≤ 2 − κ0" -> Last[s] <= 2 - k0 + 10^-9|>]], graphs]"""),
+     <|"λ₁" -> s[[2]], Subscript["λ", "max"] -> Last[s], Row[{"λ₁ ≥ ", Subscript["κ", "LLY"]}] -> s[[2]] >= kL - 10^-9,
+       Row[{"λ₁ ≥ ", Subscript["K", "BE"]}] -> s[[2]] >= kB - 10^-6, Row[{Subscript["λ", "max"], " ≤ 2 − κ₀"}] -> Last[s] <= 2 - k0 + 10^-9|>]], graphs]"""),
 ("Text", "Belkin–Niyogi: on points sampled from a manifold, the heat-kernel graph Laplacian (weighted mean − value)/t converges to Δ. "
          "Check on 20 000 points of S² with f = z, for which Δf = −2f: the fitted ratio should be close to 1."),
 ("Input",

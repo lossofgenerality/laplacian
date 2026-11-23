@@ -12,9 +12,9 @@ Curvature is what the Laplacian sees beyond its flat value. On smooth surfaces a
 
 ## At a glance
 
-![Each smooth Laplacian–curvature identity has a discrete twin](relationship-map.png)
+![Fig. 1](relationship-map.png)
 
-The highlighted row is the thread from Laplacian Lab Section 1: the mean-value origin of Δ is also where curvature first appears, both on manifolds and on graphs.
+**Fig. 1.** Each smooth Laplacian–curvature identity has a discrete twin. The highlighted row is the thread from Laplacian Lab Section 1: the mean-value origin of Δ is also where curvature first appears, both on manifolds and on graphs.
 
 ## 1. Gauss curvature is a Laplacian
 
@@ -38,11 +38,11 @@ So a surface is minimal exactly when its coordinate functions are harmonic (Taka
 
 ## 3. Mean values and volumes: where Laplacian Lab Section 1 meets curvature
 
-Laplacian Lab Section 1 obtains Δ from the flat sphere mean, M_r f = f + r²Δf/(2n) + …. On a curved space the same expansion carries curvature from order r⁴ on (Gray–Willmore 1982). On a surface of constant curvature K the geodesic-circle mean is:
+Laplacian Lab Section 1 obtains Δ from the flat sphere mean, $M_{r}$ f = f + r²Δf/(2n) + …. On a curved space the same expansion carries curvature from order r⁴ on (Gray–Willmore 1982). On a surface of constant curvature K the geodesic-circle mean is:
 
 $$M_r f = f + \frac{r^2}{4}\Delta f + r^4\Big(\frac{\Delta^2 f}{64} + \frac{K\,\Delta f}{96}\Big) + r^6\Big(\frac{\Delta^3 f}{2304} + \frac{K\,\Delta^2 f}{1152} + \frac{K^2\Delta f}{1440}\Big) + O(r^8)$$
 
-The coefficients come from the series of P_l(cos r), the eigenvalue of the circle-mean operator on spherical harmonics, rewritten in λ = −l(l+1). Volumes carry curvature at order r²:
+The coefficients come from the series of $P_{l}$(cos r), the eigenvalue of the circle-mean operator on spherical harmonics, rewritten in λ = −l(l+1). Volumes carry curvature at order r²:
 
 $$A(r) = \pi r^2\Big(1 - \frac{K r^2}{12} + \frac{K^2 r^4}{360} - \dots\Big), \qquad \operatorname{Vol} B_r = \omega_n r^n\Big(1 - \frac{S\,r^2}{6(n+2)} + O(r^4)\Big)$$
 
@@ -71,7 +71,7 @@ In Bakry–Émery's Γ-calculus it reads Γ₂(f) = |Hess f|² + Ric(∇f, ∇f)
 - **Lichnerowicz:** Ric ≥ (n−1)k > 0 gives λ₁ ≥ nk, with equality only on the round sphere (Obata).
 - **Laplacian comparison:** Ric ≥ 0 gives Δr ≤ (n−1)/r for the distance r. Δr is the mean curvature of geodesic spheres, which leads to Bishop–Gromov volume comparison.
 - **Li–Yau gradient estimate** for positive heat solutions under Ric ≥ 0.
-- **Weitzenböck on 1-forms:** Δ_Hodge = ∇\*∇ + Ric, so Ric > 0 forces b₁ = 0 (Bochner's theorem). Forman's graph curvature (Section 7) discretises this splitting.
+- **Weitzenböck on 1-forms:** $\Delta_{\mathrm{Hodge}}$ = ∇\*∇ + Ric, so Ric > 0 forces b₁ = 0 (Bochner's theorem). Forman's graph curvature (Section 7) discretises this splitting.
 
 **Checked (notebook §6):** Bochner holds symbolically for an arbitrary f(θ, φ) on S². λ₁(S²) = 2 = nk, the equality case. Δr = cot r ≤ 1/r on (0, π).
 
@@ -91,23 +91,23 @@ Every graph curvature in use copies one smooth relationship from Sections 1–5,
 
 | Curvature | Smooth relationship it copies | Defined on | Built from the Laplacian via |
 | --- | --- | --- | --- |
-| Ollivier (2009) | Ball means at nearby points (§3) | edges, pairs | W₁ distance between random-walk measures μ_x = averaging kernel of Δ |
+| Ollivier (2009) | Ball means at nearby points (§3) | edges, pairs | W₁ distance between random-walk measures $\mu_{x}$ = averaging kernel of Δ |
 | Lin–Lu–Yau (2011) | same, infinitesimal laziness | edges | κ = inf { ∇_xy Δf : f 1-Lipschitz, ∇_yx f = 1 } (Münch–Wojciechowski 2019) |
 | Bakry–Émery CD(K,N) (Lin–Yau 2010) | Bochner, Γ₂ ≥ KΓ + (Δf)²/N (§5) | vertices | Γ, Γ₂ computed from Δ on the 2-ball |
 | CDE / CDE′ (Bauer et al. 2015) | Bochner + chain rule, for Li–Yau | vertices | modified Γ₂ with Δ√f |
-| Forman (2003) | Weitzenböck: Hodge = rough + curvature (§5) | edges, cells | diagonal of the 1-form Hodge Laplacian; 4 − d_x − d_y + 3·#triangles |
+| Forman (2003) | Weitzenböck: Hodge = rough + curvature (§5) | edges, cells | diagonal of the 1-form Hodge Laplacian; 4 − $d_{x}$ − $d_{y}$ + 3·#triangles |
 | Entropic (Erbar–Maas 2012) | Ricci ⇔ entropy convexity (Lott–Sturm–Villani) | whole chain | heat flow e^(tΔ) as a gradient flow of entropy |
-| Resistance (Devriendt–Lambiotte 2022) | Gauss–Bonnet (§6) | vertices, edges | effective resistance from L⁺; p_i = 1 − ½ Σ_{j~i} ω_ij |
+| Resistance (Devriendt–Lambiotte 2022) | Gauss–Bonnet (§6) | vertices, edges | effective resistance from L⁺; $p_{i}$ = 1 − ½ $\Sigma_{j\sim i}$ $\omega_{ij}$ |
 | Steinerberger (2023) | Bonnet–Myers / mean distance | vertices | D·K = n·1 with D the distance matrix |
 | Combinatorial (Higuchi 2001) | Gauss–Bonnet on polyhedra | vertices | 1 − d/2 + Σ 1/face size; total = χ |
 
-Two results make the link to Section 3 explicit. Ollivier curvature compares averages over two neighbouring balls, as the smooth expansion does. Münch–Wojciechowski turn it into an optimisation of ∇Δf, so curvature is literally the gradient of the Laplacian of a test function. Foster's theorem Σ_edges ω = n − 1 makes Σ p_i = 1 on every connected graph.
+Two results make the link to Section 3 explicit. Ollivier curvature compares averages over two neighbouring balls, as the smooth expansion does. Münch–Wojciechowski turn it into an optimisation of ∇Δf, so curvature is literally the gradient of the Laplacian of a test function. Foster's theorem $\Sigma_{\mathrm{edges}}$ ω = n − 1 makes Σ $p_{i}$ = 1 on every connected graph.
 
 ## 8. Spectral consequences on graphs, and the limit back to manifolds
 
 Graph curvature lower bounds give Lichnerowicz-type bounds on the normalised Laplacian, as in Section 5:
 
-- **Ollivier / Lin–Lu–Yau:** κ ≥ k > 0 on all edges gives λ₁ ≥ k. With κ₀ the non-lazy Ollivier curvature, λ_max ≤ 2 − κ₀ (Ollivier; Bauer–Jost–Liu, with t-step refinements).
+- **Ollivier / Lin–Lu–Yau:** κ ≥ k > 0 on all edges gives λ₁ ≥ k. With κ₀ the non-lazy Ollivier curvature, $\lambda_{\mathrm{max}}$ ≤ 2 − κ₀ (Ollivier; Bauer–Jost–Liu, with t-step refinements).
 - **Bakry–Émery:** CD(K, ∞) gives λ₁ ≥ K, and CD(K, n) gives λ₁ ≥ nK/(n−1) (Lin–Yau; Bauer–Chung–Lin–Liu).
 - **Diameter:** positive curvature bounds diameter (discrete Bonnet–Myers: Lin–Lu–Yau; Liu–Münch–Peyerimhoff).
 - **Heat flow:** CDE(0, n) gives a Li–Yau inequality and polynomial volume growth (Bauer–Horn–Lin–Lippner–Mangoubi–Yau).
@@ -118,9 +118,9 @@ The link runs the other way too. On points sampled from a manifold, the heat-ker
 
 ## 9. Verified graph results
 
-Computed in the notebook; all curvatures are minima over edges or vertices, and λ are eigenvalues of the normalised Laplacian. Lin–Lu–Yau was computed two ways (Münch–Wojciechowski linear program and 2κ_{1/2} by optimal transport) and they agree on every graph.
+Computed in the notebook; all curvatures are minima over edges or vertices, and λ are eigenvalues of the normalised Laplacian. Lin–Lu–Yau was computed two ways (Münch–Wojciechowski linear program and 2$\kappa_{1/2}$ by optimal transport) and they agree on every graph.
 
-| Graph | κ_LLY | κ₀ (Ollivier) | K_BE (CD(K,∞)) | Forman / augmented | min resistance p | λ₁ | λ_max |
+| Graph | $\kappa_{\mathrm{LLY}}$ | κ₀ (Ollivier) | $K_{\mathrm{BE}}$ (CD(K,∞)) | Forman / augmented | min resistance p | λ₁ | $\lambda_{\mathrm{max}}$ |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Complete K₅ | 5/4 | 3/4 | 7/8 | −4 / 5 | 0.200 | 1.250 | 1.250 |
 | Cube Q₃ | 2/3 | 0 | 2/3 | −2 / −2 | 0.125 | 0.667 | 2.000 |
@@ -128,13 +128,13 @@ Computed in the notebook; all curvatures are minima over edges or vertices, and 
 | Cycle C₆ | 0 | 0 | 0 | 0 / 0 | 0.167 | 0.500 | 2.000 |
 | Grid 4×4 | 0 | 0 | 0.088 | −4 / −4 | −0.112 | 0.218 | 2.000 |
 
-Other totals: Σ resistance curvature = 1.000 on all five graphs. Higuchi curvature sums to 2 on the tetrahedron, cube, dodecahedron, icosahedron and truncated icosahedron. K₅ attains λ₁ = κ_LLY = 5/4 and Q₃ attains λ₁ = κ_LLY = K_BE = 2/3, the discrete equality cases.
+Other totals: Σ resistance curvature = 1.000 on all five graphs. Higuchi curvature sums to 2 on the tetrahedron, cube, dodecahedron, icosahedron and truncated icosahedron. K₅ attains λ₁ = $\kappa_{\mathrm{LLY}}$ = 5/4 and Q₃ attains λ₁ = $\kappa_{\mathrm{LLY}}$ = $K_{\mathrm{BE}}$ = 2/3, the discrete equality cases.
 
 ## 10. Flows and further identities, worked out (notebook §10)
 
 Five more places where curvature is a Laplacian, each computed in notebook §10.
 
-- **Weitzenböck on 1-forms.** Δ_Hodge = ∇\*∇ + Ric. On S² every 1-form is df + ⋆dh, and Δ_Hodge commutes with d and ⋆, so the identity can be checked for arbitrary f and h. Ric > 0 then leaves no harmonic 1-forms: b₁ = 0.
+- **Weitzenböck on 1-forms.** $\Delta_{\mathrm{Hodge}}$ = ∇\*∇ + Ric. On S² every 1-form is df + ⋆dh, and $\Delta_{\mathrm{Hodge}}$ commutes with d and ⋆, so the identity can be checked for arbitrary f and h. Ric > 0 then leaves no harmonic 1-forms: b₁ = 0.
 - **Ricci flow** ∂g/∂t = −2Ric. In two dimensions, with g = e^(2u)(dx² + dy²), it is the heat equation ∂u/∂t = e^(−2u)Δ₀u = −K. The round sphere shrinks as (1 − 2t)g₀.
 - **Mean-curvature flow** ∂X/∂t = ΔX = −2Hn. A sphere shrinks as R² = R₀² − 4t. In the plane this is curve shortening, which rounds any embedded curve (Gage–Hamilton–Grayson), and the enclosed area falls at exactly 2π per unit time.
 - **Ollivier curvature on a manifold.** For uniform measures on ε-balls, sliding the surface along the geodesic carries one ball onto the other, and gives κ → ε²K/8 = ε² Ric/(2(n+2)).

@@ -94,6 +94,9 @@ Legended[GraphicsGrid[Partition[Table[With[{s = surfaces[[i]], K = Kformulas[[i,
    ImageSize -> 760, Spacings -> {10, 10}], κLegend[1, "K"]]
 
 (* ::Text:: *)
+(*Fig. 1. *)
+
+(* ::Text:: *)
 (*Gauss–Bonnet on the examples: ∬K dA = 2πχ. The torus (χ = 0) integrates to 0, the sphere (χ = 2) to 4π. The Liouville form of Section 2 reproduces the sphere’s K from the stereographic conformal factor.*)
 
 With[{t = surfaceCurvatures[{(2 + Cos[v]) Cos[u], (2 + Cos[v]) Sin[u], Sin[v]}, {u, v}],
@@ -137,17 +140,20 @@ minimal = {curvatureSurface[{Cosh[v] Cos[u], Cosh[v] Sin[u], v}, {u, 0, 2 π}, {
     surfaceCurvatures[{v Cos[u], v Sin[u], u/2}, {u, v}]["H"], 0.7, "Helicoid: H = 0", ViewPoint -> {2.5, -1.5, 1}]};
 {Htorus, Legended[GraphicsRow[Prepend[minimal, torusPlot], ImageSize -> 760], κLegend[0.7, "H"]]}
 
+(* ::Text:: *)
+(*Fig. 2. *)
+
 (* ::Section:: *)
 (*4. Mean values and volumes: curvature in the mean-value expansion of Δ*)
 
 (* ::Text:: *)
-(*Laplacian Lab Section 1 derives Δ from the sphere mean in flat space: M_r f = f + r²/(2n) Δf + …. On a curved manifold the same expansion picks up curvature (Gray–Willmore 1982). On a surface of constant curvature K the geodesic-circle mean is*)
+(*Laplacian Lab Section 1 derives Δ from the sphere mean in flat space: \!\(\*SubscriptBox[\(M\), \(r\)]\) f = f + r²/(2n) Δf + …. On a curved manifold the same expansion picks up curvature (Gray–Willmore 1982). On a surface of constant curvature K the geodesic-circle mean is*)
 
 (* ::Text:: *)
-(*  M_r f(p) = f + (r²/4) Δf + r⁴ (Δ²f/64 + K Δf/96) + r⁶ (Δ³f/2304 + K Δ²f/1152 + K² Δf/1440) + O(r⁸).*)
+(*  \!\(\*SubscriptBox[\(M\), \(r\)]\) f(p) = f + (r²/4) Δf + r⁴ (Δ²f/64 + K Δf/96) + r⁶ (Δ³f/2304 + K Δ²f/1152 + K² Δf/1440) + O(r⁸).*)
 
 (* ::Text:: *)
-(*Derivation on the unit sphere: the circle-mean operator acts on a degree-l spherical harmonic as the Legendre polynomial P_l(cos r), and Δ acts as λ = −l(l+1). Matching the series of P_l(cos r) in powers of λ gives the coefficients; scaling the sphere restores K.*)
+(*Derivation on the unit sphere: the circle-mean operator acts on a degree-l spherical harmonic as the Legendre polynomial \!\(\*SubscriptBox[\(P\), \(l\)]\)(cos r), and Δ acts as λ = −l(l+1). Matching the series of \!\(\*SubscriptBox[\(P\), \(l\)]\)(cos r) in powers of λ gives the coefficients; scaling the sphere restores K.*)
 
 λ = -l (l + 1);
 ser = Expand@Normal@Series[LegendreP[l, Cos[r]], {r, 0, 6}];
@@ -156,7 +162,7 @@ ser = Expand@Normal@Series[LegendreP[l, Cos[r]], {r, 0, 6}];
  SolveAlways[Coefficient[ser, r, 6] == a3 λ^3 + b3 λ^2 + c3 λ, l]}
 
 (* ::Text:: *)
-(*Direct check on S² with a non-symmetric test function. Write it in ambient coordinates and extend it as a degree-0 function F(X/|X|); then |X|²·Δ_ℝ³ of it is again degree 0 and equals Δ_S² F. Average F over the geodesic circle of colatitude r about the north pole and compare with the formula evaluated at the pole.*)
+(*Direct check on S² with a non-symmetric test function. Write it in ambient coordinates and extend it as a degree-0 function F(X/|X|); then |X|²·\!\(\*SubscriptBox[\(Δ\), \(ℝ³\)]\) of it is again degree 0 and equals \!\(\*SubscriptBox[\(Δ\), \(S²\)]\) F. Average F over the geodesic circle of colatitude r about the north pole and compare with the formula evaluated at the pole.*)
 
 F0[{x_, y_, z_}] := Exp[x] (1 + z)^2 + y z^3;
 ext = F0[{x, y, z}/Sqrt[x^2 + y^2 + z^2]];
@@ -169,7 +175,7 @@ formula = atPole[ext] + r^2/4 atPole[L1] + r^4 (atPole[L2]/64 + atPole[L1]/96) +
 Simplify[Expand[circleMean - formula]]
 
 (* ::Text:: *)
-(*Volumes. Area of a geodesic disc on a surface of curvature K: A(r) = πr²(1 − K r²/12 + K²r⁴/360 − …) (Bertrand–Diguet–Puiseux). In dimension n: Vol B_r = ω_n rⁿ (1 − S r²/(6(n+2)) + O(r⁴)), S the scalar curvature. Check on S³ (S = 6).*)
+(*Volumes. Area of a geodesic disc on a surface of curvature K: A(r) = πr²(1 − K r²/12 + K²r⁴/360 − …) (Bertrand–Diguet–Puiseux). In dimension n: Vol \!\(\*SubscriptBox[\(B\), \(r\)]\) = \!\(\*SubscriptBox[\(ω\), \(n\)]\) rⁿ (1 − S r²/(6(n+2)) + O(r⁴)), S the scalar curvature. Check on S³ (S = 6).*)
 
 areaK = 2 π Integrate[Sin[Sqrt[K] ρ]/Sqrt[K], {ρ, 0, r}];
 volS3 = 4 π Integrate[Sin[ρ]^2, {ρ, 0, r}];
@@ -201,12 +207,18 @@ errPlot = ListLogLogPlot[Table[Transpose[{rs, errs[[All, k]]}], {k, 3}], Joined 
 Row[{sphereView, errPlot}]
 
 (* ::Text:: *)
+(*Fig. 3. *)
+
+(* ::Text:: *)
 (*Area of a geodesic disc divided by the flat value πr², for K = 1 (sphere), 0 (plane) and −1 (hyperbolic plane). Positive curvature makes discs smaller than flat ones, negative curvature larger: the −Kr²/12 term.*)
 
 Plot[{2 (1 - Cos[r])/r^2, 1, 2 (Cosh[r] - 1)/r^2}, {r, 0.01, 2.5},
  PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Gray, RGBColor[0.18, 0.36, 0.78]},
  PlotLegends -> {"K = 1", "K = 0", "K = −1"}, AxesLabel -> {"r", "A(r)/πr²"},
  PlotLabel -> "Geodesic discs: A(r)/πr² = 1 − Kr²/12 + …", ImageSize -> 420]
+
+(* ::Text:: *)
+(*Fig. 4. *)
 
 (* ::Section:: *)
 (*5. Heat kernel and spectrum: curvature is audible*)
@@ -231,6 +243,9 @@ Plot[{ratio[heatTrace, t], 1 + t/3 + t^2/15, ratio[torusTrace, t]}, {t, 0.005, 0
  PlotStyle -> {{RGBColor[0.98, 0.56, 0.17], Thick}, {Black, Dashed}, {RGBColor[0.18, 0.36, 0.78], Thick}},
  PlotLegends -> {"sphere S²", "1 + t/3 + t²/15", "flat torus, same area"},
  AxesLabel -> {"t", "Tr e^{tΔ} ÷ (Area/4πt)"}, PlotLabel -> "Curvature is the first correction to Weyl’s law", ImageSize -> 460]
+
+(* ::Text:: *)
+(*Fig. 5. *)
 
 (* ::Section:: *)
 (*6. Bochner formula, Lichnerowicz bound and Laplacian comparison*)
@@ -276,6 +291,9 @@ Row[{
    PlotLegends -> {"K = 1", "K = 0", "K = −1"}, AxesLabel -> {"r", "length/2πr"}, PlotLabel -> "Bishop–Gromov: circle length vs flat", ImageSize -> 320]}]
 
 (* ::Text:: *)
+(*Fig. 6. *)
+
+(* ::Text:: *)
 (*Lichnerowicz pictured: the first nonzero eigenvalue of S² is 2 = nk, attained by the coordinate functions. The eigenfunction Y₁⁰ = z is drawn on the sphere.*)
 
 SphericalPlot3D[1, {θ, 0, π}, {φ, 0, 2 π}, Mesh -> None, PlotPoints -> 40,
@@ -286,7 +304,7 @@ SphericalPlot3D[1, {θ, 0, π}, {φ, 0, 2 π}, Mesh -> None, PlotPoints -> 40,
 (*7. Discrete surfaces: cotangent Laplacian, angle defect, discrete Gauss–Bonnet*)
 
 (* ::Text:: *)
-(*On a triangle mesh, the cotangent Laplacian (L f)_i = ½ Σ_j (cot α_ij + cot β_ij)(f_j − f_i), divided by the vertex area A_i, approximates Δ. Applied to the vertex positions it gives the discrete mean-curvature normal (Meyer–Desbrun–Schröder–Barr). The angle defect 2π − Σθ at a vertex is the discrete Gauss curvature; it sums to exactly 2πχ. Test: 400-point mesh of the unit sphere (H = 1, K = 1, χ = 2).*)
+(*On a triangle mesh, the cotangent Laplacian (L f)_i = ½ \!\(\*SubscriptBox[\(Σ\), \(j\)]\) (cot \!\(\*SubscriptBox[\(α\), \(ij\)]\) + cot \!\(\*SubscriptBox[\(β\), \(ij\)]\))(\!\(\*SubscriptBox[\(f\), \(j\)]\) − \!\(\*SubscriptBox[\(f\), \(i\)]\)), divided by the vertex area \!\(\*SubscriptBox[\(A\), \(i\)]\), approximates Δ. Applied to the vertex positions it gives the discrete mean-curvature normal (Meyer–Desbrun–Schröder–Barr). The angle defect 2π − Σθ at a vertex is the discrete Gauss curvature; it sums to exactly 2πχ. Test: 400-point mesh of the unit sphere (H = 1, K = 1, χ = 2).*)
 
 mesh = ConvexHullMesh[SpherePoints[400]];
 P = MeshCoordinates[mesh]; T = MeshCells[mesh, 2][[All, 1]]; nv = Length[P];
@@ -307,6 +325,9 @@ Lcot = W - DiagonalMatrix[Total[W]];
 
 Graphics3D[{EdgeForm[GrayLevel[.6]], MapThread[{ColorData["SunsetColors"][Rescale[#2, MinMax[defect/A]]], Polygon[P[[#1]]]} &,
    {T, Mean[(defect/A)[[#]]] & /@ T}]}, Boxed -> False, PlotLabel -> "Angle defect / vertex area ≈ K = 1"]
+
+(* ::Text:: *)
+(*Fig. 7. *)
 
 (* ::Subsection:: *)
 (*7.1 Worked example: a torus mesh, where Gauss–Bonnet gives zero*)
@@ -330,7 +351,7 @@ TT = Flatten[Table[{{idx[i, j], idx[i + 1, j], idx[i + 1, j + 1]}, {idx[i, j], i
 mt = meshCurvature[PT, TT];
 Kmesh = mt["defect"]/mt["area"];
 Ksmooth = Flatten[Table[N[Cos[2 π j/nvv]/(2 + Cos[2 π j/nvv])], {i, 0, nu - 1}, {j, 0, nvv - 1}]];
-<|"Σ defect" -> Chop[Total[mt["defect"]], 10^-9], "max |K_mesh − K|" -> Max[Abs[Kmesh - Ksmooth]]|>
+<|"Σ defect" -> Chop[Total[mt["defect"]], 10^-9], Row[{"max |", Subscript["K", "mesh"], " − K|"}] -> Max[Abs[Kmesh - Ksmooth]]|>
 
 Legended[Row[{
    Graphics3D[{EdgeForm[GrayLevel[0.6, 0.5]], Table[{κColour[Mean[Kmesh[[t]]], 1], Polygon[PT[[t]]]}, {t, TT}]},
@@ -340,6 +361,9 @@ Legended[Row[{
     PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Black}, AxesLabel -> {"v", "K"},
     PlotLegends -> {"mesh: defect/area", "smooth K"}, PlotLabel -> "Mesh vs smooth Gauss curvature", ImageSize -> 420]}],
  κLegend[1, "K"]]
+
+(* ::Text:: *)
+(*Fig. 8. *)
 
 (* ::Section:: *)
 (*8. Graph curvatures built from the graph Laplacian*)
@@ -351,7 +375,7 @@ Legended[Row[{
 (*8.1 Ollivier / Lin–Lu–Yau curvature*)
 
 (* ::Text:: *)
-(*Ollivier: κ_α(x,y) = 1 − W₁(μ_x^α, μ_y^α)/d(x,y), with μ_x^α the lazy random walk (stay with probability α). It compares averages over two small balls — the discrete twin of Section 4. Lin–Lu–Yau: κ = lim_{α→1} κ_α/(1−α); it equals 2κ_{1/2} for every edge. Münch–Wojciechowski limit-free formula: κ(x,y) = inf { ∇_{xy}Δf : f 1-Lipschitz, ∇_{yx}f = 1 }, a linear program in which the Laplacian appears explicitly. Both routes are computed and must agree.*)
+(*Ollivier: \!\(\*SubscriptBox[\(κ\), \(α\)]\)(x,y) = 1 − W₁(\!\(\*SubscriptBox[\(μ\), \(x\)]\), \!\(\*SubscriptBox[\(μ\), \(y\)]\))/d(x,y), with \!\(\*SubscriptBox[\(μ\), \(x\)]\) the α-lazy random walk at x (stay with probability α). It compares averages over two small balls — the discrete twin of Section 4. Lin–Lu–Yau: κ = \!\(\*SubscriptBox[\(lim\), \(α→1\)]\) \!\(\*SubscriptBox[\(κ\), \(α\)]\)/(1−α); it equals 2\!\(\*SubscriptBox[\(κ\), \(1/2\)]\) for every edge. Münch–Wojciechowski limit-free formula: κ(x,y) = inf { \!\(\*SubscriptBox[\(∇\), \(xy\)]\)Δf : f 1-Lipschitz, \!\(\*SubscriptBox[\(∇\), \(yx\)]\)f = 1 }, a linear program in which the Laplacian appears explicitly. Both routes are computed and must agree.*)
 
 nbr[G_, v_] := AdjacencyList[G, v];
 Δgraph[G_, f_][v_] := Mean[f /@ nbr[G, v]] - f[v];
@@ -376,9 +400,9 @@ W1[G_, μ_Association, ν_Association] := Module[{A = Keys[μ], B = Keys[ν], pl
 graphs = <|"C6" -> CycleGraph[6], "K5" -> CompleteGraph[5], "Q3" -> HypercubeGraph[3],
    "Petersen" -> PetersenGraph[], "Grid4x4" -> GridGraph[{4, 4}]|>;
 edges[G_] := List @@@ EdgeList[G];
-Dataset@Map[Function[G, <|"min κ_LLY (LP)" -> Min[κLLY[G, #] & /@ edges[G]],
-     "min 2κ_1/2 (transport)" -> Min[2 κOllivier[G, #, 1/2] & /@ edges[G]],
-     "min κ_0" -> Min[κOllivier[G, #, 0] & /@ edges[G]]|>], graphs]
+Dataset@Map[Function[G, <|Row[{"min ", Subscript["κ", "LLY"], " (LP)"}] -> Min[κLLY[G, #] & /@ edges[G]],
+     Row[{"min 2", Subscript["κ", "1/2"], " (transport)"}] -> Min[2 κOllivier[G, #, 1/2] & /@ edges[G]],
+     "min κ₀" -> Min[κOllivier[G, #, 0] & /@ edges[G]]|>], graphs]
 
 (* ::Subsection:: *)
 (*8.2 Bakry–Émery curvature (the discrete Bochner formula)*)
@@ -402,7 +426,7 @@ Dataset@Map[Function[G, Min[bakryEmery[G, #] & /@ VertexList[G]]], graphs]
 (*8.3 Forman curvature (the discrete Bochner–Weitzenböck splitting)*)
 
 (* ::Text:: *)
-(*Forman splits the combinatorial Hodge Laplacian on 1-cells as □ = B + F; the diagonal part F is the curvature. For an unweighted graph, F(e) = 4 − d_x − d_y; counting triangles as 2-cells gives the augmented version 4 − d_x − d_y + 3·#triangles(e).*)
+(*Forman splits the combinatorial Hodge Laplacian on 1-cells as □ = B + F; the diagonal part F is the curvature. For an unweighted graph, F(e) = 4 − \!\(\*SubscriptBox[\(d\), \(x\)]\) − \!\(\*SubscriptBox[\(d\), \(y\)]\); counting triangles as 2-cells gives the augmented version 4 − \!\(\*SubscriptBox[\(d\), \(x\)]\) − \!\(\*SubscriptBox[\(d\), \(y\)]\) + 3·#triangles(e).*)
 
 forman[G_, {x_, y_}] := 4 - VertexDegree[G, x] - VertexDegree[G, y];
 formanAug[G_, {x_, y_}] := forman[G, {x, y}] + 3 Length[Intersection[nbr[G, x], nbr[G, y]]];
@@ -413,7 +437,7 @@ Dataset@Map[Function[G, <|"min Forman" -> Min[forman[G, #] & /@ edges[G]],
 (*8.4 Resistance curvature (from the pseudoinverse of the Laplacian)*)
 
 (* ::Text:: *)
-(*Effective resistance ω_ij = (L⁺)_ii + (L⁺)_jj − 2(L⁺)_ij with L the Kirchhoff matrix. Node curvature p_i = 1 − ½ Σ_{j~i} ω_ij (Devriendt–Lambiotte). Foster’s theorem Σ_edges ω = n − 1 makes Σ p_i = 1 for every connected graph: a discrete Gauss–Bonnet theorem. Edge curvature κ_ij = 2(p_i + p_j)/ω_ij.*)
+(*Effective resistance \!\(\*SubscriptBox[\(ω\), \(ij\)]\) = (L⁺)_ii + (L⁺)_jj − 2(L⁺)_ij with L the Kirchhoff matrix. Node curvature \!\(\*SubscriptBox[\(p\), \(i\)]\) = 1 − ½ \!\(\*SubscriptBox[\(Σ\), \(j~i\)]\) \!\(\*SubscriptBox[\(ω\), \(ij\)]\) (Devriendt–Lambiotte). Foster’s theorem \!\(\*SubscriptBox[\(Σ\), \(edges\)]\) ω = n − 1 makes Σ \!\(\*SubscriptBox[\(p\), \(i\)]\) = 1 for every connected graph: a discrete Gauss–Bonnet theorem. Edge curvature \!\(\*SubscriptBox[\(κ\), \(ij\)]\) = 2(\!\(\*SubscriptBox[\(p\), \(i\)]\) + \!\(\*SubscriptBox[\(p\), \(j\)]\))/\!\(\*SubscriptBox[\(ω\), \(ij\)]\).*)
 
 resistance[G_] := Module[{Lp = PseudoInverse[N@KirchhoffMatrix[G]], n = VertexCount[G]},
   Table[Lp[[i, i]] + Lp[[j, j]] - 2 Lp[[i, j]], {i, n}, {j, n}]];
@@ -425,7 +449,7 @@ Dataset@Map[<|"Σ p (=1)" -> Chop@Total[pNode[#]], "min p" -> Min[pNode[#]], "ma
 (*8.5 Steinerberger curvature and combinatorial (Higuchi) curvature*)
 
 (* ::Text:: *)
-(*Steinerberger: solve D·K = n·1 with D the distance matrix (least squares if singular). Higuchi’s combinatorial curvature for a polyhedral surface: κ(v) = 1 − d_v/2 + Σ_faces∋v 1/|face|; by Euler’s formula it sums to χ = 2 on every convex polyhedron.*)
+(*Steinerberger: solve D·K = n·1 with D the distance matrix (least squares if singular). Higuchi’s combinatorial curvature for a polyhedral surface: κ(v) = 1 − \!\(\*SubscriptBox[\(d\), \(v\)]\)/2 + \!\(\*SubscriptBox[\(Σ\), \(faces\)]\)∋v 1/|face|; by Euler’s formula it sums to χ = 2 on every convex polyhedron.*)
 
 steinerberger[G_] := LeastSquares[N@GraphDistanceMatrix[G], ConstantArray[N@VertexCount[G], VertexCount[G]]];
 higuchiTotal[name_] := Module[{F = PolyhedronData[name, "FaceIndices"], nv = Length[PolyhedronData[name, "VertexCoordinates"]]},
@@ -455,30 +479,42 @@ Keys[family]
 (* ::Text:: *)
 (*Lin–Lu–Yau curvature on every edge. In the binary tree, interior edges are −2/3 (the two neighbourhoods do not overlap) while leaf edges are +2/3 (a leaf sees only its parent). The cycle and the Petersen graph are 0, the cube is 2/3 everywhere and K₅ is 5/4. The grid is 0 inside and positive along the boundary. The dumbbell’s bridge is negative (−3/5) while its cliques are positive: the bottleneck shows up as negative curvature.*)
 
-Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, κLLY, 1.25, nm]], family]], κLegend[1.25, "κ_LLY"]]
+Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, κLLY, 1.25, nm]], family]], κLegend[1.25, Subscript["κ", "LLY"]]]
+
+(* ::Text:: *)
+(*Fig. 9. *)
 
 Dataset[Map[Function[G, With[{k = κLLY[G, #] & /@ edges[G]}, <|"min" -> Min[k], "max" -> Max[k], "mean" -> N[Mean[k]]|>]], family]]
 
 (* ::Text:: *)
-(*What Ollivier’s curvature measures, on one edge: the walk measures μ_x and μ_y spread mass over the two neighbourhoods. Shared neighbours (purple, the triangles) let mass stay put, which is why K₅ is positive. Across an interior tree edge the neighbourhoods do not overlap, mass must travel up to 3 steps, and κ is negative.*)
+(*What Ollivier’s curvature measures, on one edge: the walk measures \!\(\*SubscriptBox[\(μ\), \(x\)]\) and \!\(\*SubscriptBox[\(μ\), \(y\)]\) spread mass over the two neighbourhoods. Shared neighbours (purple, the triangles) let mass stay put, which is why K₅ is positive. Across an interior tree edge the neighbourhoods do not overlap, mass must travel up to 3 steps, and κ is negative.*)
 
 edgePicture[G_, {x_, y_}, label_] := Graph[G,
   VertexStyle -> Join[Thread[Union[nbr[G, x], nbr[G, y]] -> RGBColor[0.98, 0.56, 0.17]],
     Thread[Intersection[nbr[G, x], nbr[G, y]] -> RGBColor[0.55, 0.3, 0.75]], {x -> Black, y -> Black}],
   EdgeStyle -> {UndirectedEdge[x, y] -> Directive[Black, AbsoluteThickness[4]]}, VertexSize -> {"Scaled", 0.05},
-  PlotLabel -> Style[Row[{label, ":  κ_LLY(x,y) = ", κLLY[G, {x, y}], ",  κ₀ = ", κOllivier[G, {x, y}, 0]}], 10], ImageSize -> 260];
+  PlotLabel -> Style[Row[{label, ":  ", Subscript["κ", "LLY"], "(x,y) = ", κLLY[G, {x, y}], ",  κ₀ = ", κOllivier[G, {x, y}, 0]}], 10], ImageSize -> 260];
 GraphicsRow[{edgePicture[KaryTree[15, 2], {2, 4}, "tree, interior edge"], edgePicture[HypercubeGraph[3], {1, 2}, "cube"],
   edgePicture[CompleteGraph[5], {1, 2}, "K5 (purple = shared)"]}, ImageSize -> 780]
 
 (* ::Text:: *)
+(*Fig. 10. *)
+
+(* ::Text:: *)
 (*Bakry–Émery curvature K∞ at every vertex (the discrete Bochner inequality). Tree vertices with children are negative and leaves positive; the cycle is exactly 0; the cube is 2/3, K₅ is 7/8 and Petersen is −1/3 at every vertex; on the dumbbell the bridge vertices are negative.*)
 
-Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, bakryEmery[G, #] & /@ VertexList[G], 1, nm]], family]], κLegend[1, "K_BE"]]
+Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, bakryEmery[G, #] & /@ VertexList[G], 1, nm]], family]], κLegend[1, Subscript["K", "BE"]]]
+
+(* ::Text:: *)
+(*Fig. 11. *)
 
 (* ::Text:: *)
 (*Forman curvature (augmented with triangles) on every edge. It is purely combinatorial, so it is very negative wherever degrees are high and triangles are few.*)
 
 Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, formanAug, 6, nm]], family]], κLegend[6, "Forman"]]
+
+(* ::Text:: *)
+(*Fig. 12. *)
 
 (* ::Text:: *)
 (*Resistance curvature p at every vertex. The totals are always 1, a discrete Gauss–Bonnet theorem; the dumbbell’s bridge vertices carry the negative curvature.*)
@@ -487,10 +523,16 @@ Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, formanAug, 6, nm
  Map[Chop@Total[pNode[#]] &, family]}
 
 (* ::Text:: *)
+(*Fig. 13. *)
+
+(* ::Text:: *)
 (*Steinerberger curvature at every vertex. It is built from graph distance where resistance curvature uses effective resistance. On a tree the two distances coincide, so the two curvatures are exactly proportional; on the grid they are strongly correlated; on vertex-transitive graphs (cycle, cube, K₅, Petersen) both are constant.*)
 
-{Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, steinerberger[G], 1.5, nm]], family]], κLegend[1.5, "K_S"]],
+{Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, steinerberger[G], 1.5, nm]], family]], κLegend[1.5, Subscript["K", "S"]]],
  "correlation with resistance curvature" -> Map[Quiet@Correlation[steinerberger[#], pNode[#]] &, KeyTake[family, {"Binary tree", "Grid 5×5", "Dumbbell"}]]}
+
+(* ::Text:: *)
+(*Fig. 14. *)
 
 (* ::Text:: *)
 (*Combinatorial (Higuchi) curvature drawn on polyhedra: every vertex of a Platonic solid carries the same positive share, and the shares add to χ = 2.*)
@@ -500,19 +542,22 @@ higuchiVertex[name_] := Module[{F = PolyhedronData[name, "FaceIndices"], nv = Le
 GraphicsRow[Table[Show[PolyhedronData[p], PlotLabel -> Style[Row[{p, ": ", First[higuchiVertex[p]], " × ", Length[higuchiVertex[p]], " = 2"}], 9]],
    {p, {"Tetrahedron", "Cube", "Octahedron", "Dodecahedron", "Icosahedron"}}], ImageSize -> 900]
 
+(* ::Text:: *)
+(*Fig. 15. *)
+
 (* ::Section:: *)
 (*9. Spectral consequences on graphs, and the graph-to-manifold limit*)
 
 (* ::Text:: *)
-(*Discrete Lichnerowicz theorems for the normalised Laplacian I − D^{−1/2}AD^{−1/2}: Ollivier curvature ≥ κ > 0 gives λ₁ ≥ κ (Ollivier; Lin–Lu–Yau); CD(K,∞) gives λ₁ ≥ K (Bakry–Émery; Lin–Yau); and λ_max ≤ 2 − κ₀ (Ollivier, Bauer–Jost–Liu).*)
+(*Discrete Lichnerowicz theorems for the normalised Laplacian I − D^{−1/2}AD^{−1/2}: Ollivier curvature ≥ κ > 0 gives λ₁ ≥ κ (Ollivier; Lin–Lu–Yau); CD(K,∞) gives λ₁ ≥ K (Bakry–Émery; Lin–Yau); and \!\(\*SubscriptBox[\(λ\), \(max\)]\) ≤ 2 − κ₀ (Ollivier, Bauer–Jost–Liu).*)
 
 normLap[G_] := Module[{A = N@AdjacencyMatrix[G], d}, d = Total[A];
    IdentityMatrix[Length[d]] - DiagonalMatrix[d^(-1/2)] . A . DiagonalMatrix[d^(-1/2)]];
 spec[G_] := Sort[Eigenvalues[normLap[G]]];
 Dataset@Map[Function[G, With[{s = spec[G], kL = Min[κLLY[G, #] & /@ edges[G]], kB = Min[bakryEmery[G, #] & /@ VertexList[G]],
       k0 = Min[κOllivier[G, #, 0] & /@ edges[G]]},
-     <|"λ1" -> s[[2]], "λmax" -> Last[s], "λ1 ≥ κ_LLY" -> s[[2]] >= kL - 10^-9,
-       "λ1 ≥ K_BE" -> s[[2]] >= kB - 10^-6, "λmax ≤ 2 − κ0" -> Last[s] <= 2 - k0 + 10^-9|>]], graphs]
+     <|"λ₁" -> s[[2]], Subscript["λ", "max"] -> Last[s], Row[{"λ₁ ≥ ", Subscript["κ", "LLY"]}] -> s[[2]] >= kL - 10^-9,
+       Row[{"λ₁ ≥ ", Subscript["K", "BE"]}] -> s[[2]] >= kB - 10^-6, Row[{Subscript["λ", "max"], " ≤ 2 − κ₀"}] -> Last[s] <= 2 - k0 + 10^-9|>]], graphs]
 
 (* ::Text:: *)
 (*Belkin–Niyogi: on points sampled from a manifold, the heat-kernel graph Laplacian (weighted mean − value)/t converges to Δ. Check on 20 000 points of S² with f = z, for which Δf = −2f: the fitted ratio should be close to 1.*)
@@ -527,11 +572,14 @@ sPC = pts[[;; ;; 200]]; lhs = Lpc /@ sPC; rhs = -2 sPC[[All, 3]];
 (*9.1 Pictures: curvature lower bounds under the spectral gap*)
 
 (* ::Text:: *)
-(*For each graph, λ₁ of the normalised Laplacian against the two curvature lower bounds. Every bar of κ_LLY and K_BE sits at or below λ₁; K₅ and Q₃ touch it, the discrete equality cases.*)
+(*For each graph, λ₁ of the normalised Laplacian against the two curvature lower bounds. Every bar of \!\(\*SubscriptBox[\(κ\), \(LLY\)]\) and \!\(\*SubscriptBox[\(K\), \(BE\)]\) sits at or below λ₁; K₅ and Q₃ touch it, the discrete equality cases.*)
 
 bounds = Map[Function[G, {spec[G][[2]], Max[0, Min[κLLY[G, #] & /@ edges[G]]], Max[0, Min[bakryEmery[G, #] & /@ VertexList[G]]]}], graphs];
 BarChart[Values[bounds], ChartLabels -> {Keys[bounds], None}, ChartStyle -> {Black, RGBColor[0.98, 0.56, 0.17], RGBColor[0.18, 0.36, 0.78]},
- ChartLegends -> {"λ₁", "max(0, κ_LLY)", "max(0, K_BE)"}, PlotLabel -> "λ₁ ≥ κ and λ₁ ≥ K", ImageSize -> 520]
+ ChartLegends -> {"λ₁", Row[{"max(0, ", Subscript["κ", "LLY"], ")"}], Row[{"max(0, ", Subscript["K", "BE"], ")"}]}, PlotLabel -> "λ₁ ≥ κ and λ₁ ≥ K", ImageSize -> 520]
+
+(* ::Text:: *)
+(*Fig. 16. *)
 
 (* ::Text:: *)
 (*The point-cloud Laplacian of f = z against the exact Δz = −2z at the sampled points: they lie on the diagonal.*)
@@ -540,14 +588,17 @@ ListPlot[Transpose[{rhs, lhs}], AspectRatio -> 1, PlotStyle -> RGBColor[0.98, 0.
  Epilog -> {Gray, Dashed, Line[{{-2, -2}, {2, 2}}]}, AxesLabel -> {"Δz = −2z", "point-cloud L z"},
  PlotLabel -> "Belkin–Niyogi on 20 000 points of S²", ImageSize -> 320]
 
+(* ::Text:: *)
+(*Fig. 17. *)
+
 (* ::Section:: *)
 (*10. Further instances, worked out: Weitzenböck, Ricci flow, mean-curvature flow, Ollivier on manifolds, Yamabe*)
 
 (* ::Subsection:: *)
-(*10.1 Weitzenböck on 1-forms: Δ_Hodge = ∇*∇ + Ric*)
+(*10.1 Weitzenböck on 1-forms: \!\(\*SubscriptBox[\(Δ\), \(Hodge\)]\) = ∇*∇ + Ric*)
 
 (* ::Text:: *)
-(*Every 1-form on S² is df + ⋆dh (S² has no harmonic 1-forms). The Hodge Laplacian commutes with d and ⋆, and equals −Δ on functions, so Δ_Hodge(df + ⋆dh) = d(−Δf) + ⋆d(−Δh) needs no further machinery. The rough Laplacian ∇*∇ω = −g^{jk}∇_k∇_j ω is computed from Christoffel symbols. The difference Δ_Hodge − ∇*∇ must be Ric(ω) = Kω = ω. Bochner’s theorem follows: Ric > 0 leaves no room for harmonic 1-forms, so b₁ = 0.*)
+(*Every 1-form on S² is df + ⋆dh (S² has no harmonic 1-forms). The Hodge Laplacian commutes with d and ⋆, and equals −Δ on functions, so \!\(\*SubscriptBox[\(Δ\), \(Hodge\)]\)(df + ⋆dh) = d(−Δf) + ⋆d(−Δh) needs no further machinery. The rough Laplacian ∇*∇ω = −g^{jk}\!\(\*SubscriptBox[\(∇\), \(k\)]\)\!\(\*SubscriptBox[\(∇\), \(j\)]\) ω is computed from Christoffel symbols. The difference \!\(\*SubscriptBox[\(Δ\), \(Hodge\)]\) − ∇*∇ must be Ric(ω) = Kω = ω. Bochner’s theorem follows: Ric > 0 leaves no room for harmonic 1-forms, so b₁ = 0.*)
 
 roughLaplacian1[g_, 𝓍_][ω_] := Module[{Γ = christoffel[g, 𝓍], gi = Inverse[g], n = Length[𝓍], T, TT},
   T = Table[D[ω[[i]], 𝓍[[j]]] - Sum[Γ[[k, i, j]] ω[[k]], {k, n}], {i, n}, {j, n}];
@@ -585,6 +636,9 @@ Row[Append[Table[DensityPlot[Kt[tt, x, y], {x, 0, 2 π}, {y, 0, 2 π}, ColorFunc
      PlotPoints -> 30, FrameTicks -> None, PlotLabel -> Row[{"K at t = ", tt}], ImageSize -> 160], {tt, {0, 0.25, 0.5, 2}}],
   ListLogPlot[Table[{tt, maxK[tt]}, {tt, 0, 2, 0.1}], Joined -> True, PlotStyle -> RGBColor[0.98, 0.56, 0.17], AxesLabel -> {"t", "max |K|"}, PlotLabel -> "curvature decays", ImageSize -> 240]]]
 
+(* ::Text:: *)
+(*Fig. 18. *)
+
 (* ::Subsection:: *)
 (*10.3 Mean-curvature flow ∂X/∂t = ΔX = −2H n*)
 
@@ -594,7 +648,7 @@ Row[Append[Table[DensityPlot[Kt[tt, x, y], {x, 0, 2 π}, {y, 0, 2 π}, ColorFunc
 Simplify[D[Sqrt[R0^2 - 4 t], t] + 2/Sqrt[R0^2 - 4 t]]
 
 (* ::Text:: *)
-(*Numerical example in the plane (curve-shortening flow, dX/dt = κN = ∂²X/∂s²). The curve is a polygon, and ∂²X/∂s² is the arc-length-weighted Laplacian of the cycle graph C_n acting on the vertex positions, a graph Laplacian again. Gage–Hamilton–Grayson: any embedded curve becomes convex, then round, and shrinks to a point. The enclosed area falls at exactly 2π per unit time, because ∮κ ds = 2π.*)
+(*Numerical example in the plane (curve-shortening flow, dX/dt = κN = ∂²X/∂s²). The curve is a polygon, and ∂²X/∂s² is the arc-length-weighted Laplacian of the cycle graph \!\(\*SubscriptBox[\(C\), \(n\)]\) acting on the vertex positions, a graph Laplacian again. Gage–Hamilton–Grayson: any embedded curve becomes convex, then round, and shrinks to a point. The enclosed area falls at exactly 2π per unit time, because ∮κ ds = 2π.*)
 
 nC = 160; Xc = Table[(1 + 0.35 Cos[3 θ] + 0.2 Sin[5 θ]) {Cos[θ], Sin[θ]}, {θ, 0., 2 π - 2 π/nC, 2 π/nC}];
 lapCurve[X_] := Module[{fw = RotateLeft[X] - X, bw = X - RotateRight[X], lf, lb}, lf = Norm /@ fw; lb = Norm /@ bw; 2 (fw/lf - bw/lb)/(lf + lb)];
@@ -612,6 +666,9 @@ Row[{Graphics[{Table[{ColorData["SunsetColors"][1 - sn[[1]]/0.45], Thick, Line[A
   ListPlot[areas, PlotStyle -> RGBColor[0.98, 0.56, 0.17], Epilog -> {Gray, Dashed, Line[{{0, polyArea[Xc]}, {0.4, polyArea[Xc] - 2 π 0.4}}]},
    AxesLabel -> {"t", "area"}, PlotLabel -> "area falls at 2π per unit time (dashed)", ImageSize -> 320]}]
 
+(* ::Text:: *)
+(*Fig. 19. *)
+
 (* ::Subsection:: *)
 (*10.4 Ollivier curvature recovers Ricci curvature on a manifold*)
 
@@ -628,6 +685,9 @@ Quiet@Plot[{κS2[ε]/ε^2, 0, κH2[ε]/ε^2}, {ε, 0.03, 1.2}, PlotRange -> {-0.
  PlotLegends -> {"sphere, K = 1", "plane, K = 0", "hyperbolic plane, K = −1"}, AxesLabel -> {"ε", "κ/ε²"},
  PlotLabel -> "Ollivier curvature of ε-balls → ε²K/8 (dashed ±1/8)", ImageSize -> 460]
 
+(* ::Text:: *)
+(*Fig. 20. *)
+
 (* ::Subsection:: *)
 (*10.5 Yamabe: prescribing scalar curvature with a conformal factor*)
 
@@ -637,7 +697,10 @@ Quiet@Plot[{κS2[ε]/ε^2, 0, κH2[ε]/ε^2}, {ε, 0.03, 1.2}, PlotRange -> {-0.
 uY = (2/(1 + x^2 + y^2 + z^2))^(1/2);
 {Simplify[-8 uY^-5 Laplacian[uY, {x, y, z}]],
  Plot[Evaluate[{uY^4 /. {y -> 0, z -> 0}, 1}], {x, -4, 4}, PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Gray},
-  PlotLegends -> {"conformal factor u⁴", "flat"}, AxesLabel -> {"r", "u⁴"}, PlotLabel -> "u⁴ g_flat = round S³, S̃ = 6", ImageSize -> 340]}
+  PlotLegends -> {"conformal factor u⁴", "flat"}, AxesLabel -> {"r", "u⁴"}, PlotLabel -> Row[{"u⁴ ", Subscript["g", "flat"], " = round S³, S̃ = 6"}], ImageSize -> 340]}
+
+(* ::Text:: *)
+(*Fig. 21. *)
 
 (* ::Text:: *)
 (*© 2026 Computational Classnotes · CC BY-NC-SA 4.0*)

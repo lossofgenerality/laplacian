@@ -87,7 +87,7 @@ page("gaussCurvature", "riemannian", "Notebook §1",
 page("roughLaplacian1", "riemannian", "Notebook §10.1",
  [("roughLaplacian1[g, 𝓍][ω]", "gives the rough (connection) Laplacian ∇*∇ω = −gʲᵏ ∇ₖ∇ⱼ ω of the 1-form ω, given as its list of components.")],
  ["Second covariant derivatives are built from christoffel.",
-  "With the Hodge Laplacian it verifies the Weitzenböck identity Δ_Hodge = ∇*∇ + Ric."],
+  "With the Hodge Laplacian it verifies the Weitzenböck identity Δ_{Hodge} = ∇*∇ + Ric."],
  {"Basic Examples": [(G1 + "\nSimplify[roughLaplacian1[gS2, 𝓍S2][{0, Sin[θ]^2}]]", None)],
   "Properties & Relations": [(G1 + "\nWith[{ΔS2 = laplaceBeltrami[gS2, 𝓍S2]}, Simplify[dS2[-ΔS2[F[θ, φ]]] + star1[dS2[-ΔS2[H[θ, φ]]]] - (roughLaplacian1[gS2, 𝓍S2][dS2[F[θ, φ]] + star1[dS2[H[θ, φ]]]] + dS2[F[θ, φ]] + star1[dS2[H[θ, φ]]])]]", None)]},
  ["dS2", "star1", "christoffel", "rough"], setup=G1)
@@ -311,7 +311,7 @@ page("Lpc", "graphs", "Notebook §9",
 FAM = GR + ' family = <|"Binary tree" -> KaryTree[15, 2], "Cycle C6" -> CycleGraph[6], "Cube Q3" -> HypercubeGraph[3], "Complete K5" -> CompleteGraph[5], "Petersen" -> PetersenGraph[], "Grid 5×5" -> GridGraph[{5, 5}], "Dumbbell" -> dumbbell|>;'
 page("edgeCurvaturePlot", "graphviz", "Notebook §8.6",
  [("edgeCurvaturePlot[G, κf, s, label]", "draws G with each edge coloured by κf[G, edge] on the κColour scale ±s.")], [],
- {"Basic Examples": [(GR + "\nedgeCurvaturePlot[dumbbell, κLLY, 1.25, \"Dumbbell: κ_LLY\"]", "IMG:edgeplot")]},
+ {"Basic Examples": [(GR + "\nedgeCurvaturePlot[dumbbell, κLLY, 1.25, Row[{\"Dumbbell: \", Subscript[\"κ\", \"LLY\"]}]]", "IMG:edgeplot")]},
  ["vertexCurvaturePlot", "κLLY", "κColour"])
 page("vertexCurvaturePlot", "graphviz", "Notebook §8.6",
  [("vertexCurvaturePlot[G, kv, s, label]", "draws G with vertex i coloured by kv[[i]] on the κColour scale ±s.")], [],

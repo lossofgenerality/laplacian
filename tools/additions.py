@@ -172,7 +172,7 @@ TT = Flatten[Table[{{idx[i, j], idx[i + 1, j], idx[i + 1, j + 1]}, {idx[i, j], i
 mt = meshCurvature[PT, TT];
 Kmesh = mt["defect"]/mt["area"];
 Ksmooth = Flatten[Table[N[Cos[2 π j/nvv]/(2 + Cos[2 π j/nvv])], {i, 0, nu - 1}, {j, 0, nvv - 1}]];
-<|"Σ defect" -> Chop[Total[mt["defect"]], 10^-9], "max |K_mesh − K|" -> Max[Abs[Kmesh - Ksmooth]]|>"""),
+<|"Σ defect" -> Chop[Total[mt["defect"]], 10^-9], Row[{"max |", Subscript["K", "mesh"], " − K|"}] -> Max[Abs[Kmesh - Ksmooth]]|>"""),
 ("Input",
 """Legended[Row[{
    Graphics3D[{EdgeForm[GrayLevel[0.6, 0.5]], Table[{κColour[Mean[Kmesh[[t]]], 1], Polygon[PT[[t]]]}, {t, TT}]},
@@ -204,7 +204,7 @@ row[plots_] := GraphicsRow[plots, ImageSize -> 1100, Spacings -> 0];
 Keys[family]"""),
 ("Text", "Lin–Lu–Yau curvature on every edge. In the binary tree, interior edges are −2/3 (the two neighbourhoods do not overlap) while leaf edges are +2/3 (a leaf sees only its parent). The cycle and the Petersen graph are 0, the cube is 2/3 everywhere and K₅ is 5/4. The grid is 0 inside and positive along the boundary. The dumbbell’s bridge is negative (−3/5) while its cliques are positive: the bottleneck shows up as negative curvature."),
 ("Input",
-"""Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, κLLY, 1.25, nm]], family]], κLegend[1.25, "κ_LLY"]]"""),
+"""Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, κLLY, 1.25, nm]], family]], κLegend[1.25, Subscript["κ", "LLY"]]]"""),
 ("Input",
 """Dataset[Map[Function[G, With[{k = κLLY[G, #] & /@ edges[G]}, <|"min" -> Min[k], "max" -> Max[k], "mean" -> N[Mean[k]]|>]], family]]"""),
 ("Text", "What Ollivier’s curvature measures, on one edge: the walk measures μ_x and μ_y spread mass over the two neighbourhoods. Shared neighbours (purple, the triangles) let mass stay put, which is why K₅ is positive. Across an interior tree edge the neighbourhoods do not overlap, mass must travel up to 3 steps, and κ is negative."),
@@ -213,12 +213,12 @@ Keys[family]"""),
   VertexStyle -> Join[Thread[Union[nbr[G, x], nbr[G, y]] -> RGBColor[0.98, 0.56, 0.17]],
     Thread[Intersection[nbr[G, x], nbr[G, y]] -> RGBColor[0.55, 0.3, 0.75]], {x -> Black, y -> Black}],
   EdgeStyle -> {UndirectedEdge[x, y] -> Directive[Black, AbsoluteThickness[4]]}, VertexSize -> {"Scaled", 0.05},
-  PlotLabel -> Style[Row[{label, ":  κ_LLY(x,y) = ", κLLY[G, {x, y}], ",  κ₀ = ", κOllivier[G, {x, y}, 0]}], 10], ImageSize -> 260];
+  PlotLabel -> Style[Row[{label, ":  ", Subscript["κ", "LLY"], "(x,y) = ", κLLY[G, {x, y}], ",  κ₀ = ", κOllivier[G, {x, y}, 0]}], 10], ImageSize -> 260];
 GraphicsRow[{edgePicture[KaryTree[15, 2], {2, 4}, "tree, interior edge"], edgePicture[HypercubeGraph[3], {1, 2}, "cube"],
   edgePicture[CompleteGraph[5], {1, 2}, "K5 (purple = shared)"]}, ImageSize -> 780]"""),
 ("Text", "Bakry–Émery curvature K∞ at every vertex (the discrete Bochner inequality). Tree vertices with children are negative and leaves positive; the cycle is exactly 0; the cube is 2/3, K₅ is 7/8 and Petersen is −1/3 at every vertex; on the dumbbell the bridge vertices are negative."),
 ("Input",
-"""Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, bakryEmery[G, #] & /@ VertexList[G], 1, nm]], family]], κLegend[1, "K_BE"]]"""),
+"""Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, bakryEmery[G, #] & /@ VertexList[G], 1, nm]], family]], κLegend[1, Subscript["K", "BE"]]]"""),
 ("Text", "Forman curvature (augmented with triangles) on every edge. It is purely combinatorial, so it is very negative wherever degrees are high and triangles are few."),
 ("Input",
 """Legended[row[KeyValueMap[Function[{nm, G}, edgeCurvaturePlot[G, formanAug, 6, nm]], family]], κLegend[6, "Forman"]]"""),
@@ -228,7 +228,7 @@ GraphicsRow[{edgePicture[KaryTree[15, 2], {2, 4}, "tree, interior edge"], edgePi
  Map[Chop@Total[pNode[#]] &, family]}"""),
 ("Text", "Steinerberger curvature at every vertex. It is built from graph distance where resistance curvature uses effective resistance. On a tree the two distances coincide, so the two curvatures are exactly proportional; on the grid they are strongly correlated; on vertex-transitive graphs (cycle, cube, K₅, Petersen) both are constant."),
 ("Input",
-"""{Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, steinerberger[G], 1.5, nm]], family]], κLegend[1.5, "K_S"]],
+"""{Legended[row[KeyValueMap[Function[{nm, G}, vertexCurvaturePlot[G, steinerberger[G], 1.5, nm]], family]], κLegend[1.5, Subscript["K", "S"]]],
  "correlation with resistance curvature" -> Map[Quiet@Correlation[steinerberger[#], pNode[#]] &, KeyTake[family, {"Binary tree", "Grid 5×5", "Dumbbell"}]]}"""),
 ("Text", "Combinatorial (Higuchi) curvature drawn on polyhedra: every vertex of a Platonic solid carries the same positive share, and the shares add to χ = 2."),
 ("Input",
@@ -245,7 +245,7 @@ ADD[9] = [
 ("Input",
 """bounds = Map[Function[G, {spec[G][[2]], Max[0, Min[κLLY[G, #] & /@ edges[G]]], Max[0, Min[bakryEmery[G, #] & /@ VertexList[G]]]}], graphs];
 BarChart[Values[bounds], ChartLabels -> {Keys[bounds], None}, ChartStyle -> {Black, RGBColor[0.98, 0.56, 0.17], RGBColor[0.18, 0.36, 0.78]},
- ChartLegends -> {"λ₁", "max(0, κ_LLY)", "max(0, K_BE)"}, PlotLabel -> "λ₁ ≥ κ and λ₁ ≥ K", ImageSize -> 520]"""),
+ ChartLegends -> {"λ₁", Row[{"max(0, ", Subscript["κ", "LLY"], ")"}], Row[{"max(0, ", Subscript["K", "BE"], ")"}]}, PlotLabel -> "λ₁ ≥ κ and λ₁ ≥ K", ImageSize -> 520]"""),
 ("Text", "The point-cloud Laplacian of f = z against the exact Δz = −2z at the sampled points: they lie on the diagonal."),
 ("Input",
 """ListPlot[Transpose[{rhs, lhs}], AspectRatio -> 1, PlotStyle -> RGBColor[0.98, 0.56, 0.17],
@@ -335,6 +335,6 @@ TableForm[ollivierTable, TableHeadings -> {None, {"ε", "κ/ε² on S² (K = 1)"
 """uY = (2/(1 + x^2 + y^2 + z^2))^(1/2);
 {Simplify[-8 uY^-5 Laplacian[uY, {x, y, z}]],
  Plot[Evaluate[{uY^4 /. {y -> 0, z -> 0}, 1}], {x, -4, 4}, PlotStyle -> {RGBColor[0.98, 0.56, 0.17], Gray},
-  PlotLegends -> {"conformal factor u⁴", "flat"}, AxesLabel -> {"r", "u⁴"}, PlotLabel -> "u⁴ g_flat = round S³, S̃ = 6", ImageSize -> 340]}"""),
+  PlotLegends -> {"conformal factor u⁴", "flat"}, AxesLabel -> {"r", "u⁴"}, PlotLabel -> Row[{"u⁴ ", Subscript["g", "flat"], " = round S³, S̃ = 6"}], ImageSize -> 340]}"""),
 ("Text", "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"),
 ]

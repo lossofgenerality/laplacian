@@ -196,8 +196,10 @@ function tpl(t) {
   rest = esc(rest).replace(/(^|[\[\s,{(+−*/^=&;])([\p{L}][\p{L}\p{N}]*)/gu, (a, p, id) => P[id] ? p + '<a href="#/ref/' + P[id].slug + '"><b>' + id + '</b></a>' : (/^(Graph|True|False|All|None|Automatic)$/.test(id) ? p + id : p + '<i>' + id + '</i>'));
   return '<b>' + esc(m[1]) + '</b>' + rest;
 }
+const SUBRE = /(?<![A-Za-z0-9\u0370-\u03FF])([A-Za-z\u0370-\u03FF])_(\{[^}]*\}|[A-Za-z0-9\u0370-\u03FF½ℝ³²]+)/gu;
+const subs = h => h.replace(SUBRE, (m, b, x) => b + '<sub>' + (x[0] === '{' ? x.slice(1, -1) : x) + '</sub>');
 function inline(s) {
-  return esc(s).replace(/(^|[\s(“"])([\p{L}][\p{L}\p{N}]*)(?=[\s,.;:)”"]|$)/gu, (a, p, id) => P[id] ? p + '<a class="mono" href="#/ref/' + P[id].slug + '">' + id + '</a>' : a);
+  return subs(esc(s)).replace(/(^|[\s(“"])([\p{L}][\p{L}\p{N}]*)(?=[\s,.;:)”"]|$)/gu, (a, p, id) => P[id] ? p + '<a class="mono" href="#/ref/' + P[id].slug + '">' + id + '</a>' : a);
 }
 function copyBtn() { return '<button class="copy" onclick="cp(this)">Copy</button>'; }
 window.cp = b => { const t = b.parentNode.getAttribute('data-raw'); navigator.clipboard && navigator.clipboard.writeText(t); b.textContent = 'Copied'; setTimeout(() => b.textContent = 'Copy', 1200); };

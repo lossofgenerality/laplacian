@@ -52,7 +52,7 @@ dumbbell = Graph[UndirectedEdge @@@ Join[List @@@ EdgeList[CompleteGraph[5]], (L
          "lands on the ball around y with every point travelling less than the distance d(x, y) between the centres. On a flat plane every point travels exactly d(x, y); "
          "on a saddle-shaped surface points off the geodesic travel more. Ollivier (2009) turned this into a definition that needs only distances and averaging: "
          "curvature is how much closer the two averaging measures are than their centres."),
-("Text", "The picture: on the unit sphere, points of the ε-ball around x (left) are carried by a rotation onto the ε-ball around y. "
+("Text", "Fig. 1: on the unit sphere, points of the ε-ball around x (left) are carried by a rotation onto the ε-ball around y. "
          "A point at distance λ from the equator moves along a circle of radius cos λ, so it travels δ cos λ < δ. Arrow colour shows the ratio travelled/δ = cos λ: orange 1 (on the geodesic), blue the smallest."),
 ("Input",
 """With[{δ = 0.7, ε = 0.42, R = RotationTransform[0.7, {0, 0, 1}]},
@@ -68,6 +68,7 @@ dumbbell = Graph[UndirectedEdge @@@ Join[List @@@ EdgeList[CompleteGraph[5]], (L
     Text[Style["x", 14, Bold], 1.18 {1, 0, 0}], Text[Style["y", 14, Bold], 1.18 R[{1, 0, 0}]]},
    ViewPoint -> {3, 1.3, 1.1}, Boxed -> False, ImageSize -> 420, Lighting -> "Neutral",
    PlotLabel -> Style["ε-ball at x slid onto the ε-ball at y: every point moves less than δ", 11]]]]"""),
+("Figure", "The ε-ball at x on the unit sphere slid by a rotation onto the ε-ball at y; arrow colour is the distance travelled divided by δ."),
 ("Text", "What to see: points on the equator (the geodesic) travel the full δ; points nearer the poles of the ball travel less. The average distance travelled is below δ, so κ > 0."),
 
 # ------------------------------------------------------------------ 3
@@ -106,7 +107,7 @@ dumbbell = Graph[UndirectedEdge @@@ Join[List @@@ EdgeList[CompleteGraph[5]], (L
          "The neighbours of x other than y lie at distance 3 from the neighbours of y other than x. One optimal plan moves the mass ⅓ on y to a neighbour of y (distance 1), "
          "the mass ⅓ on the far neighbour of x to x (distance 1), and the last ⅓ across, distance 3: W₁ = ⅓ + ⅓ + 1 = 5/3, so κ₀ = −2/3. Trees spread out: negative curvature."),
 ("Input", """{κ[tree, {2, 4}, 0], plan[tree, μ[tree, 2, 0], μ[tree, 4, 0]]}"""),
-("Text", "The plan lists (from, to) → mass. The picture shows the optimal plans for one edge of K₅, C₆ and the tree: the edge in black, mass moved as orange arrows labelled by the amount."),
+("Text", "The plan lists (from, to) → mass. Fig. 2 shows the optimal plans for one edge of K₅, C₆ and the tree: the edge in black, mass moved as orange arrows labelled by the amount."),
 ("Input",
 """planPicture[G_, {x_, y_}, label_] := Module[{pl = plan[G, μ[G, x, 0], μ[G, y, 0]], pos, moves},
   pos = AssociationThread[VertexList[G] -> GraphEmbedding[G]];
@@ -119,6 +120,7 @@ dumbbell = Graph[UndirectedEdge @@@ Join[List @@@ EdgeList[CompleteGraph[5]], (L
         Arrow[{pos[a], pos[b]}, 0.08], Black, Text[Style[w, 10, Background -> White], (pos[a] + pos[b])/2]}], {m, moves}]}],
    PlotLabel -> Style[Row[{label, ":  W₁ = ", W1[G, μ[G, x, 0], μ[G, y, 0]], ",  κ₀ = ", κ[G, {x, y}, 0]}], 10]]];
 Row[{planPicture[CompleteGraph[5], {1, 2}, "K₅"], planPicture[CycleGraph[6], {1, 2}, "C₆"], planPicture[tree, {2, 4}, "binary tree"]}, "  "]"""),
+("Figure", "Optimal transport plans for one edge of K₅, C₆ and the binary tree; the edge is black, moved mass is orange."),
 ("Text", "What to see: in K₅ one arrow of mass ¼; in C₆ two arrows of mass ½; in the tree some mass has to cross the edge and travel 3."),
 
 # ------------------------------------------------------------------ 5
@@ -136,17 +138,19 @@ Row[{planPicture[CompleteGraph[5], {1, 2}, "K₅"], planPicture[CycleGraph[6], {
 as = {0, 1/8, 1/6, 1/5, 1/4, 1/3, 1/2, 2/3, 3/4, 9/10};
 idle = Table[With[{G = c[[2]], e = c[[3]]}, {c[[1]], Max[VertexDegree[G, #] & /@ e], κ[G, e, #] & /@ as, κLLY[G, e]}], {c, cases}];
 Grid[Prepend[{#[[1]], #[[2]], Union[Select[Transpose[{as, #[[3]]}], Function[p, p[[1]] >= 1/(#[[2]] + 1)]] /. {a_, k_} :> k/(1 - a)], #[[4]]} & /@ idle,
-  {"edge", "d", "κ_α/(1 − α) for α ≥ 1/(d+1)", "κ_LLY (Laplacian LP)"}], Frame -> All, Background -> {None, {LightGray}}]"""),
+  {"edge", "d", Row[{Subscript["κ", "α"], "/(1 − α) for α ≥ 1/(d+1)"}], Row[{Subscript["κ", "LLY"], " (Laplacian LP)"}]}], Frame -> All, Background -> {None, {LightGray}}]"""),
 ("Text", "Check: in every row the third column is a single value equal to the fourth — K₅ 5/4, C₆ 0, Q₃ 2/3, Petersen 0, tree −2/3, dumbbell bridge −3/5, star 1/2."),
-("Text", "The idleness functions themselves: each is linear from α = 1/(d + 1) down to 0 at α = 1; the dot marks α = 1/(d + 1). K₅ peaks at κ = 1 exactly there."),
+("Text", "The idleness functions themselves (Fig. 3): each is linear from α = 1/(d + 1) down to 0 at α = 1; the dot marks α = 1/(d + 1). K₅ peaks at κ = 1 exactly there."),
 ("Input",
 """ListLinePlot[Table[Append[Transpose[{as, t[[3]]}], {1, 0}], {t, idle}], PlotMarkers -> Automatic, PlotLegends -> idle[[All, 1]],
  Epilog -> {Black, PointSize[0.018], Table[Point[{1/(t[[2]] + 1), κ[cases[[i, 2]], cases[[i, 3]], 1/(t[[2]] + 1)]}], {i, Length[idle]}, {t, {idle[[i]]}}]},
- AxesLabel -> {"α", "κ_α"}, PlotLabel -> "Idleness functions: linear on [1/(d+1), 1]", ImageSize -> 520, GridLines -> {{1/2}, {0}}]"""),
+ AxesLabel -> {"α", Subscript["κ", "α"]}, PlotLabel -> "Idleness functions: linear on [1/(d+1), 1]", ImageSize -> 520, GridLines -> {{1/2}, {0}}]"""),
+
+("Figure", "Idleness functions α ↦ κ_α on seven edges; black dots mark α = 1/(d + 1)."),
 
 # ------------------------------------------------------------------ 6
 ("Section", "6. A gallery of graphs"),
-("Text", "Every edge coloured by κ_LLY (= 2κ_{1/2}) on the CCN scale: blue negative, near-white zero, orange positive. "
+("Text", "Fig. 4 colours every edge by κ_LLY (= 2κ_{1/2}) on the CCN scale: blue negative, near-white zero, orange positive. "
          "Complete graphs and cubes are positive, cycles and grids are flat in the interior, trees and bridges are negative."),
 ("Input",
 """edgePlot[G_, label_] := With[{ks = κLLY[G, List @@ #] & /@ EdgeList[G]},
@@ -154,7 +158,8 @@ Grid[Prepend[{#[[1]], #[[2]], Union[Select[Transpose[{as, #[[3]]}], Function[p, 
    VertexSize -> 0.15, VertexStyle -> GrayLevel[0.35], ImageSize -> 175,
    PlotLabel -> Style[Row[{label, "  min ", Min[ks]}], 9]]];
 fam = {{"tree", tree}, {"C₆", CycleGraph[6]}, {"Q₃", HypercubeGraph[3]}, {"K₅", CompleteGraph[5]}, {"Petersen", PetersenGraph[]}, {"grid 4×4", GridGraph[{4, 4}]}, {"dumbbell", dumbbell}};
-Legended[Grid[Partition[edgePlot[#[[2]], #[[1]]] & /@ fam, 4, 4, {1, 1}, ""]], κLegend[1.25, "κ_LLY"]]"""),
+Legended[Grid[Partition[edgePlot[#[[2]], #[[1]]] & /@ fam, 4, 4, {1, 1}, ""]], κLegend[1.25, Subscript["κ", "LLY"]]]"""),
+("Figure", "Seven graphs with every edge coloured by κ_LLY."),
 ("Text", "What to see: the grid’s boundary edges are positive and its interior edges zero; the dumbbell’s bridge path is the most negative part of the graph."),
 
 # ------------------------------------------------------------------ 7
@@ -200,13 +205,14 @@ kappaSliding[K, 6] // Expand"""),
 """Module[{e, ρ, ψ}, Normal@Series[Integrate[Normal@Series[(1 - Sqrt[1 - Sin[ρ]^2 Sin[ψ]^2]) Sin[ρ]^2, {ρ, 0, 7}] Sin[ψ], {ψ, 0, π}, {ρ, 0, e}]/
      (2 Integrate[Normal@Series[Sin[ρ]^2, {ρ, 0, 7}], {ρ, 0, e}]), {e, 0, 4}] /. e -> ε]"""),
 ("Text", "Check: ε²/5 − 2ε⁴/75, whose leading term is Ollivier’s ε² Ric/(2(N + 2)) with Ric = 2, N = 3."),
-("Text", "The picture compares κ/ε² from exact quadrature (written cancellation-free as s²/(1 + √(1 − s²)) with s = sin(√K ρ) sin α) with its limit K/8, for K = 1, 0, −1."),
+("Text", "Fig. 5 compares κ/ε² from exact quadrature (written cancellation-free as s²/(1 + √(1 − s²)) with s = sin(√K ρ) sin α) with its limit K/8, for K = 1, 0, −1."),
 ("Input",
 """κS2[ε_?NumericQ] := NIntegrate[With[{s = Sin[ρ] Sin[α]}, s^2/(1 + Sqrt[1 - s^2])] Sin[ρ], {ρ, 0, ε}, {α, 0, 2 π}]/(2 π (1 - Cos[ε]));
 κH2[ε_?NumericQ] := -NIntegrate[With[{s = Sinh[ρ] Sin[α]}, s^2/(1 + Sqrt[1 + s^2])] Sinh[ρ], {ρ, 0, ε}, {α, 0, 2 π}]/(2 π (Cosh[ε] - 1));
 Plot[{κS2[e]/e^2, 0, κH2[e]/e^2, 1/8, -1/8}, {e, 0.02, 1.2}, PlotStyle -> {RGBColor[0.98, 0.56, 0.17], GrayLevel[0.4], RGBColor[0.18, 0.36, 0.78], Dashed, Dashed},
  PlotLegends -> {"sphere K = 1", "plane K = 0", "hyperbolic K = −1", "K/8"}, AxesLabel -> {"ε", "κ/ε²"}, PlotRange -> {-0.2, 0.2},
  PlotLabel -> "Ollivier curvature of ε-balls tends to K/8", ImageSize -> 480]"""),
+("Figure", "κ/ε² against ε for the sphere, the plane and the hyperbolic plane, with the limits ±1/8."),
 ("Input", """{κS2[0.05]/0.05^2, κH2[0.05]/0.05^2, N[kappaSliding[1, 6]/ε^2 /. ε -> 0.3] - κS2[0.3]/0.09}"""),
 ("Text", "Check: 0.12496 and −0.12504 at ε = 0.05; the series and the quadrature agree at ε = 0.3 to 3 × 10⁻⁸."),
 
