@@ -18,6 +18,7 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | `tools/pdf-style.css` | Stylesheet for the PDF: `pandoc docs/laplacian-curvature.md -s --mathml --css tools/pdf-style.css`, then print with headless Chrome |
 | `tools/cells.py`, `tools/additions.py`, `tools/build.py` | Notebook source and builder: edit `cells.py`, then `python3 tools/build.py notebooks` |
 | `lab/laplacian-curvature-lab.html` | **Laplacian Curvature Lab**: single-page interactive lab (14 hash-routed benches: surfaces coloured by K and H, Ricci flow, curved mean values, heat trace, Bochner and comparison, torus mesh, seven graph curvatures, curve shortening, Ollivier on manifolds, reference sheet, self-check, Ask the TA, Wolfram cells). Built from `lab/template.html` + `lab/core.js` + `lab/app.js` by `python3 lab/build_lab.py`; `node lab/test-core.js` checks the core against the notebook values |
+| `lab/Laplacian_Curvature_Lab.html` | **Standalone** Laplacian Curvature Lab: open in any browser. Set `WOLFRAM_URL` (your LaplacianLabKernel URL) in the settings block at the top, then type your CCN-KEY in the Wolfram Language section and press Connect. Wolfram cells and Ask the TA run through CCN's Wolfram Cloud kernel; no key is stored in the file |
 | `STYLE.md` | House style for Computational Classnotes math documents |
 | `CONTEXT.md` | Working context for the Laplacian Lab project: deliverables, decisions, lessons, open issues |
 

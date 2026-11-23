@@ -103,6 +103,8 @@ A sibling of Laplacian Lab for the curvature material, same tokens (cool paper/i
 - Lab Wolfram snippets were run on the connector kernel (Weitzenböck {0,0}, LLY on Q₃ = 2/3 = λ₁, mesh defect 0, Liouville 1/−1).
 - Wolfram cells strip `Symbol::undefined2` / `General::messages` lint lines from output.
 - Not yet tested inside Claude: the `mcp` and `sample` calls themselves (only the no-capability fallback was seen in headless Chrome).
+- **Standalone version `lab/Laplacian_Curvature_Lab.html`** (same build, `window.LAB_STANDALONE = true`): settings block `window.LAPLACIAN_LAB_CONFIG = { MODEL: "", WOLFRAM_URL: "" }` ships empty; masked CCN-KEY field (`id="wl-key"`, variable `WL_KEY`) with Connect and "Remember on this device" (localStorage `ccn-key`) at the top of the Wolfram Language section. Uses the existing LaplacianLabKernel protocol unchanged: Connect sends `$VersionNumber` and reads `chat_ready`; cells POST `key`, `code_b64`, `mode=wolfram` and read `text_b64` + `image`; the TA POSTs `mode=chat` + `payload_b64`. Because the kernel's chat mode forwards no tools, the TA uses a page-side loop: it answers `<run_wolfram>code</run_wolfram>`, the page runs it on the kernel and returns the output (at most two rounds). Tested in headless Chrome against a mock kernel: connect, cell evaluation, TA round trip with Unicode, wrong-key message.
+- A new chat key can go in a new private object or replace `LaplacianLab/apikey` (which the deployed kernel reads; no redeploy needed).
 
 ---
 

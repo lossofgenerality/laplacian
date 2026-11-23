@@ -920,13 +920,29 @@ Simplify[d1[-Lap[𝒻[θ, φ]]] + star[d1[-Lap[𝒽[θ, φ]]]] - (rough[ω] + ω
 };
 const SNIPNAMES = { surfaces: "Gauss and mean curvature", ricci: "Liouville and Ricci flow", means: "curved mean value", heat: "heat trace", bochner: "Bochner on S²", weitzenbock: "Weitzenböck on S²", mesh: "torus mesh defect", graphs: "Lin–Lu–Yau and λ₁", flows: "exact flows", ollivier: "Ollivier on S² and H²", yamabe: "Yamabe" };
 let MCP = null, SAMPLE = null, capsChecked = false;
-const capStatus = () => ($("status").textContent = MCP ? "Wolfram kernel connected" : capsChecked ? "Wolfram cells need the Wolfram connector (open this page in Claude)" : "");
-if (window.claude && claude.use) {
+const STANDALONE = !!window.LAB_STANDALONE, CFG = window.LAPLACIAN_LAB_CONFIG || {};
+let WL_KEY = "", kernelOK = false, chatReady = false;
+const b64enc = s => { const b = new TextEncoder().encode(s); let t = ""; for (let i = 0; i < b.length; i += 0x8000) t += String.fromCharCode.apply(null, b.subarray(i, i + 0x8000)); return btoa(t); };
+const b64dec = s => { const t = atob(s), b = new Uint8Array(t.length); for (let i = 0; i < t.length; i++) b[i] = t.charCodeAt(i); return new TextDecoder().decode(b); };
+async function kernelPost(params) {
+  if (!CFG.WOLFRAM_URL) throw { code: "no_url", message: "Set WOLFRAM_URL in the settings block at the top of this file." };
+  if (!WL_KEY) throw { code: "no_key", message: "Enter your CCN-KEY and press Connect (Wolfram Language section)." };
+  let res;
+  try { res = await fetch(CFG.WOLFRAM_URL, { method: "POST", body: new URLSearchParams({ key: WL_KEY, ...params }) }); }
+  catch (e) { throw { code: "network", message: "Could not reach CCN's Wolfram Cloud kernel." }; }
+  let j = null; try { j = await res.json(); } catch (e) {}
+  if (!j || (j.Success === false) || (!res.ok && !j.error)) throw { code: "rejected", message: "The kernel refused the request. Check the CCN-KEY." };
+  return j;
+}
+const capStatus = () => ($("status").textContent = STANDALONE ? (kernelOK ? `CCN Cloud connected${chatReady ? " · TA ready" : " · TA unavailable (no chat key on the kernel)"}` : "Not connected: enter your CCN-KEY in the Wolfram Language section") : MCP ? "Wolfram kernel connected" : capsChecked ? "Wolfram cells need the Wolfram connector (open this page in Claude)" : "");
+if (STANDALONE) { capsChecked = true; setTimeout(capStatus, 0); }
+else if (window.claude && claude.use) {
   claude.use("mcp").then(m => { MCP = m; capsChecked = true; capStatus(); }).catch(() => { capsChecked = true; capStatus(); });
   claude.use("sample").then(s => { SAMPLE = s; $("askstate").textContent = s ? "" : "The TA needs this page to be open in Claude."; }).catch(() => {});
 } else { capsChecked = true; setTimeout(() => { capStatus(); $("askstate").textContent = "The TA needs this page to be open in Claude."; }, 0); }
 function wlError(e) {
   const c = e && e.code;
+  if (c === "no_url" || c === "no_key" || c === "network" || c === "rejected") return e.message;
   if (c === "server_not_connected") return "Add the Wolfram connector in claude.ai Settings → Connectors, then run again.";
   if (c === "needs_reauth") return "Reconnect Wolfram in claude.ai Settings → Connectors.";
   if (c === "not_in_manifest") return "Wolfram is turned off for this page in this view.";
@@ -936,6 +952,11 @@ function wlError(e) {
   return "The Wolfram call failed (" + (c || "unknown") + "): " + (e && e.message || "");
 }
 async function runWolfram(code) {
+  if (STANDALONE) {
+    const j = await kernelPost({ code_b64: b64enc(code), mode: "wolfram" });
+    const text = j.text_b64 ? b64dec(j.text_b64) : (j.text || "");
+    return { text, imgs: j.image ? [`data:image/png;base64,${j.image}`] : [] };
+  }
   if (!MCP) throw { code: "not_granted", message: "No Wolfram connector in this view." };
   const r = await MCP.callTool("Wolfram", "WolframLanguageEvaluator", { code }, { cache: false });
   const text = [], imgs = [];
@@ -981,8 +1002,38 @@ function addMsg(role, text, codes) {
   (codes || []).forEach(c => { const det = document.createElement("details"); det.innerHTML = "<summary>Wolfram code the TA ran</summary><pre></pre>"; det.querySelector("pre").textContent = c; d.appendChild(det); });
   $("chat").appendChild(d); $("chat").scrollTop = $("chat").scrollHeight; return d;
 }
+const RUN_NOTE = `\nTo run Wolfram Language, reply with only <run_wolfram>complete code</run_wolfram> and nothing else; the page runs it on the kernel and sends you the output, then you answer. Use it at most twice per question.`;
+async function askStandalone(q, d, ctx) {
+  if (!kernelOK) { d.textContent = "Connect with your CCN-KEY first (Wolfram Language section)."; return; }
+  if (!chatReady) { d.textContent = "The kernel has no chat key stored, so the TA is unavailable. Store one with CloudPut on your Wolfram Cloud."; return; }
+  const msgs = history.slice(-8).concat([{ role: "user", content: `${ctx}\n\nQuestion: ${q}` }]), codes = [];
+  for (let round = 0; round < 3; round++) {
+    const payload = { model: CFG.MODEL || undefined, max_tokens: 1500, system: BRIEF + RUN_NOTE, messages: msgs };
+    const j = await kernelPost({ mode: "chat", payload_b64: b64enc(JSON.stringify(payload)) });
+    if (j.error) { d.textContent = "The TA could not answer: " + j.error + (j.status ? ` (status ${j.status})` : ""); return; }
+    const text = b64dec(j.text_b64 || ""), m = text.match(/<run_wolfram>([\s\S]*?)<\/run_wolfram>/);
+    if (m && round < 2) {
+      d.textContent = "Running Wolfram code…"; codes.push(m[1].trim());
+      let out; try { const r = await runWolfram(m[1].trim()); out = (r.text || "(no text output)").slice(0, 4000); } catch (e) { out = "Error: " + wlError(e); }
+      msgs.push({ role: "assistant", content: text }, { role: "user", content: "Wolfram output:\n" + out + "\nNow answer the question." });
+      continue;
+    }
+    d.textContent = text.replace(/<run_wolfram>[\s\S]*?<\/run_wolfram>/g, "").trim();
+    codes.forEach(c => { const det = document.createElement("details"); det.innerHTML = "<summary>Wolfram code the TA ran</summary><pre></pre>"; det.querySelector("pre").textContent = c; d.appendChild(det); });
+    history.push({ role: "user", content: q }, { role: "assistant", content: d.firstChild ? d.firstChild.textContent : text });
+    return;
+  }
+}
 async function ask() {
   const q = $("askq").value.trim(); if (!q) return;
+  if (STANDALONE) {
+    $("askq").value = ""; addMsg("user", q); const d = addMsg("ta", "Thinking…");
+    const state = window.__labState ? `Current graph bench state: ${JSON.stringify(window.__labState)}.` : "";
+    $("asksend").disabled = true;
+    try { await askStandalone(q, d, `Bench the student came from: ${$("askctx").dataset.from || "none"}. ${state}\n${askContext}`); }
+    catch (e) { d.textContent = wlError(e); }
+    $("asksend").disabled = false; askContext = ""; return;
+  }
   if (!SAMPLE) { $("askstate").textContent = "The TA needs this page to be open in Claude."; return; }
   $("askq").value = ""; addMsg("user", q); const d = addMsg("ta", "Thinking…"); lastCode = [];
   const state = window.__labState ? `Current graph bench state: ${JSON.stringify(window.__labState)}.` : "";
@@ -999,6 +1050,30 @@ async function ask() {
 let lastBench = "map";
 addEventListener("hashchange", () => { const id = location.hash.slice(1); if (id === "ask") { $("askctx").dataset.from = lastBench; $("askctx").textContent = `Asking from: ${sections.find(s => s.id === lastBench)?.dataset.title || "the lab"}.`; } else if (sections.some(s => s.id === id)) lastBench = id; });
 $("asksend").onclick = ask; $("askq").addEventListener("keydown", e => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) ask(); });
+
+// ===================== standalone: CCN-KEY =====================
+if (STANDALONE) {
+  const card = document.createElement("div"); card.className = "card"; card.style.margin = "16px 0";
+  card.innerHTML = `<h3>Connect to CCN Cloud</h3><p class="muted">Wolfram cells and the TA run on CCN's Wolfram Cloud kernel. Enter your CCN-KEY and press Connect.</p>
+   <div class="controls"><label for="wl-key">CCN-KEY</label><input id="wl-key" type="password" autocomplete="off" spellcheck="false" style="min-height:40px;padding:6px 10px;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);width:min(100%,320px)">
+   <button class="primary" id="wl-connect">Connect</button><label><input type="checkbox" id="wl-remember"> Remember on this device</label><span class="muted" id="wl-state"></span></div>`;
+  const wsec = $("wolfram"); wsec.insertBefore(card, wsec.querySelector(".controls"));
+  try { const k = localStorage.getItem("ccn-key"); if (k) { $("wl-key").value = k; $("wl-remember").checked = true; } } catch (e) {}
+  const connect = async () => {
+    WL_KEY = $("wl-key").value.trim(); $("wl-state").textContent = "Connecting…";
+    try {
+      const j = await kernelPost({ code_b64: b64enc("$VersionNumber"), mode: "wolfram" });
+      kernelOK = true; chatReady = j.chat_ready === true || j.chat_ready === "True";
+      $("wl-state").textContent = `Connected · Wolfram ${j.text_b64 ? b64dec(j.text_b64) : j.text}${chatReady ? " · TA ready" : " · no chat key on the kernel"}`;
+      try { if ($("wl-remember").checked) localStorage.setItem("ccn-key", WL_KEY); else localStorage.removeItem("ccn-key"); } catch (e) {}
+    } catch (e) { kernelOK = false; chatReady = false; $("wl-state").textContent = wlError(e); }
+    capStatus(); $("askstate").textContent = kernelOK ? (chatReady ? "" : "The kernel has no chat key stored.") : "Connect with your CCN-KEY (Wolfram Language section).";
+  };
+  $("wl-connect").onclick = connect; $("wl-key").addEventListener("keydown", e => { if (e.key === "Enter") connect(); });
+  $("askstate").textContent = "Connect with your CCN-KEY (Wolfram Language section).";
+  $("status").style.cursor = "pointer"; $("status").onclick = () => (location.hash = "wolfram");
+  if ($("wl-key").value) setTimeout(connect, 0);
+}
 
 // ===================== start =====================
 show(location.hash.slice(1) || "map");
