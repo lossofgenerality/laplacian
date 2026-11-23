@@ -30,6 +30,7 @@ Writing: short plain sentences (under 25 words), paragraphs of three sentences o
 - Each section has a Text cell restating the claim, then Input cells, ending in a check that returns True, 0, or the number quoted in the document.
 - **Geometric graphics and worked examples for every instance.** Each notion is drawn, not only verified: surfaces coloured by the curvature (blue negative, near-white zero, CCN orange positive, with a legend); comparison plots across K = 1, 0, −1; log–log error plots showing the order at which a correction enters; and for graph notions a family of example graphs (tree, cycle, cube, complete, Petersen, grid, dumbbell) with edges or vertices coloured by the value. Each picture has a Text cell saying what to see in it.
 - In plots, use `Row[{…}]` rather than `GraphicsRow` when the panels carry legends, and plain `r^4` rather than superscript ⁴/⁶ in plot labels (the plot font lacks them).
+- Graph and Show pictures with a PlotLabel need explicit top room, e.g. `ImagePadding -> {{10, 10}, {10, 34}}` (as an option of the outer Show or Graph); otherwise fractions in the label lose their top lines when rasterized. Put arrow labels about 0.3 of the way along the arrow, not at the midpoint, so crossing arrows do not stack their labels.
 - Never nest `#…&` inside `#…&`; use `Function[{name, G}, …]` for the outer function.
 - Every check is run on a Wolfram kernel before the document quotes it.
 - Visible code uses Greek letters, ∈ and script symbols (θ, φ, 𝓍, 𝒻) rather than long names.
