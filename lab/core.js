@@ -230,9 +230,33 @@ const LC = (() => {
     return S;
   }
   const ricciTotalK = S => ricciLap(S).flat().reduce((a, b) => a - b, 0) * S.h * S.h; // ∬K dA = −∬Δ₀u
+  // Energy and entropy of the flow (Lab section "Energy and entropy"):
+  //  area A = ∬ e^{2u} dx dy (conserved: dA/dt = −2∬K dA = 0 on the torus),
+  //  energy D = ∬ |∇₀u|² dx dy (forward differences), with dD/dt = −2∬ K² dA,
+  //  entropy S = −∬ ρ ln ρ dx dy of the area density ρ = e^{2u}/A, with dS/dt = 4D/A ≥ 0; S → ln(4π²) when the metric is flat.
+  function ricciStats(S) {
+    const { u, N, h } = S, K = ricciK(S); let A = 0, D = 0, K2 = 0, umin = Infinity, umax = -Infinity, kmin = Infinity, kmax = -Infinity;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const v = u[i][j], e2 = Math.exp(2 * v), dx = u[(i + 1) % N][j] - v, dy = u[i][(j + 1) % N] - v;
+      A += e2; D += dx * dx + dy * dy; K2 += K[i][j] * K[i][j] * e2;
+      umin = Math.min(umin, v); umax = Math.max(umax, v); kmin = Math.min(kmin, K[i][j]); kmax = Math.max(kmax, K[i][j]);
+    }
+    A *= h * h; K2 *= h * h; let Sent = 0;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const r = Math.exp(2 * u[i][j]) / A; Sent -= r * Math.log(r); }
+    return { t: S.t, area: A, energy: D, K2, entropy: Sent * h * h, umin, umax, kmin, kmax };
+  }
+  // the reaction–diffusion comparison u_t = u_xx + c u² on a circle of length 2π (c = 1 reaction on, c = 0 plain heat equation)
+  function reactionDiffusion(c, u0 = x => 0.6 + 0.4 * Math.cos(x), n = 64, tEnd = 4, cap = 60) {
+    const h = 2 * Math.PI / n; let u = Array.from({ length: n }, (_, i) => u0(i * h)), t = 0; const out = [[0, Math.max(...u)]];
+    while (t < tEnd) {
+      const m = Math.max(...u), dt = Math.min(0.2 * h * h, 0.02 / Math.max(m, 1e-9)), next = u.map((v, i) => v + dt * ((u[(i + 1) % n] - 2 * v + u[(i + n - 1) % n]) / (h * h) + c * v * v));
+      u = next; t += dt; const mm = Math.max(...u); if (out.length === 0 || t - out[out.length - 1][0] > 0.01 || mm > cap) out.push([t, mm]); if (mm > cap) break;
+    }
+    return out;
+  }
 
   return { jacobiEig, pinvSym, GRAPHS, kappaLLY, kappa0, forman, formanAug, bakryEmery, resistanceCurv, steinerberger, normLapSpectrum,
     SURFACES, surfaceKH, totalCurvature, torusMesh, meshCurvature, circleMean, approx, POLE, discRatio, lapDist, sphereTrace, torusTrace,
-    ollivierBall, curveInit, curveStep, curveResample, curveFlow, perimeter, polyArea, ricciInit, ricciStep, ricciK, ricciTotalK };
+    ollivierBall, curveInit, curveStep, curveResample, curveFlow, perimeter, polyArea, ricciInit, ricciStep, ricciK, ricciTotalK, ricciStats, reactionDiffusion };
 })();
 if (typeof module !== "undefined") module.exports = LC;

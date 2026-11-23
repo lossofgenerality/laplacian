@@ -152,7 +152,8 @@ inits.surfaces = () => {
 
 // ===================== 3. Ricci flow =====================
 let RS = null, ricciTimer = 0, ricciHist = [];
-function ricciReset() { RS = LC.ricciInit(32, +$("riccia").value, +$("riccia").value * 0.83); ricciHist = [[0, maxAbs(LC.ricciK(RS))]]; $("ricciplay").textContent = "Run"; drawRicci(); }
+let ricciES = [];
+function ricciReset() { RS = LC.ricciInit(32, +$("riccia").value, +$("riccia").value * 0.83); ricciHist = [[0, maxAbs(LC.ricciK(RS))]]; ricciES = [LC.ricciStats(RS)]; $("ricciplay").textContent = "Run"; drawRicci(); }
 const maxAbs = M => Math.max(...M.flat().map(Math.abs));
 function drawRicci() {
   const { c, W, H } = fit($("riccicv")), K = LC.ricciK(RS), N = RS.N, top = 26, s = Math.min(W, H - top) * 0.92, ox = (W - s) / 2, oy = top + (H - top - s) / 2, cell = s / N;
@@ -163,7 +164,15 @@ function drawRicci() {
   c.fillStyle = css("--ink"); c.font = "600 14px " + (css("--mono") || "monospace"); c.textAlign = "center";
   c.fillText(`t = ${fmt(RS.t, 2)}   max |K| = ${fmt(mk, 3)}   colours ±${fmt(sc, 3)}`, W / 2, 18);
   $("riccilo").textContent = "−" + fmt(sc, 3); $("riccihi").textContent = "+" + fmt(sc, 3);
-  $("ricciread").innerHTML = `<dt>t</dt><dd>${fmt(RS.t, 3)}</dd><dt>max |K|</dt><dd>${fmt(mk, 4)}</dd><dt>∬ K dA</dt><dd>${fmt(LC.ricciTotalK(RS), 10)}</dd>`;
+  const st = LC.ricciStats(RS), Smax = Math.log(4 * Math.PI * Math.PI);
+  if (!ricciES.length || st.t > ricciES[ricciES.length - 1].t + 1e-12) ricciES.push(st);
+  const prev = ricciES.length > 1 ? ricciES[ricciES.length - 2] : null, dt = prev ? st.t - prev.t : 0;
+  const rates = prev && dt > 0 ? `<dt>dD/dt · −2∬K²dA</dt><dd>${fmt((st.energy - prev.energy) / dt, 4)} · ${fmt(-(st.K2 + prev.K2), 4)}</dd><dt>dS/dt · 4D/A</dt><dd>${fmt((st.entropy - prev.entropy) / dt, 5)} · ${fmt(2 * (st.energy + prev.energy) / st.area, 5)}</dd>` : "";
+  $("ricciread").innerHTML = `<dt>t</dt><dd>${fmt(RS.t, 3)}</dd><dt>max |K|</dt><dd>${fmt(mk, 4)}</dd><dt>min K</dt><dd>${fmt(st.kmin, 4)}</dd><dt>∬ K dA</dt><dd>${fmt(LC.ricciTotalK(RS), 10)}</dd><dt>max u · min u</dt><dd>${fmt(st.umax, 4)} · ${fmt(st.umin, 4)}</dd><dt>area A</dt><dd>${fmt(st.area, 6)}</dd><dt>energy D</dt><dd>${fmt(st.energy, 5)}</dd><dt>entropy S (max ln 4π² = ${fmt(Smax, 4)})</dt><dd>${fmt(st.entropy, 5)}</dd>${rates}`;
+  const D0 = ricciES[0].energy, S0 = ricciES[0].entropy;
+  if ($("ricciescv")) plot($("ricciescv"), { xr: [0, 2], yr: [0, 1.02], xlabel: "t", ylabel: "fraction", series: [
+    { pts: ricciES.map(q => [q.t, q.energy / D0]), color: POSc(), label: "energy D/D(0)" },
+    { pts: ricciES.map(q => [q.t, (q.entropy - S0) / (Smax - S0)]), color: NEGc(), label: "entropy, share of the way to ln 4π²" }] });
   plot($("riccichart"), { xr: [0, 2], yr: [0.01, 10], ylog: true, xlabel: "t", ylabel: "max |K|", series: [{ pts: ricciHist, color: POSc() }] });
 }
 const POSc = () => "rgb(250,143,43)", NEGc = () => (isDark() ? "rgb(111,151,255)" : "rgb(46,92,199)");
@@ -174,7 +183,13 @@ function ricciRun() {
   const tick = () => { LC.ricciStep(RS, reduced ? 200 : 1); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run again"; } };
   ricciTimer = requestAnimationFrame(tick);
 }
-inits.ricci = () => { ricciReset(); $("ricciscale").onchange = drawRicci; $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
+function drawRD() {
+  if (!window.__rd) window.__rd = [LC.reactionDiffusion(1), LC.reactionDiffusion(0)];
+  const [a, b] = window.__rd;
+  plot($("rdcv"), { xr: [0, 2.5], yr: [0.3, 60], ylog: true, xlabel: "t", ylabel: "max u", series: [
+    { pts: a, color: POSc(), label: "u_t = u_xx + u² (reaction wins)" }, { pts: b.filter(p => p[0] <= 2.5), color: NEGc(), label: "u_t = u_xx (diffusion only)" }] });
+}
+inits.ricci = () => { ricciReset(); drawRD(); onSize($("rdcv"), drawRD); $("ricciscale").onchange = drawRicci; $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
 
 // ===================== 4. curved means =====================
 let meansData = null;

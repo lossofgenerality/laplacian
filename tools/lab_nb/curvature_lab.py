@@ -515,4 +515,64 @@ def _merge(cells, extra):
         out.append((st, tx))
     return out
 
+
+# ---------------------------------------------------------------- §2.3 Ricci flow as a heat equation: energy, entropy, reaction–diffusion
+EXTRA23 = [
+("Subsection", "2.3 Ricci flow as a heat equation: the maximum principle, energy and entropy, and reaction against diffusion"),
+("Text", "This subsection regenerates the five parts the Lab page shows under the Ricci flow animation (written from G. Khan, An Illustrated Introduction to the Ricci Flow, arXiv:2201.04923, 2022, pp. 14–33). The derivations are worked by hand in the page text and repeated in the Text cells here; the cells check each identity on the kernel and set the page’s live readings beside Wolfram’s."),
+("Text", "Worked by hand: the curvature equation. With u_t = −K and K = −e^{−2u}Δ₀u, K_t = 2u_t e^{−2u}Δ₀u − e^{−2u}Δ₀u_t = 2(−K)(−K) + e^{−2u}Δ₀K, so K_t = Δ_g K + 2K² with Δ_g = e^{−2u}Δ₀: diffusion plus a reaction term. The cell checks this for an arbitrary u(x, y, t) that solves the flow."),
+("Input", r"""ClearAll[t, w];
+Kof[w_] := -Exp[-2 w] (D[w, {x, 2}] + D[w, {y, 2}]);
+flowRule = Derivative[0, 0, 1][w][x, y, t] -> Exp[-2 w[x, y, t]] (D[w[x, y, t], {x, 2}] + D[w[x, y, t], {y, 2}]);
+lhs = D[Kof[w[x, y, t]], t] //. {flowRule, Derivative[a_, b_, 1][w][x, y, t] :> D[Exp[-2 w[x, y, t]] (D[w[x, y, t], {x, 2}] + D[w[x, y, t], {y, 2}]), {x, a}, {y, b}]};
+rhs = Exp[-2 w[x, y, t]] (D[Kof[w[x, y, t]], {x, 2}] + D[Kof[w[x, y, t]], {y, 2}]) + 2 Kof[w[x, y, t]]^2;
+Simplify[lhs - rhs]"""),
+("Text", "Expected 0. The maximum principle follows: at a minimum of K both Δ_g K ≥ 0 and 2K² ≥ 0, so min K never decreases; and at a maximum of u, Δ₀u ≤ 0, so max u never increases (min u never decreases)."),
+("Text", "Worked by hand: energy and entropy of the heat equation. For u_t = Δu on a closed space, E = ∫u² has E′ = 2∫uΔu = −2∫|∇u|² ≤ 0 after integrating by parts (no boundary). For u > 0, S = −∫u ln u has S′ = −∫(ln u + 1)Δu = ∫∇(ln u)·∇u = ∫|∇u|²/u ≥ 0 (∫Δu = 0), the Fisher information. The cell checks both on the circle for an exact positive solution u = 2 + e^{−t} cos x + ½e^{−4t} sin 2x of u_t = u_xx."),
+("Input", r"""uh = 2 + Exp[-t] Cos[x] + Exp[-4 t] Sin[2 x]/2;
+Eh = Integrate[uh^2, {x, 0, 2 π}];
+Sh[τ_?NumericQ] := NIntegrate[-uh Log[uh] /. t -> τ, {x, 0, 2 π}, WorkingPrecision -> 30, PrecisionGoal -> 20];
+{Simplify[D[uh, t] - D[uh, {x, 2}]], Simplify[D[Eh, t] + 2 Integrate[D[uh, x]^2, {x, 0, 2 π}]],
+ With[{t0 = 3/10, d = 10^-6}, {(Sh[t0 + d] - Sh[t0 - d])/(2 d), NIntegrate[D[uh, x]^2/uh /. t -> t0, {x, 0, 2 π}, WorkingPrecision -> 30]}]}"""),
+("Text", "Expected: 0 (u solves the heat equation), 0 (E′ = −2∫u_x² exactly, for all t), and two equal numbers (S′ and the Fisher information ∫u_x²/u at t = 0.3)."),
+("Text", "Worked by hand: the flow’s own energy and entropy. Area A = ∬e^{2u}: A′ = ∬2u_t e^{2u} = 2∬Δ₀u = 0 on the torus. Energy D = ∬|∇₀u|²: D′ = 2∬∇₀u·∇₀u_t = −2∬Δ₀u u_t = −2∬e^{−2u}(Δ₀u)² = −2∬K² dA ≤ 0, since K² dA = e^{−4u}(Δ₀u)² e^{2u} dx dy. Entropy of the area density ρ = e^{2u}/A: S = −∬ρ ln ρ, ∬ρ_t = 0, ρ_t = 2u_t ρ = 2Δ₀u/A, so S′ = −∬ρ_t ln ρ = −(2/A)∬Δ₀u (2u − ln A) = −(4/A)∬uΔ₀u = 4D/A ≥ 0, with equality only for constant u. Its largest value is ln(4π²) = 3.676, the uniform density on the square [0, 2π)²."),
+("Text", "The page’s run, step for step (the scheme of §2), with A, D, S and ∬K² dA recorded at every step; then the finite-difference rates against the formulas, and the page’s start and end values against Wolfram’s."),
+("Input", r"""ricciStatsRun[a_, b_, N_] := Module[{h = 2. π/N, U, lap, Kf, t = 0., rec = {}, stats},
+   U = Table[a Cos[i h] + b Sin[2 j h] Cos[i h + j h], {i, 0, N - 1}, {j, 0, N - 1}];
+   lap[W_] := (RotateLeft[W, {1, 0}] + RotateRight[W, {1, 0}] + RotateLeft[W, {0, 1}] + RotateRight[W, {0, 1}] - 4 W)/h^2;
+   Kf[W_] := -Exp[-2 W] lap[W];
+   stats[W_] := Module[{K = Kf[W], A = Total[Exp[2 W], 2] h^2, ρ},
+     ρ = Exp[2 W]/A; <|"t" -> t, "area" -> A, "energy" -> Total[(RotateLeft[W, {1, 0}] - W)^2 + (RotateLeft[W, {0, 1}] - W)^2, 2],
+       "K2" -> Total[K^2 Exp[2 W], 2] h^2, "entropy" -> -Total[ρ Log[ρ], 2] h^2, "kmin" -> Min[K], "umax" -> Max[W], "umin" -> Min[W]|>];
+   AppendTo[rec, stats[U]];
+   While[t < 2, With[{dt = 0.2 h^2 Exp[2 Min[U]]}, U = U + dt Exp[-2 U] lap[U]; t += dt]; AppendTo[rec, stats[U]]];
+   rec];
+rec = ricciStatsRun[0.3, 0.3 0.83, 32];
+rates = Table[With[{p = rec[[k - 1]], q = rec[[k]], dt = rec[[k, "t"]] - rec[[k - 1, "t"]]},
+    {q["t"], (q["energy"] - p["energy"])/dt, -(q["K2"] + p["K2"]), (q["entropy"] - p["entropy"])/dt, 2 (q["energy"] + p["energy"])/q["area"]}], {k, 2, Length[rec]}];
+late = Select[rates, #[[1]] > 0.2 &];
+<|"steps" -> Length[rec] - 1, "largest relative gap D′ vs −2∬K²dA (t > 0.2)" -> Max[Abs[(#[[2]] - #[[3]])/#[[3]]] & /@ late],
+  "largest relative gap S′ vs 4D/A (t > 0.2)" -> Max[Abs[(#[[4]] - #[[5]])/#[[5]]] & /@ late],
+  "area drift, relative" -> (rec[[-1, "area"]] - rec[[1, "area"]])/rec[[1, "area"]], "ln 4π²" -> N[Log[4 π^2]]|>"""),
+("Input", r"""cmpGrid[Flatten[Table[{cmpRow[If[q == "area", which, ""], q, page["ricci", which, q], rec[[If[which == "start", 1, -1], q]]]},
+    {which, {"start", "end"}}, {q, {"area", "energy", "entropy", "kmin", "umax", "umin"}}], 2]]"""),
+("Text", "What to see: the rates agree to within about half a percent (they are finite differences in time on a 32 × 32 grid), the area drifts by 5 × 10⁻⁴ of itself because the time steps are explicit (the exact flow keeps it fixed), and the page’s start and end readings agree with Wolfram’s to round-off. Min K rises from −4.63 to −0.043, max u falls from 0.507 to 0.123 and min u rises from −0.507 to 0.0075, as the maximum principle says."),
+("Input", r"""With[{D0 = rec[[1, "energy"]], S0 = rec[[1, "entropy"]], Smax = Log[4 π^2]},
+ ListLinePlot[{{#["t"], #["energy"]/D0} & /@ rec, {#["t"], (#["entropy"] - S0)/(Smax - S0)} & /@ rec}, PlotStyle -> {orange, blue}, PlotRange -> {0, 1.02},
+  AxesLabel -> {"t", "fraction"}, PlotLegends -> {"energy D/D(0)", "entropy: share of the way to ln 4π²"}, ImageSize -> 420]]"""),
+("Figure", "Along the page’s run, the energy falls to 1% of its start and the entropy of the area density climbs most of the way to its flat-metric maximum ln 4π² (the page’s chart “Energy falls, entropy rises”)."),
+("Text", "Worked by hand: reaction against diffusion. For constant data u₀ > 0 the reaction alone, u′ = u², gives u = u₀/(1 − u₀t), infinite at t = 1/u₀. The round unit sphere under Ricci flow is this case exactly: g = (1 − 2t)g₀ has K = 1/(1 − 2t), so R = 2K = 2/(1 − 2t) solves R′ = R² with ΔR = 0, and vanishes at t = ½. The cell checks both, then solves the page’s model u_t = u_xx + u² from 0.6 + 0.4 cos x on the circle and finds when max u reaches 60 (the page: t ≈ 1.32), against u_t = u_xx, which tends to the mean 0.6."),
+("Input", r"""{Simplify[D[u0/(1 - u0 τ), τ] - (u0/(1 - u0 τ))^2], Simplify[D[2/(1 - 2 τ), τ] - (2/(1 - 2 τ))^2]}"""),
+("Input", r"""rdSolve[c_] := NDSolveValue[{D[v[τ, x], τ] == D[v[τ, x], {x, 2}] + c v[τ, x]^2, v[0, x] == 0.6 + 0.4 Cos[x], v[τ, 0] == v[τ, 2 π]}, v, {τ, 0, 4}, {x, 0, 2 π},
+    Method -> {"MethodOfLines", "SpatialDiscretization" -> {"TensorProductGrid", "MinPoints" -> 200}}] // Quiet;
+rd1 = rdSolve[1]; rd0 = rdSolve[0]; tEnd = rd1["Domain"][[1, 2]];
+maxu[f_, τ_] := Max[Table[f[τ, x], {x, 0, 2 π, 2 π/200}]];
+tHit = τ /. FindRoot[maxu[rd1, τ] == 60, {τ, 0.9 tEnd, 0.5, tEnd}] // Quiet;
+<|"solver stops (blow-up) near t" -> tEnd, "max u reaches 60 at t" -> tHit, "page" -> page["rd", "blowT"], "heat equation, max u at t = 4" -> maxu[rd0, 4], "page (heat)" -> page["rd", "heatEnd"]|>"""),
+("Input", r"""LogPlot[{maxu[rd1, τ], maxu[rd0, τ]}, {τ, 0, Min[2.5, tEnd]}, PlotRange -> {0.3, 60}, PlotStyle -> {orange, blue},
+ AxesLabel -> {"t", "max u"}, PlotLegends -> {"u_t = u_xx + u² (reaction wins)", "u_t = u_xx (diffusion only)"}, ImageSize -> 420]"""),
+("Figure", "The model of the curvature equation: with the reaction term u² the maximum blows up in finite time; without it the solution settles to its mean (the page’s reaction–diffusion chart)."),
+("Text", "On the torus Gauss–Bonnet keeps ∬K dA = 0, so positive and negative curvature balance and the reaction term cannot win: the flow irons the metric flat. On surfaces Hamilton (1988) and Chow (1991) proved that the normalised flow always converges to constant curvature; in three dimensions singularities form, and Perelman’s classification of them and surgery completed Hamilton’s programme."),
+]
+EXTRA[2] = EXTRA[2] + [("Text", "Ricci flow as a heat equation (the maximum principle, energy and entropy, reaction against diffusion), shown on the page under this animation, has its own notebook: notebooks/series/14-Ricci-Flow.nb, which regenerates those readings and charts.")]
 CELLS = _merge(CELLS, EXTRA)

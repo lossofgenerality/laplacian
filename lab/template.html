@@ -87,6 +87,7 @@ pre{background:var(--code);border:1px solid var(--line);border-radius:8px;paddin
 .msg{padding:10px 12px;border-radius:10px;max-width:92%;white-space:pre-wrap;font-size:15px}
 .msg.user{align-self:flex-end;background:var(--tint)}
 .msg.ta{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
+.prose p{margin:0 0 .7em;line-height:1.55}.prose ul{margin:.2em 0 .7em;padding-left:1.2em;line-height:1.55}.prose li{margin:.25em 0}.prose .eq{text-align:center;margin:.4em 0 .8em;font-size:1.05em}
 .msg.ta{white-space:normal}.msg p{margin:0 0 .55em}.msg p:last-of-type{margin-bottom:0}.msg ul,.msg ol{margin:.2em 0 .6em;padding-left:1.4em}.msg li{margin:.15em 0}.msg code{font-family:var(--mono,monospace);font-size:.92em;background:rgba(0,0,0,.05);padding:0 .25em;border-radius:3px}
 .msg details{margin-top:6px;font-size:13px}
 .ask-row{display:flex;gap:8px;margin-top:10px}.ask-row textarea{flex:1;min-height:64px;padding:10px}
@@ -161,6 +162,51 @@ footer a{color:inherit}
    <p class="muted" id="riccinote" style="margin:6px 0 0">The colours follow the largest |K| at each moment, so the pattern stays visible while the curvature shrinks; the chart below shows how fast it shrinks. Choose “fixed ±1.5” to see it fade to flat.</p></div>
   <div class="card"><h3>Readings</h3><dl class="read" id="ricciread"></dl><div class="fig short"><canvas id="riccichart"></canvas></div>
    <div class="check">Lab notebook §2, at the default bump 0.3: max|K| 4.63 → 0.059 by t = 2.00, with \(\iint K\,dA=0\) to round-off throughout (the page’s own scheme, reproduced step for step).</div></div>
+ </div>
+ <div class="bench">
+  <div class="card prose">
+   <h3>1 · What the flow is</h3>
+   <p>A <b>Riemannian metric</b> \(g\) is an inner product on the tangent vectors at each point; lengths, angles, areas and every curvature are computed from it. The <b>sectional curvature</b> \(K(X,Y)\) of the plane spanned by unit vectors \(X,Y\) measures how a small geodesic triangle with legs \(\varepsilon X,\varepsilon Y\) falls short of a flat one: its third side is \(L(\varepsilon)=\varepsilon\lVert X-Y\rVert\big(1-\tfrac1{12}K(X,Y)(1+\langle X,Y\rangle)\varepsilon^2\big)+O(\varepsilon^4)\), shorter when \(K>0\), longer when \(K<0\). The <b>Ricci curvature</b> \(\mathrm{Ric}(X,X)\) is \(n-1\) times the average of \(K(X,Y)\) over the planes containing \(X\).</p>
+   <p><b>Ricci flow</b> (Hamilton, 1982) moves the metric by \(\partial_tg=-2\,\mathrm{Ric}(g)\): directions of positive Ricci curvature shrink and directions of negative Ricci curvature stretch. On a surface \(\mathrm{Ric}=K\,g\), so \(\partial_tg=-2Kg\). Write \(g=e^{2u}g_0\) with \(g_0\) the flat metric; then \(\partial_tg=2u_t\,g\), hence</p>
+   <p class="eq">\(u_t=-K=e^{-2u}\Delta_0u,\qquad K=-e^{-2u}\Delta_0u,\)</p>
+   <p>a heat equation for \(u\) whose conductivity \(e^{-2u}\) depends on \(u\) itself. <i>By hand:</i> for a small bump \(u\approx0\), \(e^{-2u}\approx1\) and \(u_t\approx\Delta_0u\), the ordinary heat equation; a Fourier mode \(a\cos x\) then decays like \(e^{-t}\), which is the slow orange–blue band left at the end of the run above.</p>
+  </div>
+  <div class="card prose">
+   <h3>2 · Why −2: Ricci curvature is minus a Laplacian of the metric</h3>
+   <p>The Laplacian has three faces. It is the <b>trace of the Hessian</b>, \(\Delta u=\sum_i\partial_i^2u\). It is a <b>mean-value defect</b>, \(\Delta f(x)=\lim_{\varepsilon\to0}\frac{2n}{\varepsilon^2}\big(\text{mean of }f\text{ on the sphere }S_\varepsilon(x)-f(x)\big)\) (the Programmable Lab’s Section 1, and “Curved mean values” here). And it measures how the gradient flow \(\dot\gamma=-\nabla f\) <b>compresses volume</b>: \(\Delta f\) is the rate at which a small cube around \(x\) changes volume.</p>
+   <p>Curvature has the same three faces. Sectional curvature is a second-order quantity (it sits at \(\varepsilon^2\) in \(L(\varepsilon)\)); assembled into the Riemann tensor it plays the Hessian, since in normal coordinates \(g_{ij}=\delta_{ij}-\tfrac13R_{ikjl}x^kx^l+\dots\). Ricci curvature is its trace, and it measures how narrow geodesic cones close up (\(\mathrm{Ric}>0\)) or open out (\(\mathrm{Ric}<0\)). In harmonic coordinates \(\mathrm{Ric}_{ij}=-\tfrac12\Delta g_{ij}+\) lower-order terms, so \(-2\,\mathrm{Ric}=\Delta g+\dots\): Ricci flow is a heat equation for the metric. The sign is essential; with \(+2\,\mathrm{Ric}\) the flow could only be run backwards in time.</p>
+  </div>
+ </div>
+ <div class="bench">
+  <div class="card prose">
+   <h3>3 · Hot spots cool: the maximum principle</h3>
+   <p>Where \(u\) is largest its Hessian is negative semidefinite, so \(\Delta_0u\le0\) and \(u_t=e^{-2u}\Delta_0u\le0\): the maximum of \(u\) falls, and by the same argument its minimum rises, until \(u\) is constant and the metric is flat. Watch <i>max u</i> and <i>min u</i> in the readings.</p>
+   <p>The curvature obeys its own equation. <i>By hand:</i> differentiate \(K=-e^{-2u}\Delta_0u\) in \(t\): \(K_t=2u_t\,e^{-2u}\Delta_0u-e^{-2u}\Delta_0u_t=2(-K)(-K)+e^{-2u}\Delta_0K\), that is</p>
+   <p class="eq">\(K_t=\Delta_gK+2K^2,\qquad \Delta_g=e^{-2u}\Delta_0.\)</p>
+   <p>At a minimum of \(K\), \(\Delta_gK\ge0\) and \(2K^2\ge0\), so the minimum of \(K\) never decreases: the most negative curvature is pulled up (<i>min K</i> in the readings: −4.63 at the start, −0.043 at t = 2).</p>
+  </div>
+  <div class="card prose">
+   <h3>4 · Energy and entropy</h3>
+   <p>For the heat equation \(u_t=\Delta u\) on a closed space (or an insulated one, \(\nabla_Nu=0\)), two quantities move one way only. The <b>energy</b> \(E=\int u^2\) satisfies \(E'=2\int u\,\Delta u=-2\int|\nabla u|^2\le0\) (integrate by parts; the boundary term vanishes): heat spreads out. For \(u>0\) the <b>entropy</b> \(S=-\int u\ln u\) satisfies \(S'=-\int(\ln u+1)\Delta u=\int|\nabla u|^2/u\ge0\), the <b>Fisher information</b>: a second law. Perelman’s breakthrough was a quantity of this kind, closer to a Fisher information than to an entropy, that is monotone along Ricci flow.</p>
+   <p>The flow above has exact versions of both, computed live:</p>
+   <ul>
+    <li><b>Area</b> \(A=\iint e^{2u}\): \(A'=2\iint\Delta_0u=-2\iint K\,dA=0\) (Gauss–Bonnet on the torus).</li>
+    <li><b>Energy</b> \(D=\iint|\nabla_0u|^2\): \(D'=-2\iint\Delta_0u\,u_t=-2\iint e^{-2u}(\Delta_0u)^2=-2\iint K^2\,dA\le0\).</li>
+    <li><b>Entropy</b> of the area density \(\rho=e^{2u}/A\), \(S=-\iint\rho\ln\rho\): with \(\rho_t=2\Delta_0u/A\), \(S'=-\tfrac2A\iint\Delta_0u\,(2u-\ln A)=\tfrac4A\iint|\nabla_0u|^2=4D/A\ge0\). It rises to its maximum \(\ln(4\pi^2)=3.676\) exactly when \(\rho\) is uniform, the flat metric.</li>
+   </ul>
+  </div>
+ </div>
+ <div class="bench">
+  <div class="card"><h3>Energy falls, entropy rises</h3><div class="fig short"><canvas id="ricciescv"></canvas></div>
+   <p class="muted" id="ricciesnote" style="margin:6px 0 0">Run the flow to draw it. Orange: \(D(t)/D(0)\). Blue: \((S(t)-S(0))/(\ln4\pi^2-S(0))\).</p>
+   <div class="check">Ricci flow notebook (series 14) §4, along the page’s run: \(D'\) and \(-2\iint K^2dA\) agree to within 0.8 %, \(S'\) and \(4D/A\) to within 0.4 % after t = 0.2 (finite differences on the 32 × 32 grid); the area drifts by 5 × 10⁻⁴ of itself, from the explicit time steps (the exact flow keeps it fixed).</div></div>
+  <div class="card prose">
+   <h3>5 · Where the analogy stops: reaction against diffusion</h3>
+   <p>Ricci flow is <b>nonlinear</b>, and curvature obeys a <b>reaction–diffusion</b> equation: for the Riemann tensor \(\partial_tR=\Delta R+R^2+R^\sharp\) (Hamilton), and on a surface exactly \(K_t=\Delta_gK+2K^2\). Its model is \(u_t=\Delta u+u^2\): diffusion spreads, reaction concentrates, and positive data can blow up in finite time. The chart: from \(0.6+0.4\cos x\) on a circle, \(u_t=u_{xx}+u^2\) passes 60 at t ≈ 1.32, while \(u_t=u_{xx}\) settles at the mean 0.6.</p>
+   <div class="fig short"><canvas id="rdcv"></canvas></div>
+   <p><i>By hand:</i> for constant data \(u_0\) the reaction alone gives \(u=u_0/(1-u_0t)\), infinite at \(t=1/u_0\). The round sphere is exactly this case: \(R=2K\) is constant, \(\Delta R=0\), \(R_t=R^2\) and \(R=2/(1-2t)\), the sphere \((1-2t)g_0\) vanishing at \(t=\tfrac12\). On the torus Gauss–Bonnet forces \(\iint K\,dA=0\), positive and negative curvature balance, the reaction cannot win, and the flow irons the metric flat; on surfaces Hamilton (1988) and Chow (1991) proved that the (normalised) flow always reaches constant curvature. In three dimensions necks pinch and singularities form; Perelman’s classification of them, and surgery, completed Hamilton’s programme for the Poincaré conjecture.</p>
+   <p class="muted">Source for this part: G. Khan, <a href="https://arxiv.org/abs/2201.04923">An Illustrated Introduction to the Ricci Flow</a> (arXiv:2201.04923, 2022), pp. 14–33. The formulas for the Lab’s own flow, the live readings and the checks are the Lab’s; every one is regenerated, with the derivations worked by hand, in its own notebook: <a href="https://github.com/lossofgenerality/laplacian/blob/main/notebooks/series/14-Ricci-Flow.nb">Ricci Flow and the Curvature–Laplacian Relations</a> (series notebook 14).</p>
+  </div>
  </div>
  <div class="wl" data-key="ricci"></div>
 </section>
