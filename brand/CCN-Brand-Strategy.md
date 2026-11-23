@@ -176,7 +176,7 @@ In Wolfram, `ccnColour[k, s]` is `Blend[{RGBColor[0.18, 0.36, 0.78], GrayLevel[0
 
 **Fig. 6.** Header with wordmark, status and companion link; tab strip with ‹ › buttons and the drawn slider; link bar; In/Out cells; Worked by Hand; readings card; check callout; CCN-KEY field and buttons.
 
-- **Header.** Wordmark on the left, connection status beside it, and the companion link on the right. It is sticky, with a blurred page-coloured background.
+- **Header.** Wordmark on the left, connection status beside it, and on the right the **documentation link** (Manual) and the companion link. Every page links to its documentation, in the header or sidebar and again in the footer. It is sticky, with a blurred page-coloured background.
 - **Navigation.** On wide screens a tab strip or sidebar. On narrow screens, a single-row strip with ‹ › buttons and a drawn slider; the current tab is always scrolled into view.
 - **Sliders.** Anything wider than its box gets a drawn slider (track and thumb), which works in every browser, including Firefox and macOS overlay scrollbars. Tall boxes get it at the top.
 - **Cards.** A Panel background, a 1 px Line border, 10 px radius and 16–18 px padding. A **check callout** has an Orange left rule on Orange Tint, for verified numbers.

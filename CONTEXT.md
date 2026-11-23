@@ -200,7 +200,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 
 ## 6. Conventions and user preferences
 
-- **Standing rules (23 Nov, see STYLE.md §6):** a *Worked by Hand* section on every manual page and in every write-up; every figure numbered **Fig. n.** with a caption; no A_B pseudo-subscripts anywhere (real subscripts in md/HTML/notebooks, `Subscript[]` in code); each write-up has an HTML counterpart whose 3D figures are truly 3D.
+- **Standing rules (23 Nov, see STYLE.md §6):** a *Worked by Hand* section on every manual page and in every write-up; every figure numbered **Fig. n.** with a caption; no A_B pseudo-subscripts anywhere (real subscripts in md/HTML/notebooks, `Subscript[]` in code); each write-up has an HTML counterpart whose 3D figures are truly 3D. **Always a documentation link** (23 Nov): every Lab or app links to its manual in the header or sidebar and the footer; both Labs now do.
 
 - Every deliverable carries "© Computational Classnotes · CC BY-NC-SA 4.0" (dated where requested).
 - The user's own copy of the notebook is credited in the page footer with its DOI.
