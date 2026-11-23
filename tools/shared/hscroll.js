@@ -32,7 +32,9 @@
     const b = document.createElement('div'), t = document.createElement('div');
     b.className = 'hs-bar'; t.className = 'hs-thumb'; b.appendChild(t); b.hidden = true;
     b.setAttribute('role', 'scrollbar'); b.setAttribute('aria-orientation', 'horizontal');
-    const anchor = el.closest('.hs-wrap') || el; anchor.after(b);
+    const strip = el.closest('.hs-wrap');
+    if (strip) strip.after(b);
+    else { const box = document.createElement('div'); box.className = 'hs-box'; el.before(box); box.appendChild(el); box.appendChild(b); }
     const upd = () => {
       const over = el.scrollWidth - el.clientWidth;
       if (over <= 2 || el.offsetParent === null) { b.hidden = true; el.classList.remove('hs-nonative'); return; }
@@ -59,7 +61,7 @@
   }
   function scan() {
     document.querySelectorAll('body *').forEach(el => {
-      if (el.classList.contains('hs-bar') || el.closest('.hs-bar')) return;
+      if (el.classList.contains('hs-bar') || el.closest('.hs-bar') || el.classList.contains('hs-box')) return;
       const ox = getComputedStyle(el).overflowX;
       if ((ox === 'auto' || ox === 'scroll') && el.tagName !== 'TEXTAREA' && el.tagName !== 'BODY' && el.tagName !== 'HTML') bar(el);
     });

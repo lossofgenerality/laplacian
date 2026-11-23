@@ -96,7 +96,7 @@ footer{border-top:1px solid var(--rule);margin-top:34px;padding-top:14px;font-si
 .idx .cols a small{font-family:"Source Sans 3",Arial;color:var(--muted);font-size:12px;margin-left:6px}
 .stats{display:flex;gap:26px;margin:0 0 22px;color:var(--muted);font-size:13.5px}
 .stats b{display:block;font-size:24px;color:var(--ink)}
-/* CCN: always-visible scrollbars (macOS/iPadOS hide overlay scrollbars) + tab-strip arrows */::-webkit-scrollbar{width:11px;height:11px}::-webkit-scrollbar-track{background:rgba(127,127,127,.12);border-radius:8px}::-webkit-scrollbar-thumb{background:rgba(127,127,127,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:rgba(212,86,28,.75);background-clip:padding-box}*{scrollbar-width:auto;scrollbar-color:rgba(127,127,127,.6) rgba(127,127,127,.12)}.hs-wrap{position:relative;display:flex;align-items:stretch;min-width:0}.hs-wrap>.hs-strip{flex:1 1 auto;min-width:0}.hs-btn{flex:none;width:30px;border:1px solid rgba(127,127,127,.35);background:inherit;color:inherit;font:600 18px/1 system-ui,sans-serif;cursor:pointer;border-radius:6px;margin:2px 3px 10px;opacity:.85}.hs-btn:hover{opacity:1;border-color:#d4561c;color:#d4561c}.hs-btn[disabled]{opacity:.25;cursor:default}.hs-wrap:not(.hs-over)>.hs-btn{display:none}.hs-wrap:not(.hs-over){display:contents}.hs-bar{position:relative;height:12px;margin:3px 0 6px;border-radius:6px;background:rgba(127,127,127,.16);cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none}.hs-bar[hidden]{display:none!important}.hs-thumb{position:absolute;top:2px;bottom:2px;left:0;min-width:28px;border-radius:5px;background:rgba(127,127,127,.6);cursor:grab}.hs-thumb:hover,.hs-bar.drag .hs-thumb{background:#d4561c}.hs-bar.drag .hs-thumb{cursor:grabbing}.hs-nonative{scrollbar-width:none}.hs-nonative::-webkit-scrollbar{height:0;display:none}
+/* CCN: always-visible scrollbars (macOS/iPadOS hide overlay scrollbars) + tab-strip arrows */::-webkit-scrollbar{width:11px;height:11px}::-webkit-scrollbar-track{background:rgba(127,127,127,.12);border-radius:8px}::-webkit-scrollbar-thumb{background:rgba(127,127,127,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box}::-webkit-scrollbar-thumb:hover{background:rgba(212,86,28,.75);background-clip:padding-box}*{scrollbar-width:auto;scrollbar-color:rgba(127,127,127,.6) rgba(127,127,127,.12)}.hs-wrap{position:relative;display:flex;align-items:stretch;min-width:0}.hs-wrap>.hs-strip{flex:1 1 auto;min-width:0}.hs-btn{flex:none;width:30px;border:1px solid rgba(127,127,127,.35);background:inherit;color:inherit;font:600 18px/1 system-ui,sans-serif;cursor:pointer;border-radius:6px;margin:2px 3px 10px;opacity:.85}.hs-btn:hover{opacity:1;border-color:#d4561c;color:#d4561c}.hs-btn[disabled]{opacity:.25;cursor:default}.hs-wrap:not(.hs-over)>.hs-btn{display:none}.hs-wrap:not(.hs-over){display:contents}.hs-bar{position:relative;height:12px;margin:3px 0 6px;border-radius:6px;background:rgba(127,127,127,.16);cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:none}.hs-bar[hidden]{display:none!important}.hs-thumb{position:absolute;top:2px;bottom:2px;left:0;min-width:28px;border-radius:5px;background:rgba(127,127,127,.6);cursor:grab}.hs-thumb:hover,.hs-bar.drag .hs-thumb{background:#d4561c}.hs-bar.drag .hs-thumb{cursor:grabbing}.hs-nonative{scrollbar-width:none}.hs-nonative::-webkit-scrollbar{height:0;display:none}.hs-box{min-width:0;max-width:100%}
 @media (max-width:720px){header.top input{width:150px}header.top nav{display:none}.usage .row,.glist .r{grid-template-columns:1fr;gap:4px}.cell{grid-template-columns:1fr}.cell .lab{text-align:left;padding:0}#results{width:300px}h1.sym{font-size:28px}}
 @media print{header.top,.crumbs .right,.copy{display:none}details.sec,details.sub{display:block}}
 </style>
@@ -230,7 +230,9 @@ window.addEventListener('hashchange', route); route();
     const b = document.createElement('div'), t = document.createElement('div');
     b.className = 'hs-bar'; t.className = 'hs-thumb'; b.appendChild(t); b.hidden = true;
     b.setAttribute('role', 'scrollbar'); b.setAttribute('aria-orientation', 'horizontal');
-    const anchor = el.closest('.hs-wrap') || el; anchor.after(b);
+    const strip = el.closest('.hs-wrap');
+    if (strip) strip.after(b);
+    else { const box = document.createElement('div'); box.className = 'hs-box'; el.before(box); box.appendChild(el); box.appendChild(b); }
     const upd = () => {
       const over = el.scrollWidth - el.clientWidth;
       if (over <= 2 || el.offsetParent === null) { b.hidden = true; el.classList.remove('hs-nonative'); return; }
@@ -257,7 +259,7 @@ window.addEventListener('hashchange', route); route();
   }
   function scan() {
     document.querySelectorAll('body *').forEach(el => {
-      if (el.classList.contains('hs-bar') || el.closest('.hs-bar')) return;
+      if (el.classList.contains('hs-bar') || el.closest('.hs-bar') || el.classList.contains('hs-box')) return;
       const ox = getComputedStyle(el).overflowX;
       if ((ox === 'auto' || ox === 'scroll') && el.tagName !== 'TEXTAREA' && el.tagName !== 'BODY' && el.tagName !== 'HTML') bar(el);
     });
@@ -268,26 +270,6 @@ window.addEventListener('hashchange', route); route();
   addEventListener('load', later); addEventListener('hashchange', later);
   new MutationObserver(later).observe(document.documentElement, { childList: true, subtree: true });
 })();
-
-// search
-const q = document.getElementById('q'), R = document.getElementById('results'); let sel = 0, hits = [];
-function search() {
-  const s = q.value.trim().toLowerCase(); if (!s) { R.style.display = 'none'; return; }
-  hits = NAMES.map(n => { const ln = n.toLowerCase(), sl = P[n].slug.toLowerCase(); let sc = ln === s || sl === s ? 0 : ln.startsWith(s) || sl.startsWith(s) ? 1 : ln.includes(s) || sl.includes(s) ? 2 : (P[n].usage.map(u => u[1]).join(' ') + ' ' + P[n].details.join(' ')).toLowerCase().includes(s) ? 3 : 9; return [sc, n]; })
-    .filter(x => x[0] < 9).sort((a, b) => a[0] - b[0] || a[1].length - b[1].length).slice(0, 14).map(x => x[1]);
-  sel = 0;
-  R.innerHTML = hits.length ? hits.map((n, i) => '<a href="#/ref/' + P[n].slug + '" class="' + (i === sel ? 'on' : '') + '"><b>' + esc(n) + '</b><span>' + esc(P[n].usage[0][1]) + '</span></a>').join('') : '<a><span>No matches</span></a>';
-  R.style.display = 'block';
-}
-q.addEventListener('input', search);
-q.addEventListener('keydown', e => {
-  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + hits.length) % hits.length; [...R.children].forEach((a, i) => a.classList.toggle('on', i === sel)); }
-  if (e.key === 'Enter' && hits[sel]) { location.hash = '#/ref/' + P[hits[sel]].slug; R.style.display = 'none'; q.blur(); }
-  if (e.key === 'Escape') { R.style.display = 'none'; q.blur(); }
-});
-R.addEventListener('click', () => { R.style.display = 'none'; q.value = ''; });
-document.addEventListener('click', e => { if (!e.target.closest('.search')) R.style.display = 'none'; });
-document.addEventListener('keydown', e => { if (e.key === '/' && document.activeElement !== q) { e.preventDefault(); q.focus(); } });
 </script>
 </body>
 </html>

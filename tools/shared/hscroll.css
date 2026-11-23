@@ -18,3 +18,4 @@
 .hs-thumb:hover,.hs-bar.drag .hs-thumb{background:#d4561c}
 .hs-bar.drag .hs-thumb{cursor:grabbing}
 .hs-nonative{scrollbar-width:none}.hs-nonative::-webkit-scrollbar{height:0;display:none}
+.hs-box{min-width:0;max-width:100%}
