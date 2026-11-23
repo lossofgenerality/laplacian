@@ -56,6 +56,7 @@ In priority order for each site (agreed 23 Nov 2026). **Top priority overall:** 
 3. Apply the CCN Brand Strategy (`brand/`): tokens, self-hosted fonts, contrast fixes.
 4. A page-wide horizontal slider (see Issues 1).
 5. Fix the A_B subscripts in the old curvature write-up's Claude Doc.
+6. **A notebook behind every production page** (rule of 23 Nov 2026). Done: the Lab (`notebooks/lab/Laplacian_Curvature_Lab.nb`), the curvature write-up (`notebooks/LaplacianCurvature.nb`, now with §7.2), 07 and 09. Still to do: a notebook for the manual's 91 example outputs and its figures (now produced by `tools/manual` scripts on the kernel, with no notebook), and the generator of `docs/relationship-map.png` (Fig. 1 of the write-up), which is not in any notebook.
 
 **Laplacian Programmable Lab** ([lossofgenerality/Laplacian-lab](https://github.com/lossofgenerality/Laplacian-lab): Lab, manual)
 
@@ -65,6 +66,7 @@ In priority order for each site (agreed 23 Nov 2026). **Top priority overall:** 
 4. A "show the steps" mode for Wolfram cells using `laplacianSteps`.
 5. A curved-space section linked to the Curvature Lab.
 6. The Symbolic Teaching Assistant.
+7. A notebook behind the Programmable Lab and its manual (49 example outputs), with the page's live readouts set beside Wolfram, as for the Curvature Lab.
 
 **Both:** cloud libraries for the manuals' functions with CloudPut/CloudGet (owner).
 
