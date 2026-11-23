@@ -33,7 +33,7 @@ window.MathJax = { tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\
 :root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
 *{box-sizing:border-box;min-width:0}
 html{scroll-padding-top:72px}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif;overflow-x:clip}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,sans-serif}
 [hidden]{display:none!important}
 header{position:sticky;top:0;z-index:5;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(6px);border-bottom:1px solid var(--line)}
 .top{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;padding:10px max(4vw,16px)}
@@ -100,12 +100,26 @@ footer{max-width:1240px;margin:0 auto;padding:20px max(4vw,16px) 40px;color:var(
 footer a{color:inherit}
 @media(max-width:600px){table{font-size:13px}input[type=range]{width:120px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* CCN: always-visible scrollbars (macOS/iPadOS hide overlay scrollbars) + tab-strip arrows */
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:rgba(127,127,127,.12);border-radius:8px}
+::-webkit-scrollbar-thumb{background:rgba(127,127,127,.55);border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(212,86,28,.75);background-clip:padding-box}
+*{scrollbar-width:auto;scrollbar-color:rgba(127,127,127,.6) rgba(127,127,127,.12)}
+.hs-wrap{position:relative;display:flex;align-items:stretch;min-width:0}
+.hs-wrap>.hs-strip{flex:1 1 auto;min-width:0}
+.hs-btn{flex:none;width:30px;border:1px solid rgba(127,127,127,.35);background:inherit;color:inherit;font:600 18px/1 system-ui,sans-serif;cursor:pointer;border-radius:6px;margin:2px 3px 10px;opacity:.85}
+.hs-btn:hover{opacity:1;border-color:#d4561c;color:#d4561c}
+.hs-btn[disabled]{opacity:.25;cursor:default}
+.hs-wrap:not(.hs-over)>.hs-btn{display:none}
+.hs-wrap:not(.hs-over){display:contents}
 </style>
 </head>
 <body>
 <header>
  <div class="top"><div class="brand">Laplacian <b>Curvature</b> Lab</div><span class="muted" id="status"></span><a class="muted" style="margin-left:auto;color:var(--soft)" href="https://lossofgenerality.github.io/Laplacian-lab/">← Laplacian Lab</a></div>
- <nav id="nav" aria-label="Sections"></nav>
+ <nav id="nav" aria-label="Sections" data-hscroll></nav>
 </header>
 <main id="main">
 
@@ -1090,6 +1104,33 @@ show(location.hash.slice(1) || "map");
 addEventListener("load", () => requestAnimationFrame(() => window.scrollTo(0, 0)));
 }
 
+</script>
+<script>
+/* CCN: arrow buttons for horizontally scrolling tab strips; keeps the current tab in view */
+(function () {
+  function wire(strip) {
+    if (!strip || strip.dataset.hs) return; strip.dataset.hs = 1;
+    const wrap = document.createElement('div'); wrap.className = 'hs-wrap';
+    strip.parentNode.insertBefore(wrap, strip);
+    const L = document.createElement('button'), R = document.createElement('button');
+    L.className = R.className = 'hs-btn'; L.type = R.type = 'button';
+    L.textContent = '‹'; R.textContent = '›'; L.setAttribute('aria-label', 'Scroll tabs left'); R.setAttribute('aria-label', 'Scroll tabs right');
+    strip.classList.add('hs-strip'); wrap.append(L, strip, R);
+    const upd = () => {
+      const horiz = getComputedStyle(strip).overflowX !== 'visible' && strip.scrollWidth > strip.clientWidth + 2 && getComputedStyle(strip).flexDirection !== 'column';
+      wrap.classList.toggle('hs-over', horiz);
+      L.disabled = strip.scrollLeft <= 1; R.disabled = strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - 1;
+    };
+    L.onclick = () => strip.scrollBy({ left: -strip.clientWidth * 0.7, behavior: 'smooth' });
+    R.onclick = () => strip.scrollBy({ left: strip.clientWidth * 0.7, behavior: 'smooth' });
+    strip.addEventListener('scroll', upd, { passive: true }); addEventListener('resize', upd);
+    new MutationObserver(upd).observe(strip, { childList: true, subtree: true, attributes: true });
+    const show = () => { const a = strip.querySelector('[aria-current="true"], [aria-current="page"]'); if (a && wrap.classList.contains('hs-over')) { const sr = strip.getBoundingClientRect(), ar = a.getBoundingClientRect(); if (ar.left < sr.left || ar.right > sr.right) strip.scrollLeft += ar.left - sr.left - (sr.width - ar.width) / 2; } upd(); };
+    addEventListener('hashchange', () => setTimeout(show, 30)); upd(); setTimeout(show, 80); setTimeout(show, 600);
+  }
+  function go() { document.querySelectorAll('[data-hscroll]').forEach(wire); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
 </script>
 </body>
 </html>
