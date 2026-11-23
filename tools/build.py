@@ -1,6 +1,21 @@
 """Build LaplacianCurvature.nb and LaplacianCurvature.wl from cells.py."""
 import json, sys
-from cells import CELLS
+from cells import CELLS as BASE
+from additions import ADD
+
+def merged():
+    out, sec = [], 0
+    for style, text in BASE:
+        if style == "Section":
+            if sec in ADD:
+                out += ADD[sec]
+            sec = int(text.split(".")[0])
+        out.append((style, text))
+    if sec in ADD:
+        out += ADD[sec]
+    return out
+
+CELLS = merged()
 
 def wl_escape(s):
     out = []

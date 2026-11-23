@@ -13,10 +13,10 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | `docs/laplacian-curvature.md` | The write-up: nine sections, verified results table, references |
 | `docs/laplacian-curvature.pdf` | The same write-up as an A4 PDF (7 pages) |
 | `docs/relationship-map.png` | The relationship map above |
-| `notebooks/LaplacianCurvature.nb` | Wolfram notebook, one section per relationship, each ending in a check |
+| `notebooks/LaplacianCurvature.nb` | Wolfram notebook, one section per relationship: a check, then geometric graphics and worked examples (surfaces coloured by K and H, a torus mesh, example graphs coloured by each graph curvature) |
 | `notebooks/LaplacianCurvature.wl` | The same code as a plain Wolfram Language package/script |
 | `tools/pdf-style.css` | Stylesheet for the PDF: `pandoc docs/laplacian-curvature.md -s --mathml --css tools/pdf-style.css`, then print with headless Chrome |
-| `tools/cells.py`, `tools/build.py` | Notebook source and builder: edit `cells.py`, then `python3 tools/build.py notebooks` |
+| `tools/cells.py`, `tools/additions.py`, `tools/build.py` | Notebook source and builder: edit `cells.py`, then `python3 tools/build.py notebooks` |
 | `STYLE.md` | House style for Computational Classnotes math documents |
 | `CONTEXT.md` | Working context for the Laplacian Lab project: deliverables, decisions, lessons, open issues |
 

@@ -2,7 +2,7 @@
 
 23 November 2026 · Computational Classnotes · Laplacian Lab
 
-Curvature is what the Laplacian sees beyond its flat value. On smooth surfaces and manifolds, on triangle meshes and on graphs, every standard notion of curvature can be read off the Laplacian, its mean values, its heat flow, its Bochner identity or its spectrum. This write-up lists those instances. Each one has a matching section and check in the companion notebook `notebooks/LaplacianCurvature.nb`, and every check below was run on a Wolfram kernel.
+Curvature is what the Laplacian sees beyond its flat value. On smooth surfaces and manifolds, on triangle meshes and on graphs, every standard notion of curvature can be read off the Laplacian, its mean values, its heat flow, its Bochner identity or its spectrum. This write-up lists those instances. Each one has a matching section and check in the companion notebook `notebooks/LaplacianCurvature.nb`, and every check below was run on a Wolfram kernel. The notebook also draws each instance: surfaces coloured by K and H, error plots for the curved mean value, heat traces of two same-area drums, a torus mesh, and seven example graphs coloured by each graph curvature.
 
 ## Scope and conventions
 
@@ -48,7 +48,7 @@ $$A(r) = \pi r^2\Big(1 - \frac{K r^2}{12} + \frac{K^2 r^4}{360} - \dots\Big), \q
 
 Here S is the scalar curvature. Ollivier's curvature (Section 7) is the same idea applied to two nearby balls: on a manifold, comparing averages over balls of radius ε at points a distance δ apart along v gives κ ≈ ε² Ric(v, v)/(2(n+2)).
 
-**Checked (notebook §4):** the Legendre coefficients 1/64, 1/96, 1/2304, 1/1152 and 1/1440 are exact. A direct average of the non-symmetric function e^z(1+x)² + yz³ over geodesic circles on S² matches the formula through r⁶ with zero remainder. The disc-area series and the S³ ball-volume coefficient −1/5 = −6/(6·5) also match.
+**Checked (notebook §4):** the Legendre coefficients 1/64, 1/96, 1/2304, 1/1152 and 1/1440 are exact. A direct average of the non-symmetric function eˣ(1+z)² + yz³ over geodesic circles on S² matches the formula through r⁶ with zero remainder. The disc-area series and the S³ ball-volume coefficient −1/5 = −6/(6·5) also match.
 
 ## 4. Heat kernel and spectrum: curvature is audible
 

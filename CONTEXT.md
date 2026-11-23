@@ -60,7 +60,7 @@ A literature survey plus a verified write-up and notebook on every Laplacian–c
   - `docs/relationship-map.png`: diagram of six smooth identities and their discrete twins.
   - `notebooks/LaplacianCurvature.nb`: Wolfram notebook, no outputs saved; evaluate top to bottom.
   - `notebooks/LaplacianCurvature.wl`: same code as a script.
-  - `tools/cells.py`: the notebook's cell content. This is the source of truth: edit it, not the `.nb`.
+  - `tools/cells.py`: the notebook's core cells (claims + checks). `tools/additions.py`: graphics and worked examples, appended to the end of each notebook section by `build.py`. These are the source of truth: edit them, not the `.nb`.
   - `tools/build.py`: `python3 tools/build.py notebooks` regenerates `.nb` and `.wl` (and `chunks.json`, the Input cells grouped by section, for testing).
 - **Doc ↔ notebook numbering:** write-up Section n ↔ notebook Section n+1 (notebook §1 is the Riemannian toolkit; §9 uses the graph functions of §8).
 - **Write-up sections:** 1 Gauss curvature (Liouville), 2 ΔX = −2Hn, 3 curved mean values and volumes (Gray–Willmore; link to Lab Section 1), 4 heat trace (McKean–Singer), 5 Bochner / Lichnerowicz / Weitzenböck, 6 cotangent Laplacian and angle defect, 7 graph curvatures table (Ollivier, Lin–Lu–Yau, Bakry–Émery, CDE, Forman, entropic, resistance, Steinerberger, Higuchi), 8 graph spectral bounds and Belkin–Niyogi, 9 verified graph results, references.
@@ -73,6 +73,7 @@ A literature survey plus a verified write-up and notebook on every Laplacian–c
   - The discrete Lichnerowicz bounds hold on all five.
   - Σ resistance curvature = 1, and Higuchi totals = 2.
   - The point-cloud Laplacian on 20 000 points of S² gives ratio 0.9997.
+- **Graphics (23 Nov):** six surfaces coloured by K with Gauss–Bonnet totals (torus 0, sphere 4π); torus coloured by H with −ΔX arrows; catenoid and helicoid (H = 0); log–log error plot of the curved mean value with slopes 3.98, 6.00, 8.00; disc-area and heat-trace plots (sphere vs same-area flat torus); Bochner on the torus (variable K); comparison and Bishop–Gromov plots; a 40×20 torus mesh (Σ defect = 0, max |K_mesh − K| = 0.016); seven example graphs coloured by Lin–Lu–Yau, Bakry–Émery, Forman, resistance and Steinerberger curvature; an Ollivier neighbourhood picture; Higuchi on Platonic solids; a λ₁ vs bound bar chart; and a point-cloud scatter. The §4 test function is now eˣ(1+z)² + yz³ (the old one had Δf = 0 at the pole, which hid the K term).
 - **Fix (23 Nov):** the notebook §8.2 summary line nested two `&` functions (`bakryEmery[#, v] & /@ VertexList[#]`), which passed a vertex as the graph. Now `Function[G, Min[bakryEmery[G, #] & /@ VertexList[G]]]`.
 
 ---

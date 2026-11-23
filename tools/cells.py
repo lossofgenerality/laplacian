@@ -71,7 +71,7 @@ ser = Expand@Normal@Series[LegendreP[l, Cos[r]], {r, 0, 6}];
  SolveAlways[Coefficient[ser, r, 6] == a3 λ^3 + b3 λ^2 + c3 λ, l]}"""),
 ("Text", "Direct check on S² with a non-symmetric test function. Write it in ambient coordinates and extend it as a degree-0 function F(X/|X|); then |X|²·Δ_ℝ³ of it is again degree 0 and equals Δ_S² F. Average F over the geodesic circle of colatitude r about the north pole and compare with the formula evaluated at the pole."),
 ("Input",
-"""F0[{x_, y_, z_}] := Exp[z] (1 + x)^2 + y z^3;
+"""F0[{x_, y_, z_}] := Exp[x] (1 + z)^2 + y z^3;
 ext = F0[{x, y, z}/Sqrt[x^2 + y^2 + z^2]];
 ΔS2amb[h_] := Simplify[(x^2 + y^2 + z^2) Laplacian[h, {x, y, z}]];
 L1 = ΔS2amb[ext]; L2 = ΔS2amb[L1]; L3 = ΔS2amb[L2];
