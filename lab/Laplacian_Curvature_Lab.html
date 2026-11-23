@@ -97,6 +97,7 @@ pre{background:var(--code);border:1px solid var(--line);border-radius:8px;paddin
 .msg.user{align-self:flex-end;background:var(--tint)}
 .msg.ta{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
 .prose p{margin:0 0 .7em;line-height:1.55}.prose ul{margin:.2em 0 .7em;padding-left:1.2em;line-height:1.55}.prose li{margin:.25em 0}.prose .eq{text-align:center;margin:.4em 0 .8em;font-size:1.05em}
+.nbdl{margin:4px 0 14px}.nbdl .btn{display:inline-block;padding:7px 14px;border-radius:8px;background:#fa8f2b;color:#1a1208;font-weight:600;text-decoration:none;margin-right:8px}.nbdl .btn:hover{filter:brightness(1.07)}
 .msg.ta{white-space:normal}.msg p{margin:0 0 .55em}.msg p:last-of-type{margin-bottom:0}.msg ul,.msg ol{margin:.2em 0 .6em;padding-left:1.4em}.msg li{margin:.15em 0}.msg code{font-family:var(--mono,monospace);font-size:.92em;background:rgba(0,0,0,.05);padding:0 .25em;border-radius:3px}
 .msg details{margin-top:6px;font-size:13px}
 .ask-row{display:flex;gap:8px;margin-top:10px}.ask-row textarea{flex:1;min-height:64px;padding:10px}
@@ -164,6 +165,7 @@ footer a{color:inherit}
 <!-- 3 -->
 <section id="ricci" data-title="Ricci flow" hidden>
  <h2>Ricci flow is a heat equation for the conformal factor</h2>
+ <p class="nbdl"><a class="btn" href="https://lossofgenerality.github.io/laplacian/notebooks/series/14-Ricci-Flow.nb" download="14-Ricci-Flow.nb">⬇ Download the Ricci flow notebook (.nb)</a> <span class="muted">Ricci Flow and the Curvature–Laplacian Relations: every derivation on this section worked by hand, checked on the Wolfram kernel, with the figures and animators. Also as <a href="https://lossofgenerality.github.io/laplacian/notebooks/series/14-Ricci-Flow.wl" download="14-Ricci-Flow.wl">.wl</a>.</span></p>
  <p class="lede">With \(g=e^{2u}(dx^2+dy^2)\), Ricci flow \(\partial_tg=-2\,\mathrm{Ric}\) becomes \(\partial_tu=e^{-2u}\Delta_0u=-K\). Start from a bumpy metric on the flat torus and watch the flow iron the curvature out. The total curvature stays exactly zero, as Gauss–Bonnet demands for \(\chi=0\).</p>
  <div class="bench">
   <div><div class="fig card"><canvas id="riccicv"></canvas></div>
