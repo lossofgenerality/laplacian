@@ -47,11 +47,11 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 
 ## TODO
 
-In priority order for each site (agreed 23 Nov 2026).
+In priority order for each site (agreed 23 Nov 2026). **Top priority overall:** Curvature Lab item 1, the definition write-ups and notebooks, once a few small tasks are done.
 
 **Laplacian Curvature Lab** (this repo: Lab, manual, write-ups)
 
-1. The remaining definition write-ups and notebooks, one per definition, in the style of the Ollivier model (`docs/series/07-ollivier`).
+1. **TOP PRIORITY.** The remaining definition write-ups and notebooks, one per definition, in the style of the Ollivier model (`docs/series/07-ollivier`).
 2. A master index notebook linking the series.
 3. Apply the CCN Brand Strategy (`brand/`): tokens, self-hosted fonts, contrast fixes.
 4. A page-wide horizontal slider (see Issues 1).
