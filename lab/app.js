@@ -507,6 +507,21 @@ Use the run_wolfram tool when a computation would settle a question; the kernel 
 const TOOLS = [{ name: "run_wolfram", description: "Evaluate Wolfram Language code on a stateless Wolfram kernel and return the text output.", inputSchema: { type: "object", properties: { code: { type: "string", description: "Complete Wolfram Language code" } }, required: ["code"] },
   execute: async ({ code }) => { const r = await runWolfram(code); lastCode.push(code); return (r.text || "(no text output)").slice(0, 4000); } }];
 let lastCode = [];
+// The TA answers in light markdown (bold, inline code, bullet and numbered lists, headings); render it safely.
+function mdRender(src) {
+  const esc = t => t.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const inline = t => esc(t).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>").replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>");
+  const out = []; let list = null;
+  const close = () => { if (list) { out.push(`</${list}>`); list = null; } };
+  for (const raw of String(src).split(/\n/)) {
+    const line = raw.trimEnd(), b = line.match(/^\s*[-*•]\s+(.*)$/), n = line.match(/^\s*\d+[.)]\s+(.*)$/), h = line.match(/^#{1,4}\s+(.*)$/);
+    if (b || n) { const want = b ? "ul" : "ol"; if (list !== want) { close(); out.push(`<${want}>`); list = want; } out.push(`<li>${inline((b || n)[1])}</li>`); continue; }
+    close();
+    if (h) out.push(`<p><b>${inline(h[1])}</b></p>`);
+    else if (line.trim()) out.push(`<p>${inline(line)}</p>`);
+  }
+  close(); return out.join("");
+}
 function addMsg(role, text, codes) {
   const d = document.createElement("div"); d.className = "msg " + role; d.textContent = text;
   (codes || []).forEach(c => { const det = document.createElement("details"); det.innerHTML = "<summary>Wolfram code the TA ran</summary><pre></pre>"; det.querySelector("pre").textContent = c; d.appendChild(det); });
@@ -518,7 +533,7 @@ async function askStandalone(q, d, ctx) {
   if (!chatReady) { d.textContent = "The kernel has no chat key stored, so the TA is unavailable. Store one with CloudPut on your Wolfram Cloud."; return; }
   const msgs = history.slice(-8).concat([{ role: "user", content: `${ctx}\n\nQuestion: ${q}` }]), codes = [];
   for (let round = 0; round < 3; round++) {
-    const payload = { model: CFG.MODEL || undefined, max_tokens: 1500, system: BRIEF + RUN_NOTE, messages: msgs };
+    const payload = { model: CFG.MODEL || undefined, max_tokens: 4000, system: BRIEF + RUN_NOTE, messages: msgs };
     const j = await kernelPost({ mode: "chat", payload_b64: b64enc(JSON.stringify(payload)) });
     if (j.error) { d.textContent = "The TA could not answer: " + j.error + (j.status ? ` (status ${j.status})` : ""); return; }
     const text = b64dec(j.text_b64 || ""), m = text.match(/<run_wolfram>([\s\S]*?)<\/run_wolfram>/);
@@ -528,9 +543,10 @@ async function askStandalone(q, d, ctx) {
       msgs.push({ role: "assistant", content: text }, { role: "user", content: "Wolfram output:\n" + out + "\nNow answer the question." });
       continue;
     }
-    d.textContent = text.replace(/<run_wolfram>[\s\S]*?<\/run_wolfram>/g, "").trim();
+    const answer = text.replace(/<run_wolfram>[\s\S]*?<\/run_wolfram>/g, "").trim();
+    d.innerHTML = mdRender(answer);
     codes.forEach(c => { const det = document.createElement("details"); det.innerHTML = "<summary>Wolfram code the TA ran</summary><pre></pre>"; det.querySelector("pre").textContent = c; d.appendChild(det); });
-    history.push({ role: "user", content: q }, { role: "assistant", content: d.firstChild ? d.firstChild.textContent : text });
+    history.push({ role: "user", content: q }, { role: "assistant", content: answer });
     return;
   }
 }
@@ -552,7 +568,7 @@ async function ask() {
   $("asksend").disabled = true;
   try {
     const r = await SAMPLE(history.slice(-8), { tools: MCP ? TOOLS : undefined, cache: false, onText: ({ text }) => (d.textContent = text) });
-    d.textContent = r.text; lastCode.forEach(c => { const det = document.createElement("details"); det.innerHTML = "<summary>Wolfram code the TA ran</summary><pre></pre>"; det.querySelector("pre").textContent = c; d.appendChild(det); });
+    d.innerHTML = mdRender(r.text); lastCode.forEach(c => { const det = document.createElement("details"); det.innerHTML = "<summary>Wolfram code the TA ran</summary><pre></pre>"; det.querySelector("pre").textContent = c; d.appendChild(det); });
     history[history.length - 1].content = q; history.push({ role: "assistant", content: r.text });
   } catch (e) { d.textContent = e && e.code === "not_granted" ? "The TA is not available in this view." : e && e.code === "rate_limited" ? "Too many questions at once; wait a moment." : "The TA could not answer: " + (e && e.message || "unknown error"); history.pop(); }
   $("asksend").disabled = false; askContext = "";
