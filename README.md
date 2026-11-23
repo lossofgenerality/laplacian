@@ -45,6 +45,29 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | 7 | 8 | Graph curvatures: Ollivier, Lin–Lu–Yau, Bakry–Émery, Forman, resistance, Steinerberger, Higuchi | LLY by LP and by transport agree; Σ resistance curvature = 1; Higuchi totals = 2 |
 | 8 | 9 | Discrete Lichnerowicz bounds; point-cloud Laplacian → Δ (Belkin–Niyogi) | bounds hold on 5 graphs; ratio 0.9997 on 20 000 points of S² |
 
+## TODO
+
+In priority order for each site (agreed 23 Nov 2026).
+
+**Laplacian Curvature Lab** (this repo: Lab, manual, write-ups)
+
+1. The remaining definition write-ups and notebooks, one per definition, in the style of the Ollivier model (`docs/series/07-ollivier`).
+2. A master index notebook linking the series.
+3. Apply the CCN Brand Strategy (`brand/`): tokens, self-hosted fonts, contrast fixes.
+4. A page-wide horizontal slider (see Issues 1).
+5. Fix the A_B subscripts in the old curvature write-up's Claude Doc.
+
+**Laplacian Programmable Lab** ([lossofgenerality/Laplacian-lab](https://github.com/lossofgenerality/Laplacian-lab): Lab, manual)
+
+1. The 𝒶𝓇𝓈 bug: the Δ-notation Insert button and table should use 𝒶𝓇ℊ𝓈.
+2. Apply the CCN Brand Strategy (the five steps in its §14).
+3. Bring the tutorial in line with version 2 (CCN-KEY field, Connect, chat through the kernel).
+4. A "show the steps" mode for Wolfram cells using `laplacianSteps`.
+5. A curved-space section linked to the Curvature Lab.
+6. The Symbolic Teaching Assistant.
+
+**Both:** cloud libraries for the manuals' functions with CloudPut/CloudGet (owner).
+
 ## Issues
 
 1. **Horizontal sliders (open, 23 Nov 2026).** Clipping is fixed: the owner confirms nothing is clipped in Firefox or Chrome, after wide formulas were made to shrink to fit their column (down to 55%) and tables to stack above their charts. Boxes that still overflow get a drawn slider with a CCN Orange thumb, and tab strips have arrow buttons. Still open: the owner sees no page-wide horizontal slider; decide whether one pinned to the bottom of the window is wanted. Affects https://lossofgenerality.github.io/Laplacian-lab/, https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html and both manuals.
