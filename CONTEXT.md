@@ -47,6 +47,8 @@ The page has three layers:
 | `laplacianSteps.wl` | Staged, self-checking derivation of Δ from the sphere or ball mean. |
 | `Laplacian_Lab_Tutorial.md` / `.pdf` | User tutorial for the standalone .html (16 pages, A4). Reworded for CCN Cloud; contains no references to Claude, Anthropic, or the key variable names. |
 
+**Laplacian Lab version 2 is hosted on GitHub Pages** at https://lossofgenerality.github.io/Laplacian-lab/ (repo `lossofgenerality/Laplacian-lab`, page title "Laplacian Lab_version2"); the Curvature Lab is at https://lossofgenerality.github.io/laplacian/.
+
 The Lab files above were made in a temporary session scratchpad; the user holds the delivered copies. They are **not** in the GitHub repo yet.
 
 ### 2a. Laplacian and curvature companion (23 Nov 2026)
