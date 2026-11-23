@@ -54,6 +54,7 @@ A literature survey plus a verified write-up and notebook on every Laplacian–c
 
 - **GitHub:** https://github.com/lossofgenerality/laplacian (branch `main`; commits authored as Noor Hoshino <noor@compclassnotes.com>, no Claude attribution).
   - `CONTEXT.md`: this file.
+  - `STYLE.md`: house style for math documents (doc, notebook, md/pdf, diagram, git).
   - `README.md`.
   - `docs/laplacian-curvature.md`: markdown copy of the write-up (GitHub `$$` maths).
   - `docs/relationship-map.png`: diagram of six smooth identities and their discrete twins.
@@ -154,6 +155,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 - In the tutorial, readers use "CCN Cloud and CCN's Wolfram Cloud kernel"; no key or deployment advice for readers.
 - Avoid the term "LLM" in the user's writing; use "conversational-construct" where such a term is needed.
 - Git commits for the user: author/committer Noor Hoshino <noor@compclassnotes.com>; no Co-Authored-By or Claude-Session lines.
+- **Math document house style:** see `STYLE.md` at the repo root (Claude Doc + numbered sections + "Checked (notebook §n)" lines + verified table + references; companion notebook; md + A4 PDF). The reference example is the Laplacian and curvature write-up.
 
 ---
 

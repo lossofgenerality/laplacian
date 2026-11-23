@@ -17,6 +17,7 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | `notebooks/LaplacianCurvature.wl` | The same code as a plain Wolfram Language package/script |
 | `tools/pdf-style.css` | Stylesheet for the PDF: `pandoc docs/laplacian-curvature.md -s --mathml --css tools/pdf-style.css`, then print with headless Chrome |
 | `tools/cells.py`, `tools/build.py` | Notebook source and builder: edit `cells.py`, then `python3 tools/build.py notebooks` |
+| `STYLE.md` | House style for Computational Classnotes math documents |
 | `CONTEXT.md` | Working context for the Laplacian Lab project: deliverables, decisions, lessons, open issues |
 
 ## What is covered
