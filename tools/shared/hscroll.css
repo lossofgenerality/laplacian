@@ -19,3 +19,4 @@
 .hs-bar.drag .hs-thumb{cursor:grabbing}
 .hs-nonative{scrollbar-width:none}.hs-nonative::-webkit-scrollbar{height:0;display:none}
 .hs-box{min-width:0;max-width:100%}
+.hs-bar.hs-top{margin:0 0 6px}

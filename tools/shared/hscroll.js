@@ -34,7 +34,7 @@
     b.setAttribute('role', 'scrollbar'); b.setAttribute('aria-orientation', 'horizontal');
     const strip = el.closest('.hs-wrap');
     if (strip) strip.after(b);
-    else { const box = document.createElement('div'); box.className = 'hs-box'; el.before(box); box.appendChild(el); box.appendChild(b); }
+    else { const box = document.createElement('div'); box.className = 'hs-box'; el.before(box); box.appendChild(el); if (el.offsetHeight > 220) { box.insertBefore(b, el); b.classList.add('hs-top'); } else box.appendChild(b); }
     const upd = () => {
       const over = el.scrollWidth - el.clientWidth;
       if (over <= 2 || el.offsetParent === null) { b.hidden = true; el.classList.remove('hs-nonative'); return; }
