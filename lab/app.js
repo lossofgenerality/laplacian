@@ -583,6 +583,23 @@ if (STANDALONE) {
   if ($("wl-key").value) setTimeout(connect, 0);
 }
 
+// ===================== write-ups and notebooks (Curvature from the Laplacian series) =====================
+const SERIES_BASE = "https://lossofgenerality.github.io/laplacian/";
+const SERIES_REPO = "https://github.com/lossofgenerality/laplacian/blob/main/";
+const READ = {
+  ollivier: [["07-ollivier", "07-Ollivier", "Ollivier Curvature"]],
+  graphs: [["07-ollivier", "07-Ollivier", "Ollivier and Lin–Lu–Yau curvature"]],
+};
+for (const [id, items] of Object.entries(READ)) {
+  const sec = document.getElementById(id); if (!sec) continue;
+  const box = document.createElement("div"); box.className = "readmore";
+  box.innerHTML = items.map(([doc, nb, title]) => `<span class="rm-title">${title}</span>` +
+    `<a href="${SERIES_REPO}docs/series/${doc}.md" target="_blank" rel="noopener">Read the write-up</a>` +
+    `<a href="${SERIES_BASE}docs/series/${doc}.pdf" target="_blank" rel="noopener">PDF</a>` +
+    `<a href="${SERIES_BASE}notebooks/series/${nb}.nb" download>Open the notebook (.nb)</a>`).join("<br>");
+  const lede = sec.querySelector(".lede"); (lede || sec.querySelector("h2")).after(box);
+}
+
 // ===================== start =====================
 show(location.hash.slice(1) || "map");
 addEventListener("load", () => requestAnimationFrame(() => window.scrollTo(0, 0)));
