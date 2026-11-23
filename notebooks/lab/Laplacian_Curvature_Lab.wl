@@ -47,8 +47,8 @@ surfaceCurvatures[pos_, \[ScriptX]_] := Module[{Xu, Xv, nn, E1, F1, G1, L1, M1, 
   {E1, F1, G1} = {Xu . Xu, Xu . Xv, Xv . Xv};
   {L1, M1, N1} = {D[pos, \[ScriptX][[1]], \[ScriptX][[1]]] . nn, D[pos, \[ScriptX][[1]], \[ScriptX][[2]]] . nn, D[pos, \[ScriptX][[2]], \[ScriptX][[2]]] . nn};
   <|"K" -> Simplify[(L1 N1 - M1^2)/(E1 G1 - F1^2)], "H" -> Simplify[(E1 N1 - 2 F1 M1 + G1 L1)/(2 (E1 G1 - F1^2))], "dA" -> Simplify[Sqrt[E1 G1 - F1^2]]|>];
-t = surfaceCurvatures[{(2 + Cos[v]) Cos[u], (2 + Cos[v]) Sin[u], Sin[v]}, {u, v}];
-{t["K"], Integrate[Simplify[t["K"] t["dA"], 0 < v < 2 π], {u, 0, 2 π}, {v, 0, 2 π}]}
+torus = surfaceCurvatures[{(2 + Cos[v]) Cos[u], (2 + Cos[v]) Sin[u], Sin[v]}, {u, v}];
+{torus["K"], Integrate[Simplify[torus["K"] torus["dA"], 0 < v < 2 π], {u, 0, 2 π}, {v, 0, 2 π}]}
 
 (* ::Text:: *)
 (*Expected: K = cos v/(2 + cos v) and total 0.*)
