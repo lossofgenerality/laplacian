@@ -343,8 +343,9 @@ EXTRA[1] = [
 Legended[Grid[Partition[surfPlot[#, "K"] & /@ Keys[surf], 3]], kLegend[1, "K"]]"""),
 ("Figure", "The six surfaces of the page coloured by Gauss curvature K on the page’s scale: blue negative, near-white zero, orange positive, saturating at |K| = 1. The torus is orange outside and blue inside; the catenoid and pseudosphere are blue throughout."),
 ("Text", "The animator: pick the surface and the quantity, and drag the picture to turn it, as on the page."),
-("Input", r"""Manipulate[Legended[surfPlot[key, q], kLegend[1, If[q == "K", "K", "|H|"]]],
- {{key, "torus", "surface"}, Keys[surf]}, {{q, "K", "colour by"}, {"K" -> "Gauss curvature K", "H" -> "mean curvature |H|"}}, SaveDefinitions -> True]"""),
+("Input", r"""With[{surfaces = Keys[surf]},
+ Manipulate[Legended[surfPlot[mSurf, mQ], kLegend[1, If[mQ == "K", "K", "|H|"]]],
+  {{mSurf, "torus", "surface"}, surfaces}, {{mQ, "K", "colour by"}, {"K" -> "Gauss curvature K", "H" -> "mean curvature |H|"}}, SaveDefinitions -> True]]"""),
 ]
 EXTRA[2] = [
 ("Subsection", "2.1 Worked by hand"),
@@ -368,7 +369,8 @@ Legended[Row[{ListLogPlot[rh["hist"], Joined -> True, PlotStyle -> orange, PlotR
     kField[rh["frames"][[1]]], kField[SelectFirst[rh["frames"], #[[1]] >= 0.5 &]], kField[rh["frames"][[-1]]]}, "  "], kLegend[1.5, "K"]]"""),
 ("Figure", "Ricci flow on the flat torus at the default bump 0.3: max|K| on a log scale against t (the page’s chart), and the curvature field at t = 0, 0.5 and the end, on the page’s colour scale (saturating at |K| = 1.5)."),
 ("Text", "The animator plays the flow frame by frame (every 0.05 in t); press the play button."),
-("Input", r"""Manipulate[Legended[kField[rh["frames"][[i]]], kLegend[1.5, "K"]], {{i, 1, "frame"}, 1, Length[rh["frames"]], 1, ControlType -> Animator, AnimationRate -> 8}, SaveDefinitions -> True]"""),
+("Input", r"""With[{nFrames = Length[rh["frames"]]},
+ Manipulate[Legended[kField[rh["frames"][[mFrame]]], kLegend[1.5, "K"]], {{mFrame, 1, "frame"}, 1, nFrames, 1, ControlType -> Animator, AnimationRate -> 8}, SaveDefinitions -> True]]"""),
 ]
 EXTRA[3] = [
 ("Subsection", "3.1 Worked by hand: Δf = −4 at the pole from the circle mean"),
@@ -387,8 +389,8 @@ ListLogLogPlot[{errs[[All, {1, 2}]], errs[[All, {1, 3}]], errs[[All, {1, 4}]]}, 
 Plot[{1, discRatio[1, r], discRatio[-1, r]}, {r, 0.02, 3}, PlotRange -> {0, 2}, PlotStyle -> {Directive[GrayLevel[0.5], Dashed], orange, blue},
  AxesLabel -> {"r", "A(r)/π r^2"}, PlotLegends -> {"K = 0", "K = 1", "K = −1"}, ImageSize -> 380]"""),
 ("Figure", "Area of a geodesic disc divided by the flat area πr², for K = 1, 0 and −1 (the page’s disc-area chart)."),
-("Input", r"""Manipulate[Plot[{1, discRatio[K, r]}, {r, 0.02, 3}, PlotRange -> {0, 2}, PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[K >= 0, orange, blue]},
-  AxesLabel -> {"r", "A(r)/π r^2"}, PlotLabel -> Row[{"K = ", K, ":  1 − K r²/12 + K² r⁴/360 − …"}], ImageSize -> 380], {{K, 1}, -1, 1, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
+("Input", r"""Manipulate[Plot[{1, discRatio[mK, r]}, {r, 0.02, 3}, PlotRange -> {0, 2}, PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[mK >= 0, orange, blue]},
+  AxesLabel -> {"r", "A(r)/π r^2"}, PlotLabel -> Row[{"K = ", mK, ":  1 − K r²/12 + K² r⁴/360 − …"}], ImageSize -> 380], {{mK, 1, "K"}, -1, 1, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
 ]
 EXTRA[4] = [
 ("Subsection", "4.1 Worked by hand: 1 + t/3 + t²/15 from the eigenvalues"),
@@ -403,8 +405,9 @@ heatPlot[tt_] := Show[Plot[{sphM[t], 1 + t/3 + t^2/15, tor[t]}, {t, 0.004, 0.4},
    Graphics[{GrayLevel[0.5], Line[{{tt, 0.98}, {tt, 1.16}}]}]];
 heatPlot[0.05]"""),
 ("Figure", "The heat trace divided by Weyl’s Area/(4πt) for the unit sphere and for a flat torus of the same area, against 1 + t/3 + t²/15 (the page’s chart; the grey line is the default t = 0.05)."),
-("Input", r"""Manipulate[Column[{heatPlot[t], Grid[{{"sphere", NumberForm[sphM[t], 7]}, {"1 + t/3 + t²/15", NumberForm[1 + t/3 + t^2/15, 7]}, {"flat torus", NumberForm[tor[t], 7]},
-     {"difference ≈ t/3", NumberForm[sphM[t] - tor[t], 7]}}, Alignment -> Left]}], {{t, 0.05}, 0.005, 0.4, 0.005, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
+("Text", "The animator: slide t, as on the page; the readout gives the sphere’s ratio, 1 + t/3 + t²/15, the torus’s ratio and their difference."),
+("Input", r"""Manipulate[Column[{heatPlot[mT], Grid[{{"sphere", NumberForm[sphM[mT], 7]}, {"1 + t/3 + t²/15", NumberForm[1 + mT/3 + mT^2/15, 7]}, {"flat torus", NumberForm[tor[mT], 7]},
+     {"difference ≈ t/3", NumberForm[sphM[mT] - tor[mT], 7]}}, Alignment -> Left]}], {{mT, 0.05, "t"}, 0.005, 0.4, 0.005, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
 ]
 EXTRA[5] = [
 ("Subsection", "5.1 Worked by hand: Bochner for f = z on the unit sphere"),
@@ -417,11 +420,11 @@ EXTRA[5] = [
 Plot[{lapDist[0, r], lapDist[1, r], lapDist[-1, r]}, {r, 0.05, 3.2}, PlotRange -> {-3, 5}, AxesLabel -> {"r", "Δr"},
  PlotStyle -> {Directive[GrayLevel[0.5], Dashed], orange, blue}, PlotLegends -> {"K = 0: 1/r", "K = 1: cot r", "K = −1: coth r"}, ImageSize -> 400]"""),
 ("Figure", "Laplacian of the distance function on surfaces of constant curvature K = 1, 0, −1 (the page’s chart): positive curvature makes Δr smaller than the flat 1/r and negative at r > π/2; negative curvature keeps it above √|K|."),
-("Input", r"""Manipulate[Column[{Plot[{lapDist[0, r], lapDist[K, r]}, {r, 0.05, 3.2}, PlotRange -> {-3, 5}, AxesLabel -> {"r", "Δr"},
-    PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[K >= 0, orange, blue]}, ImageSize -> 400],
-   If[K > 0, Grid[{{"Lichnerowicz λ₁ ≥ nK", 2 K}, {"round sphere λ₁ = 2K", 2 K}, {"Bonnet–Myers diam ≤ π/√K", N[π/Sqrt[K]]}, {"Δr changes sign at r", N[π/(2 Sqrt[K])]}}, Alignment -> Left],
-    Grid[{{"Lichnerowicz", "no bound for K ≤ 0"}, {"Δr → √|K| as r → ∞", N[Sqrt[-K]]}}, Alignment -> Left]]}],
- {{K, 1}, -1, 2, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
+("Input", r"""Manipulate[Column[{Plot[{lapDist[0, r], lapDist[mK, r]}, {r, 0.05, 3.2}, PlotRange -> {-3, 5}, AxesLabel -> {"r", "Δr"},
+    PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[mK >= 0, orange, blue]}, ImageSize -> 400],
+   If[mK > 0, Grid[{{"Lichnerowicz λ₁ ≥ nK", 2 mK}, {"round sphere λ₁ = 2K", 2 mK}, {"Bonnet–Myers diam ≤ π/√K", N[π/Sqrt[mK]]}, {"Δr changes sign at r", N[π/(2 Sqrt[mK])]}}, Alignment -> Left],
+    Grid[{{"Lichnerowicz", "no bound for K ≤ 0"}, {"Δr → √|K| as r → ∞", N[Sqrt[-mK]]}}, Alignment -> Left]]}],
+ {{mK, 1, "K"}, -1, 2, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
 ]
 EXTRA[6] = [
 ("Subsection", "6.5 Worked by hand"),
@@ -440,7 +443,7 @@ Row[{meshPicture[{40, 20}], Show[Plot[Cos[v]/(2 + Cos[v]), {v, 0, 2 π}, PlotSty
 ("Input", r"""ListLogLogPlot[{2 π/#[[2]], #[[3]]} & /@ ({#["nu"], #["nv"], #["err"]} & /@ page["mesh"]), Joined -> True, PlotMarkers -> Automatic, PlotStyle -> orange,
  AxesLabel -> {"edge length 2π/nv", "max |Kmesh − K|"}, PlotLabel -> Row[{"fitted slope ", NumberForm[Coefficient[Fit[Log[{2 π/#["nv"], #["err"]}] & /@ page["mesh"], {1, s}, s], s], 3]}], ImageSize -> 380]"""),
 ("Figure", "Largest error of the mesh curvature against the mesh size for the four resolutions: slope about 2, second-order convergence."),
-("Input", r"""Manipulate[meshPicture[res], {{res, {40, 20}, "resolution"}, {{12, 6} -> "12 × 6", {24, 12} -> "24 × 12", {40, 20} -> "40 × 20", {64, 32} -> "64 × 32"}}, SaveDefinitions -> True]"""),
+("Input", r"""Manipulate[meshPicture[mRes], {{mRes, {40, 20}, "resolution"}, {{12, 6} -> "12 × 6", {24, 12} -> "24 × 12", {40, 20} -> "40 × 20", {64, 32} -> "64 × 32"}}, SaveDefinitions -> True]"""),
 ]
 EXTRA[7] = [
 ("Subsection", "7.1 Worked by hand"),
@@ -460,11 +463,12 @@ Legended[Grid[Partition[graphPicture[#, "lly"] & /@ Keys[page["graphs"]], 4, 4, 
 ("Input", r"""Legended[Grid[Partition[graphPicture[#, "be"] & /@ Keys[page["graphs"]], 4, 4, 1, ""]], kLegend[1, Subscript["K", "∞"]]]"""),
 ("Figure", "The same graphs with every vertex coloured by its Bakry–Émery curvature K_∞."),
 ("Text", "The animator: pick a graph and a curvature, as on the page; the readout gives min, max, mean (sum for resistance curvature) and the spectral bounds the page ticks."),
-("Input", r"""Manipulate[With[{w = N[wlValues[g, k]], sp = normSpec[graphOf[g]]},
-  Column[{Legended[graphPicture[g, k], kLegend[kScale[k], curvs[k][[1]]]],
-    Grid[{{"min", Min[w]}, {"max", Max[w]}, {If[k == "res", "sum", "mean"], If[k == "res", Total[w], Mean[w]]}, {"λ₁ (normalised)", sp[[2]]}, {"λmax", sp[[-1]]},
-      {"λ₁ ≥ min κLLY", sp[[2]] >= Min[N[wlValues[g, "lly"]]] - 10^-9}}, Alignment -> Left]}]],
- {{g, "dumbbell", "graph"}, Keys[page["graphs"]]}, {{k, "lly", "curvature"}, Thread[Keys[curvs] -> curvs[[All, 1]]]}, SaveDefinitions -> True]"""),
+("Input", r"""With[{graphs = Keys[page["graphs"]], curvatures = Normal[curvs[[All, 1]]]},
+ Manipulate[With[{w = N[wlValues[mGraph, mCurv]], sp = normSpec[graphOf[mGraph]]},
+   Column[{Legended[graphPicture[mGraph, mCurv], kLegend[kScale[mCurv], curvs[mCurv][[1]]]],
+     Grid[{{"min", Min[w]}, {"max", Max[w]}, {If[mCurv == "res", "sum", "mean"], If[mCurv == "res", Total[w], Mean[w]]}, {"λ₁ (normalised)", sp[[2]]}, {"λmax", sp[[-1]]},
+       {"λ₁ ≥ min κLLY", sp[[2]] >= Min[N[wlValues[mGraph, "lly"]]] - 10^-9}}, Alignment -> Left]}]],
+  {{mGraph, "dumbbell", "graph"}, graphs}, {{mCurv, "lly", "curvature"}, curvatures}, SaveDefinitions -> True]]"""),
 ]
 EXTRA[8] = [
 ("Subsection", "8.1 Worked by hand"),
@@ -477,10 +481,11 @@ EXTRA[8] = [
    Graphics[{Table[{Opacity[0.25 + 0.75 j/6], orange, Line[Append[#, First[#]] &[runs["wiggle", "frames"][[Round[1 + (Length[runs["wiggle", "frames"]] - 1) j/6]]]]]}, {j, 0, 6}]},
     PlotLabel -> "wiggly start, seven moments", ImageSize -> 260]}]"""),
 ("Figure", "Area against time for the four starting curves, with the line of slope −2π from the wiggly start (dashed), and the wiggly curve at seven moments: it becomes convex, then round, and shrinks to a point."),
-("Input", r"""Manipulate[With[{fr = runs[kind, "frames"]}, Graphics[{Dashed, GrayLevel[0.6], Line[Append[#, First[#]] &[fr[[1]]]], Dashing[{}], orange, Thickness[0.008],
-    Line[Append[#, First[#]] &[fr[[Min[i, Length[fr]]]]]]}, PlotRange -> 1.6, ImageSize -> 380,
-   PlotLabel -> Row[{"area ", NumberForm[polyArea[fr[[Min[i, Length[fr]]]]], 4], ",  vertices ", Length[fr[[Min[i, Length[fr]]]]]}]]],
- {{kind, "wiggle", "start"}, Keys[runs]}, {{i, 1, "frame"}, 1, Max[Length[runs[#, "frames"]] & /@ Keys[runs]], 1, ControlType -> Animator, AnimationRate -> 10}, SaveDefinitions -> True]"""),
+("Input", r"""With[{starts = Keys[runs], nFrames = Max[Length[runs[#, "frames"]] & /@ Keys[runs]]},
+ Manipulate[With[{fr = runs[mStart, "frames"]}, With[{X = fr[[Min[mFrame, Length[fr]]]]},
+    Graphics[{Dashed, GrayLevel[0.6], Line[Append[fr[[1]], First[fr[[1]]]]], Dashing[{}], orange, Thickness[0.008], Line[Append[X, First[X]]]},
+     PlotRange -> 1.6, ImageSize -> 380, PlotLabel -> Row[{"area ", NumberForm[polyArea[X], 4], ",  vertices ", Length[X]}]]]],
+  {{mStart, "wiggle", "start"}, starts}, {{mFrame, 1, "frame"}, 1, nFrames, 1, ControlType -> Animator, AnimationRate -> 10}, SaveDefinitions -> True]]"""),
 ]
 EXTRA[9] = [
 ("Subsection", "9.1 Worked by hand: κ ≈ ε²K/8"),
@@ -496,7 +501,7 @@ ollPlot[K_] := With[{emax = If[K == 0, 1.2, Min[1.2, 0.9 π/Sqrt[Abs[K]]/2]]},
     Epilog -> {Dashed, GrayLevel[0.5], Line[{{0, K/8}, {emax, K/8}}]}, AxesLabel -> {"ε", "κ/ε^2"}, PlotLabel -> Row[{"K = ", K}], ImageSize -> 300]];
 Row[{ollPlot[1], ollPlot[0], ollPlot[-1]}]"""),
 ("Figure", "Ollivier curvature of ε-balls divided by ε², against ε, for K = 1, 0 and −1 (the page’s chart); the dashed line is K/8."),
-("Input", r"""Manipulate[ollPlot[K], {{K, 1}, -2, 2, 0.25, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
+("Input", r"""Manipulate[ollPlot[mK], {{mK, 1, "K"}, -2, 2, 0.25, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
 ]
 
 def _merge(cells, extra):

@@ -119,8 +119,9 @@ Legended[Grid[Partition[surfPlot[#, "K"] & /@ Keys[surf], 3]], kLegend[1, "K"]]
 (* ::Text:: *)
 (*The animator: pick the surface and the quantity, and drag the picture to turn it, as on the page.*)
 
-Manipulate[Legended[surfPlot[key, q], kLegend[1, If[q == "K", "K", "|H|"]]],
- {{key, "torus", "surface"}, Keys[surf]}, {{q, "K", "colour by"}, {"K" -> "Gauss curvature K", "H" -> "mean curvature |H|"}}, SaveDefinitions -> True]
+With[{surfaces = Keys[surf]},
+ Manipulate[Legended[surfPlot[mSurf, mQ], kLegend[1, If[mQ == "K", "K", "|H|"]]],
+  {{mSurf, "torus", "surface"}, surfaces}, {{mQ, "K", "colour by"}, {"K" -> "Gauss curvature K", "H" -> "mean curvature |H|"}}, SaveDefinitions -> True]]
 
 (* ::Section:: *)
 (*2. Ricci flow is a heat equation for the conformal factor (page: #ricci)*)
@@ -200,7 +201,8 @@ Legended[Row[{ListLogPlot[rh["hist"], Joined -> True, PlotStyle -> orange, PlotR
 (* ::Text:: *)
 (*The animator plays the flow frame by frame (every 0.05 in t); press the play button.*)
 
-Manipulate[Legended[kField[rh["frames"][[i]]], kLegend[1.5, "K"]], {{i, 1, "frame"}, 1, Length[rh["frames"]], 1, ControlType -> Animator, AnimationRate -> 8}, SaveDefinitions -> True]
+With[{nFrames = Length[rh["frames"]]},
+ Manipulate[Legended[kField[rh["frames"][[mFrame]]], kLegend[1.5, "K"]], {{mFrame, 1, "frame"}, 1, nFrames, 1, ControlType -> Animator, AnimationRate -> 8}, SaveDefinitions -> True]]
 
 (* ::Section:: *)
 (*3. The mean-value origin of Δ, on a curved surface (page: #means)*)
@@ -271,8 +273,8 @@ Plot[{1, discRatio[1, r], discRatio[-1, r]}, {r, 0.02, 3}, PlotRange -> {0, 2}, 
 (* ::Text:: *)
 (*Fig. 4. Area of a geodesic disc divided by the flat area πr², for K = 1, 0 and −1 (the page’s disc-area chart).*)
 
-Manipulate[Plot[{1, discRatio[K, r]}, {r, 0.02, 3}, PlotRange -> {0, 2}, PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[K >= 0, orange, blue]},
-  AxesLabel -> {"r", "A(r)/π r^2"}, PlotLabel -> Row[{"K = ", K, ":  1 − K r²/12 + K² r⁴/360 − …"}], ImageSize -> 380], {{K, 1}, -1, 1, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]
+Manipulate[Plot[{1, discRatio[mK, r]}, {r, 0.02, 3}, PlotRange -> {0, 2}, PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[mK >= 0, orange, blue]},
+  AxesLabel -> {"r", "A(r)/π r^2"}, PlotLabel -> Row[{"K = ", mK, ":  1 − K r²/12 + K² r⁴/360 − …"}], ImageSize -> 380], {{mK, 1, "K"}, -1, 1, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]
 
 (* ::Section:: *)
 (*4. Curvature is the first correction to Weyl’s law (page: #heat)*)
@@ -325,8 +327,11 @@ heatPlot[0.05]
 (* ::Text:: *)
 (*Fig. 5. The heat trace divided by Weyl’s Area/(4πt) for the unit sphere and for a flat torus of the same area, against 1 + t/3 + t²/15 (the page’s chart; the grey line is the default t = 0.05).*)
 
-Manipulate[Column[{heatPlot[t], Grid[{{"sphere", NumberForm[sphM[t], 7]}, {"1 + t/3 + t²/15", NumberForm[1 + t/3 + t^2/15, 7]}, {"flat torus", NumberForm[tor[t], 7]},
-     {"difference ≈ t/3", NumberForm[sphM[t] - tor[t], 7]}}, Alignment -> Left]}], {{t, 0.05}, 0.005, 0.4, 0.005, Appearance -> "Labeled"}, SaveDefinitions -> True]
+(* ::Text:: *)
+(*The animator: slide t, as on the page; the readout gives the sphere’s ratio, 1 + t/3 + t²/15, the torus’s ratio and their difference.*)
+
+Manipulate[Column[{heatPlot[mT], Grid[{{"sphere", NumberForm[sphM[mT], 7]}, {"1 + t/3 + t²/15", NumberForm[1 + mT/3 + mT^2/15, 7]}, {"flat torus", NumberForm[tor[mT], 7]},
+     {"difference ≈ t/3", NumberForm[sphM[mT] - tor[mT], 7]}}, Alignment -> Left]}], {{mT, 0.05, "t"}, 0.005, 0.4, 0.005, Appearance -> "Labeled"}, SaveDefinitions -> True]
 
 (* ::Section:: *)
 (*5. Bochner’s formula, and what a curvature bound controls (page: #bochner)*)
@@ -382,11 +387,11 @@ Plot[{lapDist[0, r], lapDist[1, r], lapDist[-1, r]}, {r, 0.05, 3.2}, PlotRange -
 (* ::Text:: *)
 (*Fig. 6. Laplacian of the distance function on surfaces of constant curvature K = 1, 0, −1 (the page’s chart): positive curvature makes Δr smaller than the flat 1/r and negative at r > π/2; negative curvature keeps it above √ K .*)
 
-Manipulate[Column[{Plot[{lapDist[0, r], lapDist[K, r]}, {r, 0.05, 3.2}, PlotRange -> {-3, 5}, AxesLabel -> {"r", "Δr"},
-    PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[K >= 0, orange, blue]}, ImageSize -> 400],
-   If[K > 0, Grid[{{"Lichnerowicz λ₁ ≥ nK", 2 K}, {"round sphere λ₁ = 2K", 2 K}, {"Bonnet–Myers diam ≤ π/√K", N[π/Sqrt[K]]}, {"Δr changes sign at r", N[π/(2 Sqrt[K])]}}, Alignment -> Left],
-    Grid[{{"Lichnerowicz", "no bound for K ≤ 0"}, {"Δr → √|K| as r → ∞", N[Sqrt[-K]]}}, Alignment -> Left]]}],
- {{K, 1}, -1, 2, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]
+Manipulate[Column[{Plot[{lapDist[0, r], lapDist[mK, r]}, {r, 0.05, 3.2}, PlotRange -> {-3, 5}, AxesLabel -> {"r", "Δr"},
+    PlotStyle -> {Directive[GrayLevel[0.5], Dashed], If[mK >= 0, orange, blue]}, ImageSize -> 400],
+   If[mK > 0, Grid[{{"Lichnerowicz λ₁ ≥ nK", 2 mK}, {"round sphere λ₁ = 2K", 2 mK}, {"Bonnet–Myers diam ≤ π/√K", N[π/Sqrt[mK]]}, {"Δr changes sign at r", N[π/(2 Sqrt[mK])]}}, Alignment -> Left],
+    Grid[{{"Lichnerowicz", "no bound for K ≤ 0"}, {"Δr → √|K| as r → ∞", N[Sqrt[-mK]]}}, Alignment -> Left]]}],
+ {{mK, 1, "K"}, -1, 2, 0.1, Appearance -> "Labeled"}, SaveDefinitions -> True]
 
 (* ::Section:: *)
 (*6. On a mesh, angle defect is curvature and the cotangent Laplacian is −2Hn (page: #mesh)*)
@@ -491,7 +496,7 @@ ListLogLogPlot[{2 π/#[[2]], #[[3]]} & /@ ({#["nu"], #["nv"], #["err"]} & /@ pag
 (* ::Text:: *)
 (*Fig. 8. Largest error of the mesh curvature against the mesh size for the four resolutions: slope about 2, second-order convergence.*)
 
-Manipulate[meshPicture[res], {{res, {40, 20}, "resolution"}, {{12, 6} -> "12 × 6", {24, 12} -> "24 × 12", {40, 20} -> "40 × 20", {64, 32} -> "64 × 32"}}, SaveDefinitions -> True]
+Manipulate[meshPicture[mRes], {{mRes, {40, 20}, "resolution"}, {{12, 6} -> "12 × 6", {24, 12} -> "24 × 12", {40, 20} -> "40 × 20", {64, 32} -> "64 × 32"}}, SaveDefinitions -> True]
 
 (* ::Section:: *)
 (*7. Seven graph curvatures, each built from the graph Laplacian (page: #graphs)*)
@@ -622,11 +627,12 @@ Legended[Grid[Partition[graphPicture[#, "be"] & /@ Keys[page["graphs"]], 4, 4, 1
 (* ::Text:: *)
 (*The animator: pick a graph and a curvature, as on the page; the readout gives min, max, mean (sum for resistance curvature) and the spectral bounds the page ticks.*)
 
-Manipulate[With[{w = N[wlValues[g, k]], sp = normSpec[graphOf[g]]},
-  Column[{Legended[graphPicture[g, k], kLegend[kScale[k], curvs[k][[1]]]],
-    Grid[{{"min", Min[w]}, {"max", Max[w]}, {If[k == "res", "sum", "mean"], If[k == "res", Total[w], Mean[w]]}, {"λ₁ (normalised)", sp[[2]]}, {"λmax", sp[[-1]]},
-      {"λ₁ ≥ min κLLY", sp[[2]] >= Min[N[wlValues[g, "lly"]]] - 10^-9}}, Alignment -> Left]}]],
- {{g, "dumbbell", "graph"}, Keys[page["graphs"]]}, {{k, "lly", "curvature"}, Thread[Keys[curvs] -> curvs[[All, 1]]]}, SaveDefinitions -> True]
+With[{graphs = Keys[page["graphs"]], curvatures = Normal[curvs[[All, 1]]]},
+ Manipulate[With[{w = N[wlValues[mGraph, mCurv]], sp = normSpec[graphOf[mGraph]]},
+   Column[{Legended[graphPicture[mGraph, mCurv], kLegend[kScale[mCurv], curvs[mCurv][[1]]]],
+     Grid[{{"min", Min[w]}, {"max", Max[w]}, {If[mCurv == "res", "sum", "mean"], If[mCurv == "res", Total[w], Mean[w]]}, {"λ₁ (normalised)", sp[[2]]}, {"λmax", sp[[-1]]},
+       {"λ₁ ≥ min κLLY", sp[[2]] >= Min[N[wlValues[mGraph, "lly"]]] - 10^-9}}, Alignment -> Left]}]],
+  {{mGraph, "dumbbell", "graph"}, graphs}, {{mCurv, "lly", "curvature"}, curvatures}, SaveDefinitions -> True]]
 
 (* ::Section:: *)
 (*8. Mean-curvature flow: a curve rounds itself off (page: #flows)*)
@@ -695,10 +701,11 @@ Row[{ListLinePlot[Table[runs[k, "hist"], {k, Keys[runs]}], PlotStyle -> {orange,
 (* ::Text:: *)
 (*Fig. 12. Area against time for the four starting curves, with the line of slope −2π from the wiggly start (dashed), and the wiggly curve at seven moments: it becomes convex, then round, and shrinks to a point.*)
 
-Manipulate[With[{fr = runs[kind, "frames"]}, Graphics[{Dashed, GrayLevel[0.6], Line[Append[#, First[#]] &[fr[[1]]]], Dashing[{}], orange, Thickness[0.008],
-    Line[Append[#, First[#]] &[fr[[Min[i, Length[fr]]]]]]}, PlotRange -> 1.6, ImageSize -> 380,
-   PlotLabel -> Row[{"area ", NumberForm[polyArea[fr[[Min[i, Length[fr]]]]], 4], ",  vertices ", Length[fr[[Min[i, Length[fr]]]]]}]]],
- {{kind, "wiggle", "start"}, Keys[runs]}, {{i, 1, "frame"}, 1, Max[Length[runs[#, "frames"]] & /@ Keys[runs]], 1, ControlType -> Animator, AnimationRate -> 10}, SaveDefinitions -> True]
+With[{starts = Keys[runs], nFrames = Max[Length[runs[#, "frames"]] & /@ Keys[runs]]},
+ Manipulate[With[{fr = runs[mStart, "frames"]}, With[{X = fr[[Min[mFrame, Length[fr]]]]},
+    Graphics[{Dashed, GrayLevel[0.6], Line[Append[fr[[1]], First[fr[[1]]]]], Dashing[{}], orange, Thickness[0.008], Line[Append[X, First[X]]]},
+     PlotRange -> 1.6, ImageSize -> 380, PlotLabel -> Row[{"area ", NumberForm[polyArea[X], 4], ",  vertices ", Length[X]}]]]],
+  {{mStart, "wiggle", "start"}, starts}, {{mFrame, 1, "frame"}, 1, nFrames, 1, ControlType -> Animator, AnimationRate -> 10}, SaveDefinitions -> True]]
 
 (* ::Section:: *)
 (*9. Comparing two ball averages measures Ricci curvature (page: #ollivier)*)
@@ -747,7 +754,7 @@ Row[{ollPlot[1], ollPlot[0], ollPlot[-1]}]
 (* ::Text:: *)
 (*Fig. 13. Ollivier curvature of ε-balls divided by ε², against ε, for K = 1, 0 and −1 (the page’s chart); the dashed line is K/8.*)
 
-Manipulate[ollPlot[K], {{K, 1}, -2, 2, 0.25, Appearance -> "Labeled"}, SaveDefinitions -> True]
+Manipulate[ollPlot[mK], {{mK, 1, "K"}, -2, 2, 0.25, Appearance -> "Labeled"}, SaveDefinitions -> True]
 
 (* ::Section:: *)
 (*10. Every Laplacian–curvature relationship on one sheet (page: #forms) and the free cell’s other snippets*)
