@@ -240,7 +240,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 3. **Notebook section numbers** cited from reading (e.g. "Factorial2 form (§4.6)", "Factorial form (§4.5)") not checked against the notebook.
 4. **Tutorial §5.6** lists results for the Section 4 cell (Δ³f vs (x+y+z)³) and the Section 12 Plot3D cell that were not run as those exact cells.
 5. **Laplacian Lab_version2 artifact** has none of the standalone version2 changes (by design for the key flow; the 𝒶𝓇𝓈 fix could still go in).
-6. **LaplacianLabKernel deployed form** untested end to end: the `With[…]`/`CloudDeploy` wrapper, reading the private key object, URL staying the same, and a real chat answer (only an invalid-key 401 was tested). The file ends with `URLExecute` checks.
+6. **LaplacianLabKernel — redeployed and checked end to end by the owner, 23 Nov 2026.** All three `URLExecute` checks passed on Wolfram 15: connect (`chat_ready -> True`), `code_b64` (Laplacian of x²y²z² = 2x²y² + 2x²z² + 2y²z²), and `mode=chat` (a real answer, Unicode intact). Closed.
 7. **Cloud API time limit.** Version 2 chat waits for the whole answer (no streaming). Long answers may hit the Wolfram Cloud plan's API timeout; lower `max_tokens` in the page if so.
 8. **LaplacianLabKernel.wl comments** still say WOLFRAM_KEY; the page now says CCN-KEY.
 9. **Remaining trade-off (version 2):** anyone with the CCN-KEY can use the TA chat at the owner's cost through the kernel, though they cannot read the chat key.
@@ -254,7 +254,6 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 
 - Cloud libraries (CloudPut/CloudGet) for the manual’s functions — the user is doing this.
 - Fix open issue 1 in both standalone files and both artifacts (ask before touching the original artifact).
-- Deploy the new LaplacianLabKernel and run the three `URLExecute` checks.
 - Bring the tutorial in line with version 2 (CCN-KEY field, Connect button, chat through the kernel).
 - Add a "show the steps" mode to Wolfram cells using `laplacianSteps` (staged evaluation, one checkable Out per step).
 - Start the Symbolic Teaching Assistant on top of version 2.
