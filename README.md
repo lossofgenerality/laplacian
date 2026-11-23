@@ -45,6 +45,10 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | 7 | 8 | Graph curvatures: Ollivier, Lin–Lu–Yau, Bakry–Émery, Forman, resistance, Steinerberger, Higuchi | LLY by LP and by transport agree; Σ resistance curvature = 1; Higuchi totals = 2 |
 | 8 | 9 | Discrete Lichnerowicz bounds; point-cloud Laplacian → Δ (Belkin–Niyogi) | bounds hold on 5 graphs; ratio 0.9997 on 20 000 points of S² |
 
+## Issues
+
+1. **Horizontal sliders (open, 23 Nov 2026).** The owner reports no horizontal slider on either site, in Firefox or Chrome, on a desktop. Wide content, especially the Laplacian formulas, is clipped instead of being resized or restructured, and then reads wrong. Done so far: drawn sliders (CCN Orange thumb) on every box that overflows, arrow buttons on the tab strips, tables that stack above their charts, and formulas that shrink to fit their column (down to 55%). Checks in the built-in browser at 1100 px and 640 px show no page-wide overflow, so no page slider appears. Still to settle: which spots are clipped on the owner's screen (screenshot), and whether a page-wide slider pinned to the bottom of the window is wanted. Affects https://lossofgenerality.github.io/Laplacian-lab/, https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html and both manuals.
+
 ## Running the notebook
 
 Open `notebooks/LaplacianCurvature.nb` in Mathematica (or upload it to Wolfram Cloud) and evaluate it top to bottom. Sections 2–6 use the toolkit defined in Section 1, and Section 9 uses the graph functions of Section 8. Requires Wolfram Language 13 or later (`LinearOptimization`, `SpherePoints`). The script version runs with `wolframscript -file notebooks/LaplacianCurvature.wl`.

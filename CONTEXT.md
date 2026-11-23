@@ -246,6 +246,7 @@ The prelude, kernel and `laplacianSteps` code are also saved verbatim in the use
 9. **Remaining trade-off (version 2):** anyone with the CCN-KEY can use the TA chat at the owner's cost through the kernel, though they cannot read the chat key.
 10. **Curvature notebook** has not been run whole in a desktop front end; cells were tested one by one on the connector kernel, and one summary line (§8.2) was wrong until the 23 Nov fix. CDE/CDE′ and entropic curvature are described, not computed. The general (non-constant-curvature) Gray–Willmore r⁴ coefficient is not stated. A sampled (point-cloud) Ollivier estimate on S² was tried and dropped: transport between ~200-point samples is biased by about ε²/8 itself; the exact sliding-coupling integral is used instead.
 11. **Lab source files** (`Laplacian_Lab*.html`, `LaplacianLabKernel.wl`, `laplacianSteps.wl`, tutorial) are not in the GitHub repo; add them from the user's copies if wanted.
+12. **Horizontal sliders / clipped formulas** (owner: none visible in Firefox or Chrome; wide Laplacians clipped). See README “Issues” for what is done and what is still to settle.
 
 ---
 
