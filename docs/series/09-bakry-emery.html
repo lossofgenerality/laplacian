@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Bakry–Émery Curvature — Computational Classnotes</title><style>@page { size: A4; margin: 20mm 18mm 22mm 18mm;
+  @bottom-center { content: "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"; } }
+body { font-family: "DejaVu Sans", sans-serif; font-size: 10.5pt; line-height: 1.45; color: #1d2430; }
+h1 { font-size: 20pt; margin: 0 0 4pt; color: #11161f; }
+h2 { font-size: 13.5pt; margin: 18pt 0 6pt; padding-bottom: 3pt; border-bottom: 2px solid rgb(250,143,43); break-after: avoid; }
+p, li { orphans: 3; widows: 3; }
+code { font-family: "DejaVu Sans Mono", monospace; font-size: 9pt; }
+table { border-collapse: collapse; width: 100%; font-size: 8.6pt; margin: 8pt 0; break-inside: auto; }
+th, td { border: 1px solid #c9d0db; padding: 3pt 5pt; vertical-align: top; text-align: left; }
+th { background: #eef1f6; }
+tr { break-inside: avoid; }
+img { max-width: 100%; max-height: 105mm; display: block; margin: 4pt auto; }
+figure { margin: 6pt 0; }
+figcaption { display: none; }
+math { font-family: "Latin Modern Math", "STIX Two Math", serif; }
+math[display="block"] { display: block; margin: 8pt 0; font-size: 11pt; }
+a { color: #1f5fbf; text-decoration: none; }
+hr { border: 0; border-top: 1px solid #c9d0db; margin: 16pt 0 8pt; }
+table { break-inside: avoid; }
+
+body{max-width:860px;margin:0 auto;padding:28px 22px 60px;background:#fff}
+img{max-width:100%;height:auto}
+canvas[data-fig3d]{width:100%;max-width:520px;height:440px;display:block;margin:6px auto;cursor:grab;touch-action:none}
+.fig3d-note{text-align:center;font-size:9pt;color:#666;margin-top:-2px}
+nav.wtop{font-size:10pt;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
+nav.wtop a{color:rgb(212,86,28)}
+@media print{canvas[data-fig3d]{display:none}.fig3d-fallback{display:block!important}}
+</style></head><body><nav class="wtop"><a href="09-bakry-emery.pdf">PDF</a><a href="https://github.com/lossofgenerality/laplacian/blob/main/docs/series/09-bakry-emery.md">Markdown</a><a href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html">Laplacian Curvature Lab</a></nav><h1 id="bakryémery-curvature">Bakry–Émery Curvature</h1>
+<p>23 November 2026 · Computational Classnotes · Curvature from the
+Laplacian, write-up 9</p>
+<p>Ricci curvature is what is left over in Bochner’s formula: Γ₂(f) =
+|Hess f|² + Ric(∇f, ∇f). Bakry and Émery noticed that both sides can be
+written with the Laplacian alone, through the carré du champ Γ and its
+iterate Γ₂. So the inequality Γ₂ ≥ (1/N)(Δf)² + KΓ makes sense wherever
+there is a Laplacian, including on a graph, and the best K is a
+curvature. On the round sphere it recovers Ric = 1 in dimension 2, and
+on graphs it is a small, exact eigenvalue problem. This write-up
+explains each part; the notebook
+<code>notebooks/series/09-Bakry-Emery.nb</code> proves each one on
+examples, with the same section numbers.</p>
+<h2 id="scope-and-conventions">Scope and conventions</h2>
+<ul>
+<li><strong>Laplacian.</strong> Δf(v) = (mean of f over the neighbours
+of v) − f(v), the random-walk normalisation used throughout the
+series.</li>
+<li><strong>Γ-calculus.</strong> Γ(f, g) = ½(Δ(fg) − fΔg − gΔf) and
+Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf). On a graph, Γ(f)(v) = ½ mean (f(w) − f(v))²
+over the neighbours w.</li>
+<li><strong>Curvature.</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
+is the largest K with Γ₂(f)(x) ≥ (1/N)(Δf(x))² + K Γ(f)(x) for all f;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+drops the dimension term.</li>
+<li><strong>Numbering.</strong> Sections 2–9 here match notebook
+Sections 2–9; notebook Section 1 is the toolkit. Every number quoted
+below was returned by the Wolfram kernel.</li>
+<li><strong>Companion.</strong> The Ollivier write-up (07) uses the same
+graphs, so the two curvatures can be compared (§8).</li>
+<li><strong>Repository.</strong>
+https://github.com/lossofgenerality/laplacian · Lab bench: <a
+href="https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#graphs">Graph
+curvatures</a>.</li>
+</ul>
+<h2 id="at-a-glance">At a glance</h2>
+<p><strong>On the unit sphere the Bochner inequality Γ₂ ≥ Γ + (Δg)²/2
+holds everywhere, with equality only at four points for this
+g.</strong></p>
+<figure>
+<canvas data-fig3d="be-sphere" aria-label="Rotatable 3D figure"></canvas><img class="fig3d-fallback" style="display:none" src="img/be-sphere.png" alt=""><div class="fig3d-note">3D: drag to rotate</div>
+<figcaption aria-hidden="true">Fig. 1</figcaption>
+</figure>
+<p><strong>Fig. 1.</strong> The slack Γ₂ − Γ − (Δg)²/2 of CD(1, 2) on
+the unit sphere for g = z + (x² − y²). It is zero only at the four
+equator points marked in black, and largest, 8, at the poles (§2). In
+the HTML version the sphere can be rotated.</p>
+<h2 id="bochners-formula-written-with-the-laplacian">2. Bochner’s
+formula, written with the Laplacian</h2>
+<p>On a Riemannian manifold, ½Δ|∇f|² = ⟨∇f, ∇Δf⟩ + |Hess f|² + Ric(∇f,
+∇f). With Γ(f) = |∇f|² and Γ₂(f) = ½ΔΓ(f) − Γ(f, Δf) this reads</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">|</mo><mo>Hess</mo><mi>f</mi><mo stretchy="true" form="postfix">|</mo></mrow><mn>2</mn></msup><mo>+</mo><mo>Ric</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mi>f</mi><mo>,</mo><mi>∇</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_2(f)=|\operatorname{Hess} f|^2+\operatorname{Ric}(\nabla f,\nabla f).
+</annotation></semantics></math></p>
+<p>On the unit sphere S², Ric = 1, so Γ₂ − Γ = |Hess f|². In dimension
+2, |Hess f|² ≥ (Δf)²/2, because the trace of a 2 × 2 symmetric matrix
+squared is at most twice the sum of its squared entries. So</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mo>≥</mo><mspace width="0.222em"></mspace><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="2.0em"></mspace><mrow><mtext mathvariant="normal">on </mtext><mspace width="0.333em"></mspace></mrow><msup><mi>S</mi><mn>2</mn></msup><mo>:</mo><mspace width="0.222em"></mspace><mrow><mtext mathvariant="normal">the sphere satisfies </mtext><mspace width="0.333em"></mspace></mrow><mi>C</mi><mi>D</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_2(f)\ \ge\ \tfrac12(\Delta f)^2+\Gamma(f)\qquad\text{on }S^2:\ \text{the sphere satisfies }CD(1,2).
+</annotation></semantics></math></p>
+<p>Equality needs a Hessian that is a multiple of the metric. The height
+z = cos θ is the first eigenfunction (Δz = −2z) and attains it
+everywhere: Γ₂(z) = 1 + z², Γ(z) = 1 − z² and (Δz)²/2 = 2z². For g = z +
+(x² − y²), mixing the first two eigenspaces, the slack is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><mi>g</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>=</mo><mn>8</mn><mo>−</mo><mn>8</mn><msup><mo>sin</mo><mn>2</mn></msup><mi>θ</mi><mo>+</mo><msup><mo>sin</mo><mn>4</mn></msup><mi>θ</mi><mspace width="0.167em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo>+</mo><mo>cos</mo><mn>4</mn><mi>φ</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo></mrow><annotation encoding="application/x-tex">
+\Gamma_2(g)-\Gamma(g)-\tfrac12(\Delta g)^2=8-8\sin^2\theta+\sin^4\theta\,(1+\cos4\varphi),
+</annotation></semantics></math></p>
+<p>which vanishes only where sin θ = 1 and cos 4φ = −1 (Fig. 1).</p>
+<p><strong>Checked (notebook §2):</strong> Γ₂ − Γ − |Hess F|² simplifies
+to 0 for an arbitrary F(θ, φ); for z the slack is exactly 0; for g the
+slack equals the formula above, ranges over [0, 8], and is 1 + cos 4φ on
+the equator.</p>
+<h2 id="definition-on-graphs">3. Definition on graphs</h2>
+<p>A graph has no Hessian and no Ricci tensor, but it has a Laplacian,
+so Γ and Γ₂ are defined. Bakry–Émery curvature imposes the Bochner
+inequality directly:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mo>≥</mo><mspace width="0.222em"></mspace><mfrac><mn>1</mn><mi>N</mi></mfrac><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mi>Δ</mi><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><msup><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo><mn>2</mn></msup><mo>+</mo><mi>K</mi><mspace width="0.167em"></mspace><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="1.0em"></mspace><mrow><mtext mathvariant="normal">for all </mtext><mspace width="0.333em"></mspace></mrow><mi>f</mi><mo>,</mo><mspace width="2.0em"></mspace><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mtext mathvariant="normal">the largest such </mtext><mspace width="0.333em"></mspace></mrow><mi>K</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_2(f)(x)\ \ge\ \frac1N\big(\Delta f(x)\big)^2+K\,\Gamma(f)(x)\quad\text{for all }f,\qquad K_N(x)=\text{the largest such }K.
+</annotation></semantics></math></p>
+<p>Γ(f)(x) depends on f on the 1-ball of x and Γ₂(f)(x) on the 2-ball.
+Both are quadratic forms in those values, and constants drop out. So
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
+is a finite problem. Minimise first over the values at distance 2 (a
+Schur complement); then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
+is the smallest generalised eigenvalue of the reduced Γ₂ − (Δf)²/N
+against Γ on the neighbours. This is the reformulation of Cushing,
+Kamtue, Liu and Peyerimhoff, and the notebook computes it exactly.</p>
+<p><strong>Checked (notebook §3), minimum over vertices:</strong> tree
+−1/3, C₆ 0, Q₃ 2/3, K₅ 7/8, Petersen −1/3, 4×4 grid 0.0876, dumbbell (2
+− √34)/10 ≈ −0.383.</p>
+<h2 id="worked-by-hand">4. Worked by hand</h2>
+<p><strong>One edge K₂.</strong> Put f(x) = 0 and f(y) = t. Then Δf(x) =
+t and Δf(y) = −t. Γ(f) = t²/2 at both ends, so ΔΓ(f)(x) = 0. And Γ(f,
+Δf)(x) = ½(t − 0)(−t − t) = −t². Hence</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>0</mn><mo>−</mo><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><msup><mi>t</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>t</mi><mn>2</mn></msup><mo>,</mo><mspace width="2.0em"></mspace><mfrac><msub><mi>Γ</mi><mn>2</mn></msub><mi>Γ</mi></mfrac><mo>=</mo><mn>2</mn><mo>:</mo><mspace width="1.0em"></mspace><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>2</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_2(f)(x)=0-(-t^2)=t^2,\qquad \frac{\Gamma_2}{\Gamma}=2:\quad K_\infty(K_2)=2.
+</annotation></semantics></math></p>
+<p>With the dimension term, t² − t²/N ≥ K t²/2 gives
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(K_2)</annotation></semantics></math>
+= 2 − 2/N: 0, 1, 3/2, 9/5 for N = 1, 2, 4, 10.</p>
+<p><strong>Long cycles are flat.</strong> On Cₙ with n ≥ 5, let f be the
+position along the path through x, with values −2, −1, 0, 1, 2 on the
+2-ball. Then Δf = 0 at x and its neighbours. Γ(f) = ½ at every vertex,
+so ΔΓ = 0. Hence Γ₂(f)(x) = 0 while Γ(f)(x) = ½, and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+≤ 0. The kernel gives exactly 0; C₃ = K₃ gives 5/4 and C₄ = Q₂ gives
+1.</p>
+<p><strong>Complete graphs.</strong> On Kₙ every other vertex is a
+neighbour, so there is no 2-ball part, and the same calculation
+gives</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mrow><mi>n</mi><mo>+</mo><mn>2</mn></mrow><mrow><mn>2</mn><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mo>:</mo><mspace width="2.0em"></mspace><mn>2</mn><mo>,</mo><mspace width="0.222em"></mspace><mfrac displaystyle="false"><mn>5</mn><mn>4</mn></mfrac><mo>,</mo><mspace width="0.222em"></mspace><mn>1</mn><mo>,</mo><mspace width="0.222em"></mspace><mfrac displaystyle="false"><mn>7</mn><mn>8</mn></mfrac><mo>,</mo><mspace width="0.222em"></mspace><mi>…</mi><mspace width="0.222em"></mspace><mo>→</mo><mspace width="0.222em"></mspace><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+K_\infty(K_n)=\frac{n+2}{2(n-1)}:\qquad 2,\ \tfrac54,\ 1,\ \tfrac78,\ \dots\ \to\ \tfrac12 .
+</annotation></semantics></math></p>
+<p><strong>Checked (notebook §4):</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(K_2)</annotation></semantics></math>
+= 2 and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>N</mi></msub><annotation encoding="application/x-tex">K_{N}</annotation></semantics></math>
+= 0, 1, 3/2, 9/5 for N = 1, 2, 4, 10; Cₙ gives 5/4, 1, 0, 0, 0, 0, 0 for
+n = 3 … 9; Kₙ matches (n + 2)/(2(n − 1)) for n = 2 … 8.</p>
+<h2 id="families-and-a-gallery">5. Families and a gallery</h2>
+<p>The hypercube
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Q</mi><mi>d</mi></msub><annotation encoding="application/x-tex">Q_{d}</annotation></semantics></math>
+has
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+= 2/d at every vertex. The binary tree is negative at the root and
+branch vertices and positive at the leaves. On the dumbbell the two
+bridge vertices are the most negative, and the vertex where a clique
+meets the bridge is just below zero.</p>
+<figure>
+<img src="img/be-gallery.png" alt="Fig. 2" />
+<figcaption aria-hidden="true">Fig. 2</figcaption>
+</figure>
+<p><strong>Fig. 2.</strong> Seven graphs with every vertex coloured by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>,
+on the same blue–white–orange scale as the Ollivier gallery. Complete
+graphs and cubes are positive and long cycles flat; tree branch points,
+Petersen and the dumbbell’s bridge are negative.</p>
+<p><strong>Checked (notebook §5):</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Q</mi><mi>d</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(Q_d)</annotation></semantics></math>
+= 2, 1, 2/3, 1/2, 2/5 for d = 1 … 5. Tree: root −1/3, second level −1/3,
+third level (5 − √33)/6 ≈ −0.124, leaf 2/3. Dumbbell: clique vertex (93
+− √793)/80 ≈ 0.81, attaching vertex (35 − √1385)/80 ≈ −0.028, bridge
+vertices (2 − √34)/10 ≈ −0.383.</p>
+<h2 id="dimension-the-curve-k_n">6. Dimension: the curve
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>N</mi></msub><annotation encoding="application/x-tex">K_{N}</annotation></semantics></math></h2>
+<p>The dimension term can only lower the curvature, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
+increases with N and tends to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(x)</annotation></semantics></math>.
+Cushing, Liu and Peyerimhoff study this curvature function N ↦
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
+systematically.</p>
+<figure>
+<img src="img/be-dimension.png" alt="Fig. 3" />
+<figcaption aria-hidden="true">Fig. 3</figcaption>
+</figure>
+<p><strong>Fig. 3.</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>N</mi></msub><annotation encoding="application/x-tex">K_{N}</annotation></semantics></math>
+against N on four vertex-transitive graphs. K₅ and Q₃ only approach
+their
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+(7/8 and 2/3, dashed). C₆ and Petersen reach theirs (0 and −1/3) already
+at N = 2: there the function that attains
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+has Δf(x) = 0, so the dimension term costs nothing.</p>
+<p>Lin and Yau proved a universal lower bound in dimension 2: every
+graph with maximum degree D satisfies</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>Γ</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mo>≥</mo><mspace width="0.222em"></mspace><mfrac displaystyle="false"><mn>1</mn><mn>2</mn></mfrac><msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>+</mo><mo minsize="1.8" maxsize="1.8" stretchy="false" form="prefix">(</mo><mfrac><mn>1</mn><mi>D</mi></mfrac><mo>−</mo><mn>1</mn><mo minsize="1.8" maxsize="1.8" stretchy="false" form="postfix">)</mo><mi>Γ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mspace width="2.0em"></mspace><mtext mathvariant="normal">that is</mtext><mspace width="1.0em"></mspace><msub><mi>K</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mo>≥</mo><mspace width="0.222em"></mspace><mfrac><mn>1</mn><mi>D</mi></mfrac><mo>−</mo><mn>1</mn><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\Gamma_2(f)\ \ge\ \tfrac12(\Delta f)^2+\Big(\frac1D-1\Big)\Gamma(f),\qquad\text{that is}\quad K_2(x)\ \ge\ \frac1D-1 .
+</annotation></semantics></math></p>
+<p><strong>Checked (notebook §6):</strong> the four curves increase in
+N;
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mn>2</mn></msub><annotation encoding="application/x-tex">K_{2}</annotation></semantics></math>
+≥ 1/D − 1 holds at every vertex of all seven graphs of Fig. 2.</p>
+<h2 id="what-a-lower-bound-buys">7. What a lower bound buys</h2>
+<p><strong>Lichnerowicz.</strong> If every vertex satisfies CD(K, N)
+with K &gt; 0, the first non-zero eigenvalue of −Δ satisfies</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>λ</mi><mn>1</mn></msub><mspace width="0.222em"></mspace><mo>≥</mo><mspace width="0.222em"></mspace><mfrac><mi>N</mi><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mspace width="0.167em"></mspace><mi>K</mi><mo>,</mo><mspace width="2.0em"></mspace><mtext mathvariant="normal">and</mtext><mspace width="1.0em"></mspace><msub><mi>λ</mi><mn>1</mn></msub><mo>≥</mo><mi>K</mi><mspace width="0.222em"></mspace><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> for </mtext><mspace width="0.333em"></mspace></mrow><mi>N</mi><mo>=</mo><mi>∞</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\lambda_1\ \ge\ \frac{N}{N-1}\,K,\qquad\text{and}\quad \lambda_1\ge K\ \text{ for }N=\infty .
+</annotation></semantics></math></p>
+<p><strong>Bonnet–Myers.</strong> Liu, Münch and Peyerimhoff prove diam
+≤ 2
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mo>max</mo></msub><annotation encoding="application/x-tex">D_{\max}</annotation></semantics></math>/K
+under CD(K, ∞) for the unnormalised Laplacian, sharp on hypercubes. For
+a d-regular graph the normalised Laplacian here is 1/d times the
+unnormalised one, so K scales by 1/d and the bound reads</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>diam</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>G</mi><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><mo>≤</mo><mspace width="0.222em"></mspace><mfrac><mn>2</mn><msub><mi>K</mi><mi>∞</mi></msub></mfrac><mspace width="2.0em"></mspace><mrow><mo stretchy="true" form="prefix">(</mo><mi>G</mi><mspace width="0.222em"></mspace><mtext mathvariant="normal">regular</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\operatorname{diam}(G)\ \le\ \frac{2}{K_\infty}\qquad(G\ \text{regular}).
+</annotation></semantics></math></p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Graph</th>
+<th>λ₁</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math></th>
+<th>best NK/(N − 1), N ≤ 50</th>
+<th>diam</th>
+<th>2/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>K₃</td>
+<td>1.5</td>
+<td>5/4</td>
+<td>1.235</td>
+<td>1</td>
+<td>8/5</td>
+</tr>
+<tr class="even">
+<td>K₅</td>
+<td>1.25</td>
+<td>7/8</td>
+<td>0.852</td>
+<td>1</td>
+<td>16/7</td>
+</tr>
+<tr class="odd">
+<td>Q₃</td>
+<td>0.667</td>
+<td>2/3</td>
+<td>0.639</td>
+<td>3</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>Q₄</td>
+<td>0.5</td>
+<td>1/2</td>
+<td>0.469</td>
+<td>4</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Checked (notebook §7):</strong> λ₁ ≥
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+in every row, with equality on Q₃ and Q₄. On these graphs the N = ∞
+bound is the strongest, since the best finite-N bound is lower. diam ≤
+2/<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+in every row, with equality on Q₂, Q₃ and Q₄.</p>
+<h2 id="bakryémery-and-ollivier-side-by-side">8. Bakry–Émery and
+Ollivier side by side</h2>
+<p>Both curvatures copy one property of Ricci curvature: Bakry–Émery the
+Bochner formula, Ollivier the transport of small balls. On these graphs
+they agree in sign but not in size.</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Graph</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+(min)</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>κ</mi><mrow><mi mathvariant="normal">L</mi><mi mathvariant="normal">L</mi><mi mathvariant="normal">Y</mi></mrow></msub><annotation encoding="application/x-tex">\kappa_{\mathrm{LLY}}</annotation></semantics></math>
+(min, write-up 07)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>K₅</td>
+<td>7/8</td>
+<td>5/4</td>
+</tr>
+<tr class="even">
+<td>Q₃</td>
+<td>2/3</td>
+<td>2/3</td>
+</tr>
+<tr class="odd">
+<td>C₆</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>Petersen</td>
+<td>−1/3</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>4×4 grid</td>
+<td>0.0876</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Checked (notebook §8):</strong> Q₃ gives 2/3 for both; on K₅
+Ollivier is larger; on Petersen Bakry–Émery is negative while Lin–Lu–Yau
+is 0; on the grid Bakry–Émery is slightly positive at every vertex while
+Lin–Lu–Yau has flat edges.</p>
+<h2 id="exercises">9. Exercises</h2>
+<ol type="1">
+<li>Show by hand that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mn>3</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(K_3)</annotation></semantics></math>
+= 5/4.</li>
+<li>Derive
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(K_2)</annotation></semantics></math>
+= 2 − 2/N from the K₂ calculation in §4.</li>
+<li>Find f on C₄ with Γ₂(f) = Γ(f) at a vertex, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>C</mi><mn>4</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(C_4)</annotation></semantics></math>
+≤ 1.</li>
+<li>Prove
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>Q</mi><mi>d</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(Q_d)</annotation></semantics></math>
+≤ 2/d with f = one coordinate.</li>
+<li>On S², show that the slack of g is 8 − 8 sin²θ + sin⁴θ (1 + cos 4φ)
+and find its four zeros.</li>
+</ol>
+<p><strong>Checked (notebook §9):</strong>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>K</mi><mn>3</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(K_3)</annotation></semantics></math>
+= 5/4,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>∞</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>C</mi><mn>4</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{\infty}(C_4)</annotation></semantics></math>
+= 1, and the slack is 0 at θ = π/2, φ = π/4.</p>
+<h2 id="verified-results">Verified results</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Graph</th>
+<th><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+(min over vertices)</th>
+<th>exact form</th>
+<th>λ₁</th>
+<th>diam</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>K₂</td>
+<td>2</td>
+<td>2</td>
+<td>—</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>K₅</td>
+<td>0.875</td>
+<td>7/8</td>
+<td>1.25</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>Q₃</td>
+<td>0.667</td>
+<td>2/3</td>
+<td>0.667</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td>C₆</td>
+<td>0</td>
+<td>0</td>
+<td>0.5</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>Petersen</td>
+<td>−0.333</td>
+<td>−1/3</td>
+<td>0.667</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>4×4 grid</td>
+<td>0.0876</td>
+<td>algebraic</td>
+<td>—</td>
+<td>6</td>
+</tr>
+<tr class="odd">
+<td>Binary tree (15 vertices)</td>
+<td>−0.333</td>
+<td>−1/3</td>
+<td>0.057</td>
+<td>6</td>
+</tr>
+<tr class="even">
+<td>Dumbbell</td>
+<td>−0.383</td>
+<td>(2 − √34)/10</td>
+<td>0.029</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+is exact in every row. Where it is positive, the Lichnerowicz bound λ₁ ≥
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>K</mi><mi>∞</mi></msub><annotation encoding="application/x-tex">K_{\infty}</annotation></semantics></math>
+holds, with equality on Q₃. The λ₁ values for C₆, Petersen, the tree and
+the dumbbell are from write-up 07.</p>
+<h2 id="references">References</h2>
+<p>Every item below was opened (abstract or full text) on 23 November
+2026 unless marked otherwise; the notes say what each contributes.</p>
+<p><strong>1. The Γ-calculus and curvature-dimension</strong></p>
+<ul>
+<li>D. Bakry, M. Émery, <em>Diffusions hypercontractives</em>, Séminaire
+de probabilités XIX, Lecture Notes in Math. 1123, Springer (1985),
+177–206. <a
+href="https://doi.org/10.1007/BFb0075847">doi:10.1007/BFb0075847</a>, <a
+href="https://www.numdam.org/item/SPS_1985__19__177_0/">Numdam</a>. The
+Γ₂ criterion: a strong positivity of Γ₂ gives hypercontractivity.</li>
+<li>D. Bakry, I. Gentil, M. Ledoux, <em>Analysis and Geometry of Markov
+Diffusion Operators</em>, Grundlehren der mathematischen Wissenschaften
+348, Springer (2014). <a
+href="https://doi.org/10.1007/978-3-319-00227-9">doi:10.1007/978-3-319-00227-9</a>.
+The standard reference for Γ, Γ₂ and CD(K, N), with Poincaré, Sobolev
+and log-Sobolev consequences.</li>
+<li>D. Bakry, M. Ledoux, <em>Sobolev inequalities and Myers’s diameter
+theorem for an abstract Markov generator</em>, Duke Math. J. 85 (1996),
+no. 1, 253–270. Cited from the reference list of Liu–Münch–Peyerimhoff;
+not opened.</li>
+</ul>
+<p><strong>2. From diffusions to graphs</strong></p>
+<ul>
+<li>M. Schmuckenschläger, <em>Curvature of nonlocal Markov
+generators</em>, in <em>Convex Geometric Analysis</em>, MSRI
+Publications 34 (1998), from p. 189. <a
+href="https://library.slmath.org/books/Book34/files/schmuck1.pdf">PDF</a>.
+Extends the curvature-dimension condition to nonlocal generators, which
+gives a curvature for graphs, local to the 2-ball.</li>
+<li>Y. Lin, S.-T. Yau, <em>Ricci curvature and eigenvalue estimate on
+locally finite graphs</em>, Math. Res. Lett. 17 (2010), no. 2, 343–356.
+<a
+href="https://doi.org/10.4310/MRL.2010.v17.n2.a13">doi:10.4310/MRL.2010.v17.n2.a13</a>.
+CD on graphs, the universal bound K₂ ≥ 1/D − 1 (§6), and eigenvalue
+estimates.</li>
+<li>Y. Lin, S.-T. Yau, <em>A brief review on geometry and spectrum of
+graphs</em>. <a
+href="https://arxiv.org/abs/1204.3168">arXiv:1204.3168</a>. States Γ₂ ≥
+½(Δf)² + (1/d − 1)Γ in the normalisation used here.</li>
+</ul>
+<p><strong>3. Curvature functions and computation</strong></p>
+<ul>
+<li>D. Cushing, S. Liu, N. Peyerimhoff, <em>Bakry–Émery curvature
+functions on graphs</em>, Canad. J. Math. 72 (2020), no. 1, 89–143. <a
+href="https://doi.org/10.4153/CJM-2018-015-4">doi:10.4153/CJM-2018-015-4</a>,
+<a href="https://arxiv.org/abs/1606.01496">arXiv:1606.01496</a>. The
+function N ↦
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>K</mi><mi>N</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>x</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">K_{N}(x)</annotation></semantics></math>
+(§6), products, Cayley and strongly regular graphs.</li>
+<li>D. Cushing, S. Kamtue, S. Liu, N. Peyerimhoff, <em>Bakry–Émery
+curvature on graphs as an eigenvalue problem</em>, Calc. Var. Partial
+Differential Equations 61 (2022), 62. <a
+href="https://arxiv.org/abs/2102.08687">arXiv:2102.08687</a>. The
+Schur-complement eigenvalue formulation used in the notebook (§3).</li>
+<li>D. Cushing, R. Kangaslampi, V. Lipiäinen, S. Liu, G. W. Stagg,
+<em>The Graph Curvature Calculator and the curvatures of cubic
+graphs</em>, Experiment. Math. 31 (2022), no. 2, 583–595. <a
+href="https://doi.org/10.1080/10586458.2019.1660740">doi:10.1080/10586458.2019.1660740</a>,
+<a href="https://arxiv.org/abs/1712.03033">arXiv:1712.03033</a>.
+Classifies the non-negatively curved cubic graphs (prisms and Möbius
+ladders) for both Ollivier and Bakry–Émery; the online <a
+href="https://www.mas.ncl.ac.uk/graph-curvature">Graph Curvature
+Calculator</a> gives an independent check of the values here.</li>
+</ul>
+<p><strong>4. Consequences: spectrum, diameter, heat
+kernels</strong></p>
+<ul>
+<li>F. Bauer, F. Chung, Y. Lin, Y. Liu, <em>Curvature aspects of
+graphs</em>, Proc. Amer. Math. Soc. 145 (2017), no. 5, 2033–2042. <a
+href="https://doi.org/10.1090/proc/13145">doi:10.1090/proc/13145</a>.
+Lichnerowicz-type eigenvalue bounds under CD (§7).</li>
+<li>S. Liu, F. Münch, N. Peyerimhoff, <em>Bakry–Émery curvature and
+diameter bounds on graphs</em>, Calc. Var. Partial Differential
+Equations 57 (2018), no. 2, 67. <a
+href="https://doi.org/10.1007/s00526-018-1334-x">doi:10.1007/s00526-018-1334-x</a>,
+<a href="https://arxiv.org/abs/1608.07778">arXiv:1608.07778</a>.
+Discrete Bonnet–Myers, diam ≤ 2
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mo>max</mo></msub><annotation encoding="application/x-tex">D_{\max}</annotation></semantics></math>/K,
+sharp on hypercubes (§7).</li>
+<li>S. Liu, F. Münch, N. Peyerimhoff, C. Rose, <em>Distance bounds for
+graphs with some negative Bakry–Émery curvature</em>. <a
+href="https://arxiv.org/abs/1705.08119">arXiv:1705.08119</a>. Diameter
+bounds when the curvature is positive outside an exceptional set.</li>
+<li>F. Bauer, P. Horn, Y. Lin, G. Lippner, D. Mangoubi, S.-T. Yau,
+<em>Li–Yau inequality on graphs</em>, J. Differential Geom. 99 (2015),
+359–405. Cited from a reference list; not opened. The exponential
+curvature-dimension condition CDE.</li>
+<li>P. Horn, Y. Lin, S. Liu, S.-T. Yau, <em>Volume doubling, Poincaré
+inequality and Gaussian heat kernel estimate for non-negatively curved
+graphs</em>, J. Reine Angew. Math. 757 (2019), 89–130. Cited from a
+reference list; not opened.</li>
+<li>B. Hua, Y. Lin, <em>Stochastic completeness for graphs with
+curvature dimension conditions</em>, Adv. Math. 306 (2017), 279–302.
+Cited from a reference list; not opened.</li>
+<li>F. Münch, <em>Remarks on curvature dimension conditions on
+graphs</em>, Calc. Var. Partial Differential Equations 56 (2017), no. 1,
+11. Cited from a reference list; not opened.</li>
+</ul>
+<p><strong>5. Related curvatures</strong></p>
+<ul>
+<li>J. Jost, S. Liu, <em>Ollivier’s Ricci curvature, local clustering
+and curvature-dimension inequalities on graphs</em>, Discrete Comput.
+Geom. 51 (2014), no. 2, 300–322. <a
+href="https://doi.org/10.1007/s00454-013-9558-1">doi:10.1007/s00454-013-9558-1</a>.
+Relates Ollivier curvature to curvature-dimension inequalities
+(§8).</li>
+<li>B. Klartag, G. Kozma, P. Ralli, P. Tetali, <em>Discrete curvature
+and abelian groups</em>, Canad. J. Math. 68 (2016), no. 3, 655–674.
+Cited from a reference list; not opened. Bakry–Émery curvature of Cayley
+graphs of abelian groups.</li>
+<li>M. Erbar, J. Maas, <em>Ricci curvature of finite Markov chains via
+convexity of the entropy</em>, Arch. Ration. Mech. Anal. (2012). <a
+href="https://arxiv.org/abs/1111.2687">arXiv:1111.2687</a>. The entropic
+curvature, a third discrete Ricci curvature.</li>
+<li>Y. Ollivier, <em>Ricci curvature of Markov chains on metric
+spaces</em>, J. Funct. Anal. 256 (2009), 810–864. <a
+href="https://arxiv.org/abs/math/0701886">arXiv:math/0701886</a>. The
+transport curvature of write-up 07.</li>
+</ul>
+<p>© Computational Classnotes · CC BY-NC-SA 4.0</p>
+<footer style="margin-top:30px;font-size:9pt;color:#666">© 2026 Computational Classnotes · CC BY-NC-SA 4.0</footer><script>/* CCN rotatable 3D figures for the HTML write-ups (no libraries). © Computational Classnotes · CC BY-NC-SA 4.0 */
+(function () {
+  const ORANGE = [250, 143, 43], BLUE = [46, 92, 199];
+  const mix = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
+  const rot = (p, ax, ay) => { // rotate about y (ay) then x (ax)
+    let [x, y, z] = p; const cy = Math.cos(ay), sy = Math.sin(ay);
+    [x, z] = [cy * x + sy * z, -sy * x + cy * z];
+    const cx = Math.cos(ax), sx = Math.sin(ax);
+    [y, z] = [cx * y - sx * z, sx * y + cx * z];
+    return [x, y, z];
+  };
+  const rz = (p, t) => [Math.cos(t) * p[0] - Math.sin(t) * p[1], Math.sin(t) * p[0] + Math.cos(t) * p[1], p[2]];
+  // points of the eps-ball around (1,0,0): spherical cap, Fibonacci sampling
+  function capPoints(eps, n) {
+    const out = [], c = Math.cos(eps);
+    for (let i = 0; i < n; i++) {
+      const u = 1 - (1 - c) * (i + 0.5) / n, a = i * Math.PI * (3 - Math.sqrt(5)), s = Math.sqrt(1 - u * u);
+      out.push([u, s * Math.cos(a), s * Math.sin(a)]); // axis = +x
+    }
+    return out.map(p => [p[0], p[1], p[2]]).map(p => [p[0], p[2], p[1]]).map(p => [p[0], p[1], p[2]]);
+  }
+  function ollivierSphere(cv) {
+    const delta = 0.7, eps = 0.42, pts = capPoints(eps, 90).map(p => [p[0], p[1], p[2]]);
+    // ball centred at x=(1,0,0) on the equator z=0; geodesic = equator; rotation about z by delta
+    const ball = pts.map(p => [p[0], p[2], p[1]]); // keep z as latitude direction
+    let ax = 0.45, ay = 0.0, drag = null;
+    const ctx = cv.getContext('2d');
+    function draw() {
+      const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const R = Math.min(W, H) * 0.42, cx = W / 2, cy = H / 2 + 6;
+      const P = q => { const v = rz(q, -delta / 2), r = rot([v[1], v[2], v[0]], ax, ay); return [cx + R * r[0], cy - R * r[1], r[2]]; };
+      ctx.clearRect(0, 0, W, H);
+      const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R);
+      g.addColorStop(0, '#fbfaf7'); g.addColorStop(1, '#d9d6cf');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+      const seg = (pts3, style, width, dash) => { // polyline, faint when behind
+        for (let i = 0; i + 1 < pts3.length; i++) {
+          const a = P(pts3[i]), b = P(pts3[i + 1]); const front = a[2] + b[2] > 0;
+          ctx.strokeStyle = style; ctx.globalAlpha = front ? 1 : 0.18; ctx.lineWidth = width; ctx.setLineDash(dash || []);
+          ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+        }
+        ctx.globalAlpha = 1; ctx.setLineDash([]);
+      };
+      // meridians/parallels
+      for (let k = 0; k < 12; k++) { const t = k * Math.PI / 6; seg(Array.from({length: 49}, (_, i) => { const s = -Math.PI / 2 + i * Math.PI / 48; return [Math.cos(s) * Math.cos(t), Math.cos(s) * Math.sin(t), Math.sin(s)]; }), '#bdb8ae', 0.6); }
+      for (const la of [-60, -30, 30, 60]) { const s = la * Math.PI / 180; seg(Array.from({length: 73}, (_, i) => { const t = i * Math.PI / 36; return [Math.cos(s) * Math.cos(t), Math.cos(s) * Math.sin(t), Math.sin(s)]; }), '#bdb8ae', 0.6); }
+      // geodesic (equator) and cap boundaries
+      seg(Array.from({length: 81}, (_, i) => { const t = -0.4 + i * (delta + 0.8) / 80; return [Math.cos(t), Math.sin(t), 0]; }), '#333', 2.2);
+      const circ = c => Array.from({length: 73}, (_, i) => { const t = i * Math.PI / 36; return rz([Math.cos(eps), Math.sin(eps) * Math.cos(t), Math.sin(eps) * Math.sin(t)], c); }).map(p => [p[0], p[1], p[2]]);
+      seg(circ(0).map(p => [p[0], p[1], p[2]]), '#222', 1.4); seg(circ(delta), '#222', 1.4);
+      // arrows: each point slides along its latitude circle by delta; colour = cos(lambda)
+      for (const p of ball) {
+        const lam = Math.asin(Math.max(-1, Math.min(1, p[2]))), t = (Math.cos(lam) - Math.cos(eps)) / (1 - Math.cos(eps));
+        const col = 'rgb(' + mix(BLUE, ORANGE, t).join(',') + ')';
+        const path = Array.from({length: 13}, (_, i) => rz(p, delta * i / 12));
+        seg(path, col, 1.3);
+        const a = P(path[11]), b = P(path[12]);
+        if (b[2] > 0) { const ang = Math.atan2(b[1] - a[1], b[0] - a[0]); ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - 6 * Math.cos(ang - 0.4), b[1] - 6 * Math.sin(ang - 0.4)); ctx.lineTo(b[0] - 6 * Math.cos(ang + 0.4), b[1] - 6 * Math.sin(ang + 0.4)); ctx.fill(); }
+      }
+      // centres
+      for (const [q, lab] of [[[1, 0, 0], 'x'], [rz([1, 0, 0], delta), 'y']]) {
+        const s = P(q); if (s[2] < 0) continue; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(s[0], s[1], 4, 0, 2 * Math.PI); ctx.fill();
+        ctx.font = 'bold 15px DejaVu Sans, sans-serif'; ctx.fillText(lab, s[0] + 7, s[1] + 16);
+      }
+    }
+    const pos = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
+    const down = e => { drag = pos(e); e.preventDefault(); };
+    const move = e => { if (!drag) return; const p = pos(e); ay += (p[0] - drag[0]) * 0.01; ax += (p[1] - drag[1]) * 0.01; ax = Math.max(-1.5, Math.min(1.5, ax)); drag = p; draw(); e.preventDefault(); };
+    cv.addEventListener('mousedown', down); addEventListener('mousemove', move); addEventListener('mouseup', () => drag = null);
+    cv.addEventListener('touchstart', down, {passive: false}); cv.addEventListener('touchmove', move, {passive: false}); cv.addEventListener('touchend', () => drag = null);
+    addEventListener('resize', draw); draw();
+  }
+  // Bakry–Émery: slack of CD(1,2) on the unit sphere for g = z + (x^2 - y^2); slack = 8 - 8 sin^2 t + sin^4 t (1 + cos 4p)
+  function beSphere(cv) {
+    const ctx = cv.getContext('2d'); let ax = 0.35, ay = -0.6, drag = null;
+    const W0 = [247, 247, 247], O = [250, 143, 43], D = [163, 82, 6];
+    const col = v => { const u = Math.max(0, Math.min(1, v / 8)); return u < 0.5 ? mix(W0, O, u * 2) : mix(O, D, (u - 0.5) * 2); };
+    const slack = (t, p) => { const s = Math.sin(t) ** 2; return 8 - 8 * s + s * s * (1 + Math.cos(4 * p)); };
+    const pt = (t, p) => [Math.sin(t) * Math.cos(p), Math.sin(t) * Math.sin(p), Math.cos(t)];
+    const NT = 36, NP = 72;
+    function draw() {
+      const dpr = window.devicePixelRatio || 1, W = cv.clientWidth, H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const R = Math.min(W, H) * 0.40, cx = W / 2, cy = H / 2;
+      const P = q => { const r = rot([q[1], q[2], q[0]], ax, ay); return [cx + R * r[0], cy - R * r[1], r[2]]; };
+      const quads = [];
+      for (let i = 0; i < NT; i++) for (let j = 0; j < NP; j++) {
+        const t0 = Math.PI * i / NT, t1 = Math.PI * (i + 1) / NT, p0 = 2 * Math.PI * j / NP, p1 = 2 * Math.PI * (j + 1) / NP;
+        const c = [P(pt(t0, p0)), P(pt(t1, p0)), P(pt(t1, p1)), P(pt(t0, p1))], z = (c[0][2] + c[1][2] + c[2][2] + c[3][2]) / 4;
+        if (z < -0.05) continue;
+        quads.push([z, c, slack((t0 + t1) / 2, (p0 + p1) / 2)]);
+      }
+      quads.sort((a, b) => a[0] - b[0]);
+      for (const [z, c, v] of quads) {
+        const k = 0.78 + 0.22 * Math.max(0, z), rgb = col(v).map(x => Math.round(x * k + 255 * 0 * (1 - k)));
+        ctx.fillStyle = ctx.strokeStyle = 'rgb(' + rgb.join(',') + ')'; ctx.lineWidth = 0.6;
+        ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let n = 1; n < 4; n++) ctx.lineTo(c[n][0], c[n][1]); ctx.closePath(); ctx.fill(); ctx.stroke();
+      }
+      // equator, faint behind
+      for (let i = 0; i < 120; i++) { const a = P(pt(Math.PI / 2, i * Math.PI / 60)), b = P(pt(Math.PI / 2, (i + 1) * Math.PI / 60));
+        if (a[2] + b[2] < 0) continue; ctx.strokeStyle = '#566273'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+      // the four zeros
+      for (let k = 0; k < 4; k++) { const s = P(pt(Math.PI / 2, Math.PI / 4 + k * Math.PI / 2)); if (s[2] < 0) continue;
+        ctx.fillStyle = '#17202b'; ctx.beginPath(); ctx.arc(s[0], s[1], 4.5, 0, 2 * Math.PI); ctx.fill(); }
+      // legend
+      const lx = W - 34, ly = cy - R * 0.8, lh = R * 1.6;
+      for (let i = 0; i < 60; i++) { ctx.fillStyle = 'rgb(' + col(8 * (1 - i / 60)).join(',') + ')'; ctx.fillRect(lx, ly + lh * i / 60, 12, lh / 60 + 1); }
+      ctx.strokeStyle = '#566273'; ctx.strokeRect(lx, ly, 12, lh); ctx.fillStyle = '#17202b'; ctx.font = '12px IBM Plex Sans, DejaVu Sans, sans-serif';
+      ctx.fillText('8', lx - 12, ly + 8); ctx.fillText('0', lx - 12, ly + lh); ctx.fillText('slack', lx - 22, ly - 8);
+    }
+    const pos = e => e.touches ? [e.touches[0].clientX, e.touches[0].clientY] : [e.clientX, e.clientY];
+    const down = e => { drag = pos(e); e.preventDefault(); };
+    const move = e => { if (!drag) return; const p = pos(e); ay += (p[0] - drag[0]) * 0.01; ax += (p[1] - drag[1]) * 0.01; ax = Math.max(-1.5, Math.min(1.5, ax)); drag = p; draw(); e.preventDefault(); };
+    cv.addEventListener('mousedown', down); addEventListener('mousemove', move); addEventListener('mouseup', () => drag = null);
+    cv.addEventListener('touchstart', down, {passive: false}); cv.addEventListener('touchmove', move, {passive: false}); cv.addEventListener('touchend', () => drag = null);
+    addEventListener('resize', draw); draw();
+  }
+  const FIGS = { 'ollivier-sphere': ollivierSphere, 'be-sphere': beSphere };
+  document.querySelectorAll('canvas[data-fig3d]').forEach(cv => { const f = FIGS[cv.dataset.fig3d]; if (f) f(cv); });
+})();
+</script></body></html>

@@ -7,7 +7,7 @@ fn = '/home/claude/laplacian/notebooks/series/' + m.FILE
 CS = number_figures(m.CELLS)
 cells = ',\n'.join(any_cell(s, t) for s, t in CS)
 open(fn + '.nb', 'w', encoding='ascii').write(
-    "(* Content-type: application/vnd.wolfram.mathematica *)\n(* %s - Computational Classnotes - CC BY-NC-SA 4.0 *)\n\nNotebook[{\n%s\n},\nWindowTitle -> \"%s\",\nStyleDefinitions -> \"Default.nb\"\n]\n" % (m.TITLE, cells, m.TITLE))
+    "(* Content-type: application/vnd.wolfram.mathematica *)\n(* %s - Computational Classnotes - CC BY-NC-SA 4.0 *)\n\nNotebook[{\n%s\n},\nWindowTitle -> \"%s\",\nStyleDefinitions -> \"Default.nb\"\n]\n" % (m.TITLE.encode("ascii", "replace").decode(), cells, wl_escape(m.TITLE)))
 lines = ["(* ::Package:: *)", "", "(* %s *)" % m.TITLE, "(* © 2026 Computational Classnotes · CC BY-NC-SA 4.0 *)", ""]
 for s, t in CS:
     if s == 'FigCaption': lines += ["(* ::Text:: *)", "(*%s*)" % text_plain(t.replace('|', ' ')), ""]

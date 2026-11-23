@@ -51,7 +51,7 @@ In priority order for each site (agreed 23 Nov 2026). **Top priority overall:** 
 
 **Laplacian Curvature Lab** (this repo: Lab, manual, write-ups)
 
-1. **TOP PRIORITY.** The remaining definition write-ups and notebooks, one per definition, in the style of the Ollivier model (`docs/series/07-ollivier`).
+1. **TOP PRIORITY.** The remaining definition write-ups and notebooks (07 Ollivier and 09 Bakry–Émery done), one per definition, in the style of the Ollivier model (`docs/series/07-ollivier`).
 2. A master index notebook linking the series.
 3. Apply the CCN Brand Strategy (`brand/`): tokens, self-hosted fonts, contrast fixes.
 4. A page-wide horizontal slider (see Issues 1).

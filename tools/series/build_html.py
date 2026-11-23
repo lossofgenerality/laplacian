@@ -11,7 +11,7 @@ nav.wtop{font-size:10pt;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap}
 nav.wtop a{color:rgb(212,86,28)}
 @media print{canvas[data-fig3d]{display:none}.fig3d-fallback{display:block!important}}
 '''
-FIG3D = {'img/ollivier-sphere.png': 'ollivier-sphere'}
+FIG3D = {'img/ollivier-sphere.png': 'ollivier-sphere', 'img/be-sphere.png': 'be-sphere'}
 for md in sys.argv[1:]:
     p = pathlib.Path(md)
     body = subprocess.run(['pandoc', str(p), '--mathml', '-t', 'html5'], capture_output=True, text=True, check=True).stdout

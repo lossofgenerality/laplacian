@@ -16,3 +16,4 @@ math { font-family: "Latin Modern Math", "STIX Two Math", serif; }
 math[display="block"] { display: block; margin: 8pt 0; font-size: 11pt; }
 a { color: #1f5fbf; text-decoration: none; }
 hr { border: 0; border-top: 1px solid #c9d0db; margin: 16pt 0 8pt; }
+table { break-inside: avoid; }
