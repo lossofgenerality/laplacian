@@ -1,5 +1,8 @@
 # CCN Brand Strategy
 
+By Dara O Shayda and Hikari Noor Hoshino (星野ヌール)  
+AI System Programming Group
+
 23 November 2026 · Computational Classnotes · all lossofgenerality projects
 
 One core, three registers and one shared kit: every Computational Classnotes project should look and read as one body of work. This document audits the branding that grew up in the Laplacian projects, fixes the places where it drifted, and specifies colour, type, marks, 2D and 3D figures, interface and experience rules for every repository. A shared `ccn-brand` kit carries the rules as code, so each project pulls the same tokens instead of copying them by hand.
@@ -63,6 +66,9 @@ Three findings matter most:
 **Required lines.**
 
 - Every page, PDF, notebook and repository ends with: © Computational Classnotes · CC BY-NC-SA 4.0.
+- Authored documents carry the byline under the title, with the group title on its own line under the names:
+  By Dara O Shayda and Hikari Noor Hoshino (星野ヌール)  
+  AI System Programming Group
 - Story and tutorial work carries the production credits: Principal Investigator Lucval; Oversight Directorate Zil; Editors Dara, Lucia, Zil; Software FreeFormer; Agent Kirari-chan (キラリちゃん).
 - Justice Node work may carry the 正義節点 seal with “CCN 制作”.
 
