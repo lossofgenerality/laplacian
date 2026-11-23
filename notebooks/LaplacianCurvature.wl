@@ -213,7 +213,7 @@ bakryEmery[G_, x_] := Module[{B2, F, ff, Γv, q1, q2, M1, M2, lo = -10., hi = 10
   M1 = D[q1, {F, 2}]/2; M2 = D[q2, {F, 2}]/2;
   Do[mid = (lo + hi)/2; If[Min[Eigenvalues[N[M2 - mid M1]]] >= -10^-9, lo = mid, hi = mid], {60}];
   N[Floor[lo 10^6]/10^6]];   (* rounded down, so theorem checks stay safe *)
-Dataset@Map[Min[bakryEmery[#, v] & /@ VertexList[#]] &, graphs]
+Dataset@Map[Function[G, Min[bakryEmery[G, #] & /@ VertexList[G]]], graphs]
 
 (* ::Subsection:: *)
 (*8.3 Forman curvature (the discrete Bochner–Weitzenböck splitting)*)

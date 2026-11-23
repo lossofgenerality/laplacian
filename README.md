@@ -14,6 +14,8 @@ It is a companion to **Laplacian Lab** and the Computational Classnotes notebook
 | `docs/relationship-map.png` | The relationship map above |
 | `notebooks/LaplacianCurvature.nb` | Wolfram notebook, one section per relationship, each ending in a check |
 | `notebooks/LaplacianCurvature.wl` | The same code as a plain Wolfram Language package/script |
+| `tools/cells.py`, `tools/build.py` | Notebook source and builder: edit `cells.py`, then `python3 tools/build.py notebooks` |
+| `CONTEXT.md` | Working context for the Laplacian Lab project: deliverables, decisions, lessons, open issues |
 
 ## What is covered
 
