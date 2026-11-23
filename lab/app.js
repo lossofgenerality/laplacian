@@ -287,8 +287,8 @@ function drawGraph() {
 inits.graphs = () => { $("gsel").onchange = e => { gKey = e.target.value; drawGraph(); }; $("ksel").onchange = e => { kKey = e.target.value; drawGraph(); }; onSize($("graphsvg").parentElement, drawGraph); };
 
 // ===================== 9. curve shortening =====================
-let CX = null, CA0 = 0, Ct = 0, Chist = [], Cframe = 0, Csteps = 0;
-function flowReset() { CX = LC.curveInit($("flowsel").value); CA0 = LC.polyArea(CX); Ct = 0; Csteps = 0; Chist = [[0, CA0]]; drawFlow(); }
+let CX = null, CA0 = 0, Ct = 0, CL0 = 1, Chist = [], Cframe = 0;
+function flowReset() { CX = LC.curveInit($("flowsel").value); CA0 = LC.polyArea(CX); CL0 = LC.perimeter(CX); Ct = 0; Chist = [[0, CA0]]; drawFlow(); }
 function drawFlow() {
   const { c, W, H } = fit($("flowcv")); c.clearRect(0, 0, W, H);
   const s = Math.min(W, H) / 3.4, ox = W / 2, oy = H / 2;
@@ -302,7 +302,7 @@ function flowRun() {
   if (Cframe) { cancelAnimationFrame(Cframe); Cframe = 0; $("flowplay").textContent = "Run"; return; }
   $("flowplay").textContent = "Pause";
   const tick = () => {
-    for (let k = 0; k < (reduced ? 200 : 15); k++) { CX = LC.curveStep(CX, 2e-4); Ct += 2e-4; Csteps++; if (Csteps % 50 === 0) CX = LC.curveResample(CX); }
+    const S = LC.curveFlow({ X: CX, t: Ct, L0: CL0 }, (reduced ? 200 : 15) * 2e-4); CX = S.X; Ct = S.t;
     Chist.push([Ct, LC.polyArea(CX)]); drawFlow();
     if (LC.polyArea(CX) > 0.08 * CA0) Cframe = requestAnimationFrame(tick); else { Cframe = 0; $("flowplay").textContent = "Run"; }
   };

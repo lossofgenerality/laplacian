@@ -139,7 +139,7 @@ footer a{color:inherit}
 <!-- 1 -->
 <section id="map" data-title="At a glance">
  <h1>Curvature is what the Laplacian sees beyond flat space</h1>
- <p class="lede">On surfaces, on triangle meshes and on graphs, every standard curvature can be read off Δ: from its mean values, its heat flow, its Bochner identity or its spectrum. Each bench below measures one of them live, checks it against the theory, and hands the same computation to a Wolfram kernel.</p>
+ <p class="lede">On surfaces, on triangle meshes and on graphs, every standard curvature can be read off Δ: from its mean values, its heat flow, its Bochner identity or its spectrum. Each section below measures one of them live, checks it against the theory, and hands the same computation to a Wolfram kernel.</p>
  <div class="fig short card" style="min-height:300px"><svg id="mapsvg" role="img" aria-label="Smooth identities and their discrete twins"></svg></div>
  <div class="tiles" id="tiles"></div>
 </section>
@@ -244,7 +244,7 @@ footer a{color:inherit}
 <!-- 9 -->
 <section id="flows" data-title="Curve shortening" hidden>
  <h2>Mean-curvature flow: a curve rounds itself off</h2>
- <p class="lede">\(\partial_tX=\Delta X=\kappa N\). In the plane this is curve shortening: any embedded curve becomes convex, then round, and shrinks to a point (Gage–Hamilton–Grayson). The curve is a polygon and \(\partial_s^2X\) is the graph Laplacian of the cycle \(C_n\), weighted by arc length. The enclosed area falls at exactly 2π per unit time because \(\oint\kappa\,ds=2\pi\).</p>
+ <p class="lede">\(\partial_tX=\Delta X=\kappa N\). In the plane this is curve shortening: any embedded curve becomes convex, then round, and shrinks to a point (Gage–Hamilton–Grayson). The curve is a polygon and \(\partial_s^2X\) is the graph Laplacian of the cycle \(C_n\), weighted by arc length. Time steps shrink with the edges (each step is at most 0.2 × the shortest edge squared, the stability limit of an explicit heat step), and the polygon is resampled with fewer vertices as it shrinks, so it stays smooth to the end. The enclosed area falls at exactly 2π per unit time because \(\oint\kappa\,ds=2\pi\).</p>
  <div class="bench">
   <div><div class="fig card"><canvas id="flowcv"></canvas></div>
    <div class="controls"><button class="primary" id="flowplay">Run</button><button id="flowreset">Reset</button><label>Start <select id="flowsel"><option value="wiggle">wiggly</option><option value="star">five-pointed</option><option value="bean">bean</option><option value="ellipse">ellipse</option></select></label></div></div>
@@ -270,7 +270,7 @@ footer a{color:inherit}
 <!-- 11 -->
 <section id="forms" data-title="All the instances" hidden>
  <h2>Every Laplacian–curvature relationship on one sheet</h2>
- <div class="scroll card"><table id="formtable"><thead><tr><th>Instance</th><th>Formula</th><th>Discrete twin</th><th>Bench</th></tr></thead><tbody></tbody></table></div>
+ <div class="scroll card"><table id="formtable"><thead><tr><th>Instance</th><th>Formula</th><th>Discrete twin</th><th>Lab section</th></tr></thead><tbody></tbody></table></div>
  <p class="muted">Full derivations, verified values and references: the write-up <em>The Laplacian and Curvature — Instances and Relationships</em> and its notebook, github.com/lossofgenerality/laplacian.</p>
 </section>
 
@@ -284,7 +284,7 @@ footer a{color:inherit}
 <!-- 13 -->
 <section id="ask" data-title="Ask the TA" hidden>
  <h2>Ask the TA</h2>
- <p class="lede">The teaching assistant knows the write-up, the notebook and the bench you came from, and can run Wolfram Language itself; code it ran appears under its answer.</p>
+ <p class="lede">The teaching assistant knows the write-up, the notebook and the Lab section you came from, and can run Wolfram Language itself; code it ran appears under its answer.</p>
  <div class="card"><div class="muted" id="askctx"></div><div class="chat" id="chat"></div>
   <div class="ask-row"><textarea id="askq" placeholder="For example: why is Lin–Lu–Yau curvature positive on leaf edges of a tree?"></textarea><button class="primary" id="asksend">Ask</button></div>
   <p class="muted" id="askstate"></p></div>
@@ -500,11 +500,24 @@ const LC = (() => {
     const n = X.length;
     return X.map((p, i) => { const a = X[(i + n - 1) % n], b = X[(i + 1) % n]; const fw = [b[0] - p[0], b[1] - p[1]], bw = [p[0] - a[0], p[1] - a[1]]; const lf = Math.hypot(...fw), lb = Math.hypot(...bw); const k = 2 / (lf + lb); return [p[0] + dt * k * (fw[0] / lf - bw[0] / lb), p[1] + dt * k * (fw[1] / lf - bw[1] / lb)]; });
   }
-  function curveResample(X) {
-    const n = X.length, c = X.concat([X[0]]), s = [0]; for (let i = 1; i < c.length; i++) s.push(s[i - 1] + Math.hypot(c[i][0] - c[i - 1][0], c[i][1] - c[i - 1][1]));
+  function curveResample(X, nOut) {
+    const n = nOut || X.length, c = X.concat([X[0]]), s = [0]; for (let i = 1; i < c.length; i++) s.push(s[i - 1] + Math.hypot(c[i][0] - c[i - 1][0], c[i][1] - c[i - 1][1]));
     const L = s[s.length - 1], out = []; let k = 0;
     for (let i = 0; i < n; i++) { const q = L * i / n; while (s[k + 1] < q) k++; const t = (q - s[k]) / (s[k + 1] - s[k] || 1); out.push([c[k][0] + t * (c[k + 1][0] - c[k][0]), c[k][1] + t * (c[k + 1][1] - c[k][1])]); }
     return out;
+  }
+  // Advance the flow by time T with stable steps: dt ≤ 0.2·(shortest edge)², and as the curve shrinks
+  // resample it with edges about 1/40 of its initial perimeter (between 24 and 160 vertices) so the steps stay usable.
+  const perimeter = X => X.reduce((s, p, i) => { const q = X[(i + 1) % X.length]; return s + Math.hypot(q[0] - p[0], q[1] - p[1]); }, 0);
+  function curveFlow(state, T) {
+    let { X, t, L0 } = state, done = 0, k = 0;
+    while (done < T - 1e-15) {
+      let h = Infinity; for (let i = 0; i < X.length; i++) { const q = X[(i + 1) % X.length]; h = Math.min(h, Math.hypot(q[0] - X[i][0], q[1] - X[i][1])); }
+      const dt = Math.min(T - done, 0.2 * h * h);
+      X = curveStep(X, dt); done += dt; k++;
+      if (k % 20 === 0) X = curveResample(X, Math.max(24, Math.min(160, Math.round(160 * perimeter(X) / L0))));
+    }
+    return { X, t: t + done, L0, steps: (state.steps || 0) + k };
   }
   const polyArea = X => Math.abs(X.reduce((s, p, i) => { const q = X[(i + 1) % X.length]; return s + p[0] * q[1] - q[0] * p[1]; }, 0)) / 2;
 
@@ -524,7 +537,7 @@ const LC = (() => {
 
   return { jacobiEig, pinvSym, GRAPHS, kappaLLY, kappa0, forman, formanAug, bakryEmery, resistanceCurv, steinerberger, normLapSpectrum,
     SURFACES, surfaceKH, totalCurvature, torusMesh, meshCurvature, circleMean, approx, POLE, discRatio, lapDist, sphereTrace, torusTrace,
-    ollivierBall, curveInit, curveStep, curveResample, polyArea, ricciInit, ricciStep, ricciK, ricciTotalK };
+    ollivierBall, curveInit, curveStep, curveResample, curveFlow, perimeter, polyArea, ricciInit, ricciStep, ricciK, ricciTotalK };
 })();
 if (typeof module !== "undefined") module.exports = LC;
 
@@ -819,8 +832,8 @@ function drawGraph() {
 inits.graphs = () => { $("gsel").onchange = e => { gKey = e.target.value; drawGraph(); }; $("ksel").onchange = e => { kKey = e.target.value; drawGraph(); }; onSize($("graphsvg").parentElement, drawGraph); };
 
 // ===================== 9. curve shortening =====================
-let CX = null, CA0 = 0, Ct = 0, Chist = [], Cframe = 0, Csteps = 0;
-function flowReset() { CX = LC.curveInit($("flowsel").value); CA0 = LC.polyArea(CX); Ct = 0; Csteps = 0; Chist = [[0, CA0]]; drawFlow(); }
+let CX = null, CA0 = 0, Ct = 0, CL0 = 1, Chist = [], Cframe = 0;
+function flowReset() { CX = LC.curveInit($("flowsel").value); CA0 = LC.polyArea(CX); CL0 = LC.perimeter(CX); Ct = 0; Chist = [[0, CA0]]; drawFlow(); }
 function drawFlow() {
   const { c, W, H } = fit($("flowcv")); c.clearRect(0, 0, W, H);
   const s = Math.min(W, H) / 3.4, ox = W / 2, oy = H / 2;
@@ -834,7 +847,7 @@ function flowRun() {
   if (Cframe) { cancelAnimationFrame(Cframe); Cframe = 0; $("flowplay").textContent = "Run"; return; }
   $("flowplay").textContent = "Pause";
   const tick = () => {
-    for (let k = 0; k < (reduced ? 200 : 15); k++) { CX = LC.curveStep(CX, 2e-4); Ct += 2e-4; Csteps++; if (Csteps % 50 === 0) CX = LC.curveResample(CX); }
+    const S = LC.curveFlow({ X: CX, t: Ct, L0: CL0 }, (reduced ? 200 : 15) * 2e-4); CX = S.X; Ct = S.t;
     Chist.push([Ct, LC.polyArea(CX)]); drawFlow();
     if (LC.polyArea(CX) > 0.08 * CA0) Cframe = requestAnimationFrame(tick); else { Cframe = 0; $("flowplay").textContent = "Run"; }
   };

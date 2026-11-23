@@ -11,7 +11,7 @@ Ricci curvature is what is left over in Bochner’s formula: Γ₂(f) = |Hess f|
 - **Curvature.** $K_{N}(x)$ is the largest K with Γ₂(f)(x) ≥ (1/N)(Δf(x))² + K Γ(f)(x) for all f; $K_{\infty}$ drops the dimension term.
 - **Numbering.** Sections 2–9 here match notebook Sections 2–9; notebook Section 1 is the toolkit. Every number quoted below was returned by the Wolfram kernel.
 - **Companion.** The Ollivier write-up (07) uses the same graphs, so the two curvatures can be compared (§8).
-- **Repository.** https://github.com/lossofgenerality/laplacian · Lab bench: [Graph curvatures](https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#graphs).
+- **Repository.** https://github.com/lossofgenerality/laplacian · Lab section: [Graph curvatures](https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#graphs).
 
 ## At a glance
 

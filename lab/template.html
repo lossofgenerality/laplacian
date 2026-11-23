@@ -130,7 +130,7 @@ footer a{color:inherit}
 <!-- 1 -->
 <section id="map" data-title="At a glance">
  <h1>Curvature is what the Laplacian sees beyond flat space</h1>
- <p class="lede">On surfaces, on triangle meshes and on graphs, every standard curvature can be read off Δ: from its mean values, its heat flow, its Bochner identity or its spectrum. Each bench below measures one of them live, checks it against the theory, and hands the same computation to a Wolfram kernel.</p>
+ <p class="lede">On surfaces, on triangle meshes and on graphs, every standard curvature can be read off Δ: from its mean values, its heat flow, its Bochner identity or its spectrum. Each section below measures one of them live, checks it against the theory, and hands the same computation to a Wolfram kernel.</p>
  <div class="fig short card" style="min-height:300px"><svg id="mapsvg" role="img" aria-label="Smooth identities and their discrete twins"></svg></div>
  <div class="tiles" id="tiles"></div>
 </section>
@@ -235,7 +235,7 @@ footer a{color:inherit}
 <!-- 9 -->
 <section id="flows" data-title="Curve shortening" hidden>
  <h2>Mean-curvature flow: a curve rounds itself off</h2>
- <p class="lede">\(\partial_tX=\Delta X=\kappa N\). In the plane this is curve shortening: any embedded curve becomes convex, then round, and shrinks to a point (Gage–Hamilton–Grayson). The curve is a polygon and \(\partial_s^2X\) is the graph Laplacian of the cycle \(C_n\), weighted by arc length. The enclosed area falls at exactly 2π per unit time because \(\oint\kappa\,ds=2\pi\).</p>
+ <p class="lede">\(\partial_tX=\Delta X=\kappa N\). In the plane this is curve shortening: any embedded curve becomes convex, then round, and shrinks to a point (Gage–Hamilton–Grayson). The curve is a polygon and \(\partial_s^2X\) is the graph Laplacian of the cycle \(C_n\), weighted by arc length. Time steps shrink with the edges (each step is at most 0.2 × the shortest edge squared, the stability limit of an explicit heat step), and the polygon is resampled with fewer vertices as it shrinks, so it stays smooth to the end. The enclosed area falls at exactly 2π per unit time because \(\oint\kappa\,ds=2\pi\).</p>
  <div class="bench">
   <div><div class="fig card"><canvas id="flowcv"></canvas></div>
    <div class="controls"><button class="primary" id="flowplay">Run</button><button id="flowreset">Reset</button><label>Start <select id="flowsel"><option value="wiggle">wiggly</option><option value="star">five-pointed</option><option value="bean">bean</option><option value="ellipse">ellipse</option></select></label></div></div>
@@ -261,7 +261,7 @@ footer a{color:inherit}
 <!-- 11 -->
 <section id="forms" data-title="All the instances" hidden>
  <h2>Every Laplacian–curvature relationship on one sheet</h2>
- <div class="scroll card"><table id="formtable"><thead><tr><th>Instance</th><th>Formula</th><th>Discrete twin</th><th>Bench</th></tr></thead><tbody></tbody></table></div>
+ <div class="scroll card"><table id="formtable"><thead><tr><th>Instance</th><th>Formula</th><th>Discrete twin</th><th>Lab section</th></tr></thead><tbody></tbody></table></div>
  <p class="muted">Full derivations, verified values and references: the write-up <em>The Laplacian and Curvature — Instances and Relationships</em> and its notebook, github.com/lossofgenerality/laplacian.</p>
 </section>
 
@@ -275,7 +275,7 @@ footer a{color:inherit}
 <!-- 13 -->
 <section id="ask" data-title="Ask the TA" hidden>
  <h2>Ask the TA</h2>
- <p class="lede">The teaching assistant knows the write-up, the notebook and the bench you came from, and can run Wolfram Language itself; code it ran appears under its answer.</p>
+ <p class="lede">The teaching assistant knows the write-up, the notebook and the Lab section you came from, and can run Wolfram Language itself; code it ran appears under its answer.</p>
  <div class="card"><div class="muted" id="askctx"></div><div class="chat" id="chat"></div>
   <div class="ask-row"><textarea id="askq" placeholder="For example: why is Lin–Lu–Yau curvature positive on leaf edges of a tree?"></textarea><button class="primary" id="asksend">Ask</button></div>
   <p class="muted" id="askstate"></p></div>

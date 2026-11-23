@@ -10,7 +10,7 @@ Positive curvature brings averages together. Ollivier’s curvature measures exa
 - **Averaging.** $\mu_{\alpha}$(x) is the α-lazy simple random walk: mass α stays at x, and 1 − α is spread evenly over the neighbours. $\kappa_{\alpha}$ is the curvature it gives; κ₀ is the non-lazy one.
 - **Laplacian.** Δf(v) = (mean of f over the neighbours of v) − f(v), the random-walk normalisation, as in the rest of the series.
 - **Numbering.** Sections 2–10 here match notebook Sections 2–10; notebook Section 1 is the toolkit. Every number quoted below was returned by the Wolfram kernel.
-- **Repository.** https://github.com/lossofgenerality/laplacian · Lab bench: [Ollivier on manifolds](https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#ollivier).
+- **Repository.** https://github.com/lossofgenerality/laplacian · Lab section: [Ollivier on manifolds](https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#ollivier).
 
 ## At a glance
 

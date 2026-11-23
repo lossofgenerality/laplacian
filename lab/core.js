@@ -190,11 +190,24 @@ const LC = (() => {
     const n = X.length;
     return X.map((p, i) => { const a = X[(i + n - 1) % n], b = X[(i + 1) % n]; const fw = [b[0] - p[0], b[1] - p[1]], bw = [p[0] - a[0], p[1] - a[1]]; const lf = Math.hypot(...fw), lb = Math.hypot(...bw); const k = 2 / (lf + lb); return [p[0] + dt * k * (fw[0] / lf - bw[0] / lb), p[1] + dt * k * (fw[1] / lf - bw[1] / lb)]; });
   }
-  function curveResample(X) {
-    const n = X.length, c = X.concat([X[0]]), s = [0]; for (let i = 1; i < c.length; i++) s.push(s[i - 1] + Math.hypot(c[i][0] - c[i - 1][0], c[i][1] - c[i - 1][1]));
+  function curveResample(X, nOut) {
+    const n = nOut || X.length, c = X.concat([X[0]]), s = [0]; for (let i = 1; i < c.length; i++) s.push(s[i - 1] + Math.hypot(c[i][0] - c[i - 1][0], c[i][1] - c[i - 1][1]));
     const L = s[s.length - 1], out = []; let k = 0;
     for (let i = 0; i < n; i++) { const q = L * i / n; while (s[k + 1] < q) k++; const t = (q - s[k]) / (s[k + 1] - s[k] || 1); out.push([c[k][0] + t * (c[k + 1][0] - c[k][0]), c[k][1] + t * (c[k + 1][1] - c[k][1])]); }
     return out;
+  }
+  // Advance the flow by time T with stable steps: dt ≤ 0.2·(shortest edge)², and as the curve shrinks
+  // resample it with edges about 1/40 of its initial perimeter (between 24 and 160 vertices) so the steps stay usable.
+  const perimeter = X => X.reduce((s, p, i) => { const q = X[(i + 1) % X.length]; return s + Math.hypot(q[0] - p[0], q[1] - p[1]); }, 0);
+  function curveFlow(state, T) {
+    let { X, t, L0 } = state, done = 0, k = 0;
+    while (done < T - 1e-15) {
+      let h = Infinity; for (let i = 0; i < X.length; i++) { const q = X[(i + 1) % X.length]; h = Math.min(h, Math.hypot(q[0] - X[i][0], q[1] - X[i][1])); }
+      const dt = Math.min(T - done, 0.2 * h * h);
+      X = curveStep(X, dt); done += dt; k++;
+      if (k % 20 === 0) X = curveResample(X, Math.max(24, Math.min(160, Math.round(160 * perimeter(X) / L0))));
+    }
+    return { X, t: t + done, L0, steps: (state.steps || 0) + k };
   }
   const polyArea = X => Math.abs(X.reduce((s, p, i) => { const q = X[(i + 1) % X.length]; return s + p[0] * q[1] - q[0] * p[1]; }, 0)) / 2;
 
@@ -214,6 +227,6 @@ const LC = (() => {
 
   return { jacobiEig, pinvSym, GRAPHS, kappaLLY, kappa0, forman, formanAug, bakryEmery, resistanceCurv, steinerberger, normLapSpectrum,
     SURFACES, surfaceKH, totalCurvature, torusMesh, meshCurvature, circleMean, approx, POLE, discRatio, lapDist, sphereTrace, torusTrace,
-    ollivierBall, curveInit, curveStep, curveResample, polyArea, ricciInit, ricciStep, ricciK, ricciTotalK };
+    ollivierBall, curveInit, curveStep, curveResample, curveFlow, perimeter, polyArea, ricciInit, ricciStep, ricciK, ricciTotalK };
 })();
 if (typeof module !== "undefined") module.exports = LC;
