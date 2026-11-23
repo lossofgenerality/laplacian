@@ -81,7 +81,17 @@ On a triangle mesh the cotangent Laplacian, divided by the vertex area, discreti
 
 $$(\Delta f)_i = \frac{1}{2A_i}\sum_{j\sim i}(\cot\alpha_{ij} + \cot\beta_{ij})(f_j - f_i), \qquad \Delta X_i \approx -2H_i\,\mathbf{n}_i, \qquad K_i \approx \frac{2\pi - \sum \theta_i}{A_i}$$
 
-The angle defect sums to exactly 2πχ, a discrete Gauss–Bonnet theorem. No discrete Laplacian keeps every smooth property at once: symmetry, locality, linear precision, semidefiniteness and the maximum principle (Wardetzky et al. 2007). The smooth analogue of this tension is the *orthonormal mandate* of the Laplacian notebook (Theorem 7.4): an average over stencil points h**u**, h**v** in the plane gives h²∇ᵀ(**uu**ᵀ + **vv**ᵀ)∇f, which is h²Δf only when the axes are orthonormal; skewed axes add a cross term 2M₁₂ ∂ₓ∂ᵧf. A mesh has no orthonormal axes, and the cotangent weights are what correct for that. See [Laplacian Programmable Lab, Section 5: Stencils and the orthonormal mandate](https://lossofgenerality.github.io/Laplacian-lab/#discrete).
+Here $\alpha_{ij}$ and $\beta_{ij}$ are the two angles opposite the edge ij, $A_i$ is the area belonging to vertex i (a third of its triangles’ area, or the Voronoi area), and $\theta_i$ runs over the corner angles of the triangles that meet at vertex i.
+
+**Angle defect.** Around a vertex of a flat sheet the corner angles add to 2π. On a curved surface they do not, and the *angle defect* (or angular deficit) measures by how much:
+
+$$\delta_i = 2\pi-\sum_{\text{triangles at } i}\theta_i .$$
+
+A positive defect means the surface closes up around the vertex like a cone point (positive curvature); a negative defect means extra angle, like a saddle. Dividing by the vertex area gives a curvature density, $K_i \approx \delta_i/A_i$. *Worked by hand:* at a corner of a cube three right angles meet, so δ = 2π − 3·π/2 = π/2; the cube has 8 corners, so the defects add to 4π. At a vertex of a regular icosahedron five 60° angles meet, δ = 2π − 5π/3 = π/3, and 12 vertices again give 4π. In both cases 4π = 2πχ with χ = 2, the Euler characteristic of a sphere (χ = V − E + F).
+
+The angle defects of any closed mesh sum to exactly 2πχ, a discrete Gauss–Bonnet theorem that holds at every resolution, not only in the limit.
+
+**Checked (Wolfram kernel):** defects π/2 (cube, 8 vertices), π/3 (icosahedron, 12), π (tetrahedron, 4) and 2π/3 (octahedron, 6); each total divided by 2π is 2. No discrete Laplacian keeps every smooth property at once: symmetry, locality, linear precision, semidefiniteness and the maximum principle (Wardetzky et al. 2007). The smooth analogue of this tension is the *orthonormal mandate* of the Laplacian notebook (Theorem 7.4): an average over stencil points h**u**, h**v** in the plane gives h²∇ᵀ(**uu**ᵀ + **vv**ᵀ)∇f, which is h²Δf only when the axes are orthonormal; skewed axes add a cross term 2M₁₂ ∂ₓ∂ᵧf. A mesh has no orthonormal axes, and the cotangent weights are what correct for that. See [Laplacian Programmable Lab, Section 5: Stencils and the orthonormal mandate](https://lossofgenerality.github.io/Laplacian-lab/#discrete).
 
 **Checked (notebook §7), 400-vertex sphere mesh:** Σ defect/2π = 2.000000, mean K = 1.014, mean H = 1.006.
 

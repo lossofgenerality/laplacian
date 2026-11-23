@@ -208,7 +208,7 @@ footer a{color:inherit}
 <!-- 7 -->
 <section id="mesh" data-title="Meshes" hidden>
  <h2>On a mesh, angle defect is curvature and the cotangent Laplacian is −2Hn</h2>
- <p class="lede">\((\Delta f)_i=\frac1{2A_i}\sum_j(\cot\alpha_{ij}+\cot\beta_{ij})(f_j-f_i)\), and \(K_i\approx(2\pi-\sum\theta)/A_i\). The defects of a closed mesh add to exactly \(2\pi\chi\), a discrete Gauss–Bonnet theorem that holds at every resolution.</p>
+ <p class="lede">\((\Delta f)_i=\frac1{2A_i}\sum_j(\cot\alpha_{ij}+\cot\beta_{ij})(f_j-f_i)\), where \(\alpha_{ij},\beta_{ij}\) are the angles opposite edge \(ij\) and \(A_i\) is the vertex area. The <em>angle defect</em> \(\delta_i=2\pi-\sum\theta_i\) is how far the corner angles \(\theta_i\) of the triangles meeting at vertex \(i\) fall short of the flat \(2\pi\) (a cube corner: \(2\pi-3\cdot\tfrac\pi2=\tfrac\pi2\)); \(K_i\approx\delta_i/A_i\). The defects of a closed mesh add to exactly \(2\pi\chi\) (χ = V − E + F, the Euler characteristic), a discrete Gauss–Bonnet theorem that holds at every resolution.</p>
  <div class="bench">
   <div><div class="fig card"><canvas id="meshcv"></canvas></div>
    <div class="controls"><label>Resolution <select id="meshres"><option value="12,6">12 × 6</option><option value="24,12">24 × 12</option><option value="40,20" selected>40 × 20</option><option value="64,32">64 × 32</option></select></label><label>Colour <select id="meshq"><option value="K">defect / area ≈ K</option><option value="H">|cotan ΔX|/2 ≈ H</option></select></label></div></div>
