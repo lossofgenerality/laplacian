@@ -155,11 +155,14 @@ let RS = null, ricciTimer = 0, ricciHist = [];
 function ricciReset() { RS = LC.ricciInit(32, +$("riccia").value, +$("riccia").value * 0.83); ricciHist = [[0, maxAbs(LC.ricciK(RS))]]; $("ricciplay").textContent = "Run"; drawRicci(); }
 const maxAbs = M => Math.max(...M.flat().map(Math.abs));
 function drawRicci() {
-  const { c, W, H } = fit($("riccicv")), K = LC.ricciK(RS), N = RS.N, s = Math.min(W, H) * 0.92, ox = (W - s) / 2, oy = (H - s) / 2, cell = s / N;
+  const { c, W, H } = fit($("riccicv")), K = LC.ricciK(RS), N = RS.N, top = 26, s = Math.min(W, H - top) * 0.92, ox = (W - s) / 2, oy = top + (H - top - s) / 2, cell = s / N;
+  const mk = maxAbs(K), auto = $("ricciscale").value === "auto", sc = auto ? Math.max(mk, 1e-9) : 1.5;
   c.clearRect(0, 0, W, H);
-  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { c.fillStyle = kcol(K[i][j], 1.5); c.fillRect(ox + i * cell, oy + (N - 1 - j) * cell, cell + 0.6, cell + 0.6); }
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { c.fillStyle = kcol(K[i][j], sc); c.fillRect(ox + i * cell, oy + (N - 1 - j) * cell, cell + 0.6, cell + 0.6); }
   c.strokeStyle = css("--line"); c.strokeRect(ox, oy, s, s);
-  const mk = maxAbs(K);
+  c.fillStyle = css("--ink"); c.font = "600 14px " + (css("--mono") || "monospace"); c.textAlign = "center";
+  c.fillText(`t = ${fmt(RS.t, 2)}   max |K| = ${fmt(mk, 3)}   colours ±${fmt(sc, 3)}`, W / 2, 18);
+  $("riccilo").textContent = "−" + fmt(sc, 3); $("riccihi").textContent = "+" + fmt(sc, 3);
   $("ricciread").innerHTML = `<dt>t</dt><dd>${fmt(RS.t, 3)}</dd><dt>max |K|</dt><dd>${fmt(mk, 4)}</dd><dt>∬ K dA</dt><dd>${fmt(LC.ricciTotalK(RS), 10)}</dd>`;
   plot($("riccichart"), { xr: [0, 2], yr: [0.01, 10], ylog: true, xlabel: "t", ylabel: "max |K|", series: [{ pts: ricciHist, color: POSc() }] });
 }
@@ -168,10 +171,10 @@ function ricciRun() {
   if (ricciTimer) { cancelAnimationFrame(ricciTimer); ricciTimer = 0; $("ricciplay").textContent = "Run"; return; }
   if (RS.t >= 2) ricciReset();  // a finished run starts again from the bump instead of doing nothing
   $("ricciplay").textContent = "Pause";
-  const tick = () => { LC.ricciStep(RS, reduced ? 200 : 12); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run again"; } };
+  const tick = () => { LC.ricciStep(RS, reduced ? 200 : 1); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run again"; } };
   ricciTimer = requestAnimationFrame(tick);
 }
-inits.ricci = () => { ricciReset(); $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
+inits.ricci = () => { ricciReset(); $("ricciscale").onchange = drawRicci; $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
 
 // ===================== 4. curved means =====================
 let meansData = null;

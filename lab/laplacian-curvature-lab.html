@@ -157,7 +157,8 @@ footer a{color:inherit}
  <p class="lede">With \(g=e^{2u}(dx^2+dy^2)\), Ricci flow \(\partial_tg=-2\,\mathrm{Ric}\) becomes \(\partial_tu=e^{-2u}\Delta_0u=-K\). Start from a bumpy metric on the flat torus and watch the flow iron the curvature out. The total curvature stays exactly zero, as Gauss–Bonnet demands for \(\chi=0\).</p>
  <div class="bench">
   <div><div class="fig card"><canvas id="riccicv"></canvas></div>
-   <div class="controls"><button class="primary" id="ricciplay">Run</button><button id="riccireset">Reset</button><label>Bump size <input type="range" id="riccia" min="0.1" max="0.45" step="0.05" value="0.3"></label><span class="legend"><span>−1.5</span><i></i><span>+1.5</span></span></div></div>
+   <div class="controls"><button class="primary" id="ricciplay">Run</button><button id="riccireset">Reset</button><label>Bump size <input type="range" id="riccia" min="0.1" max="0.45" step="0.05" value="0.3"></label><label>Colour scale <select id="ricciscale"><option value="auto" selected>follow max |K|</option><option value="fixed">fixed ±1.5</option></select></label><span class="legend"><span id="riccilo">−1.5</span><i></i><span id="riccihi">+1.5</span></span></div>
+   <p class="muted" id="riccinote" style="margin:6px 0 0">The colours follow the largest |K| at each moment, so the pattern stays visible while the curvature shrinks; the chart below shows how fast it shrinks. Choose “fixed ±1.5” to see it fade to flat.</p></div>
   <div class="card"><h3>Readings</h3><dl class="read" id="ricciread"></dl><div class="fig short"><canvas id="riccichart"></canvas></div>
    <div class="check">Lab notebook §2, at the default bump 0.3: max|K| 4.63 → 0.053 by t ≈ 2.11, with \(\iint K\,dA=0\) to round-off throughout (the page’s own scheme, reproduced step for step).</div></div>
  </div>
@@ -699,11 +700,14 @@ let RS = null, ricciTimer = 0, ricciHist = [];
 function ricciReset() { RS = LC.ricciInit(32, +$("riccia").value, +$("riccia").value * 0.83); ricciHist = [[0, maxAbs(LC.ricciK(RS))]]; $("ricciplay").textContent = "Run"; drawRicci(); }
 const maxAbs = M => Math.max(...M.flat().map(Math.abs));
 function drawRicci() {
-  const { c, W, H } = fit($("riccicv")), K = LC.ricciK(RS), N = RS.N, s = Math.min(W, H) * 0.92, ox = (W - s) / 2, oy = (H - s) / 2, cell = s / N;
+  const { c, W, H } = fit($("riccicv")), K = LC.ricciK(RS), N = RS.N, top = 26, s = Math.min(W, H - top) * 0.92, ox = (W - s) / 2, oy = top + (H - top - s) / 2, cell = s / N;
+  const mk = maxAbs(K), auto = $("ricciscale").value === "auto", sc = auto ? Math.max(mk, 1e-9) : 1.5;
   c.clearRect(0, 0, W, H);
-  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { c.fillStyle = kcol(K[i][j], 1.5); c.fillRect(ox + i * cell, oy + (N - 1 - j) * cell, cell + 0.6, cell + 0.6); }
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { c.fillStyle = kcol(K[i][j], sc); c.fillRect(ox + i * cell, oy + (N - 1 - j) * cell, cell + 0.6, cell + 0.6); }
   c.strokeStyle = css("--line"); c.strokeRect(ox, oy, s, s);
-  const mk = maxAbs(K);
+  c.fillStyle = css("--ink"); c.font = "600 14px " + (css("--mono") || "monospace"); c.textAlign = "center";
+  c.fillText(`t = ${fmt(RS.t, 2)}   max |K| = ${fmt(mk, 3)}   colours ±${fmt(sc, 3)}`, W / 2, 18);
+  $("riccilo").textContent = "−" + fmt(sc, 3); $("riccihi").textContent = "+" + fmt(sc, 3);
   $("ricciread").innerHTML = `<dt>t</dt><dd>${fmt(RS.t, 3)}</dd><dt>max |K|</dt><dd>${fmt(mk, 4)}</dd><dt>∬ K dA</dt><dd>${fmt(LC.ricciTotalK(RS), 10)}</dd>`;
   plot($("riccichart"), { xr: [0, 2], yr: [0.01, 10], ylog: true, xlabel: "t", ylabel: "max |K|", series: [{ pts: ricciHist, color: POSc() }] });
 }
@@ -712,10 +716,10 @@ function ricciRun() {
   if (ricciTimer) { cancelAnimationFrame(ricciTimer); ricciTimer = 0; $("ricciplay").textContent = "Run"; return; }
   if (RS.t >= 2) ricciReset();  // a finished run starts again from the bump instead of doing nothing
   $("ricciplay").textContent = "Pause";
-  const tick = () => { LC.ricciStep(RS, reduced ? 200 : 12); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run again"; } };
+  const tick = () => { LC.ricciStep(RS, reduced ? 200 : 1); ricciHist.push([RS.t, maxAbs(LC.ricciK(RS))]); drawRicci(); if (RS.t < 2) ricciTimer = requestAnimationFrame(tick); else { ricciTimer = 0; $("ricciplay").textContent = "Run again"; } };
   ricciTimer = requestAnimationFrame(tick);
 }
-inits.ricci = () => { ricciReset(); $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
+inits.ricci = () => { ricciReset(); $("ricciscale").onchange = drawRicci; $("ricciplay").onclick = ricciRun; $("riccireset").onclick = () => { if (ricciTimer) ricciRun(); ricciReset(); }; $("riccia").oninput = () => { if (ricciTimer) ricciRun(); ricciReset(); }; onSize($("riccicv"), drawRicci); };
 
 // ===================== 4. curved means =====================
 let meansData = null;
