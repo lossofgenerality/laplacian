@@ -13,9 +13,7 @@ TOOLKIT = r"""ClearAll["Global`*"];
 kcol[k_?NumericQ, s_] := With[{w = Clip[k/s, {-1, 1}]}, Blend[{RGBColor[0.10, 0.27, 0.75], GrayLevel[0.97], RGBColor[0.96, 0.47, 0.02]}, (1 + Sign[w] Abs[w]^0.55)/2]];
 kLegend[s_, label_] := BarLegend[{kcol[#, s] &, {-s, s}}, LegendLabel -> label];
 orange = RGBColor[0.96, 0.47, 0.02]; blue = RGBColor[0.10, 0.27, 0.75];
-cmpRow[label_, q_, p_, w_] := {label, q, p, w, Abs[p - w]};
-cmpGrid[rows_] := Grid[Prepend[Map[If[NumericQ[#] && ! IntegerQ[#], NumberForm[N[#], 7], #] &, rows, {2}],
-   Style[#, Bold] & /@ {"", "quantity", "page (JavaScript)", "Wolfram", "|difference|"}],
+valGrid[head_, rows_] := Grid[Prepend[Map[If[NumericQ[#] && ! IntegerQ[#], NumberForm[N[#], 7], #] &, rows, {2}], Style[#, Bold] & /@ head],
   Frame -> All, Alignment -> Left, Background -> {None, {1 -> GrayLevel[0.93]}}, FrameStyle -> GrayLevel[0.75]];"""
 
 CELLS = [
@@ -25,9 +23,8 @@ CELLS = [
 ("Text", "Ricci flow is a heat flow of curvature. This notebook follows G. Khan, An Illustrated Introduction to the Ricci Flow (arXiv:2201.04923, 2022), pp. 14–33, and makes each step concrete on the flow the Laplacian Curvature Lab runs (" + PAGE + "): a bumpy metric e^{2u}(dx² + dy²) on the flat torus. Every derivation is worked by hand in a Text cell, then checked on the kernel; the page’s live readings are set beside Wolfram’s; every chart on the page is redrawn as a numbered figure; the flow can be played with an animator."),
 ("Text", "Conventions: Δ is the Laplace–Beltrami operator, negative semidefinite (Δ₀ = ∂²/∂x² + ∂²/∂y² on the flat torus [0, 2π)²); Ric(X, X) for unit X is n − 1 times the mean sectional curvature of the planes containing X; on a surface Ric = K g. Evaluate from the top: the first cell clears the session."),
 
-("Section", "0. Toolkit and the page’s readings"),
+("Section", "0. Toolkit"),
 ("Input", TOOLKIT),
-("Input", L.page_data(['ricci', 'rd'])),
 
 ("Section", "1. What the flow is"),
 ("Text", "A Riemannian metric g is an inner product on tangent vectors at each point; lengths, angles, areas and curvature come from it. The sectional curvature K(X, Y) of the plane of unit vectors X, Y measures how a small geodesic triangle with legs εX and εY falls short of a flat one: its third side is L(ε) = ε‖X − Y‖(1 − (1/12)K(X, Y)(1 + ⟨X, Y⟩)ε²) + O(ε⁴). Ricci flow (Hamilton 1982) is ∂g/∂t = −2 Ric(g): directions of positive Ricci curvature shrink, directions of negative Ricci curvature stretch."),
@@ -74,7 +71,7 @@ Sh[τ_?NumericQ] := NIntegrate[-uh Log[uh] /. t -> τ, {x, 0, 2 π}, WorkingPrec
  With[{t0 = 3/10, d = 10^-6}, {(Sh[t0 + d] - Sh[t0 - d])/(2 d), NIntegrate[D[uh, x]^2/uh /. t -> t0, {x, 0, 2 π}, WorkingPrecision -> 30]}]}"""),
 ("Text", "Expected 0, 0 and two equal numbers (S′ and ∫u_x²/u at t = 0.3)."),
 ("Text", "Worked by hand: the flow’s own energy and entropy. Area A = ∬e^{2u}: A′ = 2∬Δ₀u = 0 on the torus (−2∬K dA = 0, Gauss–Bonnet). Energy D = ∬|∇₀u|²: D′ = −2∬Δ₀u u_t = −2∬e^{−2u}(Δ₀u)² = −2∬K² dA ≤ 0. Entropy of the area density ρ = e^{2u}/A, S = −∬ρ ln ρ: since ∬ρ_t = 0 and ρ_t = 2Δ₀u/A, S′ = −(2/A)∬Δ₀u (2u − ln A) = (4/A)∬|∇₀u|² = 4D/A ≥ 0, with maximum ln(4π²) = 3.676 exactly for the flat metric."),
-("Text", "The page’s run (32 × 32 periodic grid, initial u = 0.3 cos x + 0.249 sin 2y cos(x + y), five-point Laplacian, explicit steps dt = 0.2h²e^{2 min u} to t ≥ 2), with A, D, S, ∬K² dA, min K, max u and min u recorded at every step."),
+("Text", "The flow on a 32 × 32 periodic grid ( initial u = 0.3 cos x + 0.249 sin 2y cos(x + y), five-point Laplacian, explicit steps dt = 0.2h²e^{2 min u} to t ≥ 2), with A, D, S, ∬K² dA, min K, max u and min u recorded at every step."),
 ("Input", r"""ricciRun[a_, b_, N_] := Module[{h = 2. π/N, U, lap, Kf, t = 0., rec = {}, frames = {}, next = 0., stats},
    U = Table[a Cos[i h] + b Sin[2 j h] Cos[i h + j h], {i, 0, N - 1}, {j, 0, N - 1}];
    lap[W_] := (RotateLeft[W, {1, 0}] + RotateRight[W, {1, 0}] + RotateLeft[W, {0, 1}] + RotateRight[W, {0, 1}] - 4 W)/h^2;
@@ -87,10 +84,9 @@ Sh[τ_?NumericQ] := NIntegrate[-uh Log[uh] /. t -> τ, {x, 0, 2 π}, WorkingPrec
     If[t >= next, AppendTo[frames, {t, Kf[U]}]; next += 0.05]];
    AppendTo[frames, {t, Kf[U]}]; <|"rec" -> rec, "frames" -> frames|>];
 run = ricciRun[0.3, 0.3 0.83, 32]; rec = run["rec"];
-cmpGrid[Join[{cmpRow["run", "steps", 0, Length[rec] - 1] /. {a_, b_, 0, n_, _} :> {a, b, "", n, ""},
-    cmpRow["", "max |K| at the end", page["ricci", "maxK"], rec[[-1, "maxK"]]], cmpRow["", "t at the end", page["ricci", "t"], rec[[-1, "t"]]]},
-   Flatten[Table[{cmpRow[If[q == "area", which, ""], q, page["ricci", which, q], rec[[If[which == "start", 1, -1], q]]]},
-     {which, {"start", "end"}}, {q, {"area", "energy", "entropy", "kmin", "umax", "umin"}}], 2]]]"""),
+valGrid[{"", "steps", "t", "area A", "energy D", "entropy S", "min K", "max u", "min u"},
+ {{"start", 0, rec[[1, "t"]], rec[[1, "area"]], rec[[1, "energy"]], rec[[1, "entropy"]], rec[[1, "kmin"]], rec[[1, "umax"]], rec[[1, "umin"]]},
+  {"end", Length[rec] - 1, rec[[-1, "t"]], rec[[-1, "area"]], rec[[-1, "energy"]], rec[[-1, "entropy"]], rec[[-1, "kmin"]], rec[[-1, "umax"]], rec[[-1, "umin"]]}}]"""),
 ("Input", r"""rates = Table[With[{p = rec[[k - 1]], q = rec[[k]], dt = rec[[k, "t"]] - rec[[k - 1, "t"]]},
     {q["t"], (q["energy"] - p["energy"])/dt, -(q["K2"] + p["K2"]), (q["entropy"] - p["entropy"])/dt, 2 (q["energy"] + p["energy"])/q["area"]}], {k, 2, Length[rec]}];
 late = Select[rates, #[[1]] > 0.2 &];
@@ -99,16 +95,16 @@ late = Select[rates, #[[1]] > 0.2 &];
   "area drift, relative" -> (rec[[-1, "area"]] - rec[[1, "area"]])/rec[[1, "area"]],
   "max u never rises, min u and min K never fall" -> And @@ (Differences[#["umax"] & /@ rec] ~Join~ (-Differences[#["umin"] & /@ rec]) ~Join~ (-Differences[#["kmin"] & /@ rec]) // Thread[# <= 10^-12] &),
   "ln 4π²" -> N[Log[4 π^2]]|>"""),
-("Text", "What to see: the rates agree to within 0.8% (energy) and 0.4% (entropy) after t = 0.2 (finite differences in time on a 32 × 32 grid); the area drifts by 5 × 10⁻⁴ of itself because the time steps are explicit, while the exact flow keeps it fixed; the maximum principle holds at every one of the steps; the page’s start and end readings agree with Wolfram’s to round-off."),
+("Text", "What to see: the rates agree to within 0.8% (energy) and 0.4% (entropy) after t = 0.2 (finite differences in time on a 32 × 32 grid); the area drifts by 5 × 10⁻⁴ of itself because the time steps are explicit, while the exact flow keeps it fixed; the maximum principle holds at every one of the steps."),
 ("Input", r"""With[{D0 = rec[[1, "energy"]], S0 = rec[[1, "entropy"]], Smax = Log[4 π^2]},
  ListLinePlot[{{#["t"], #["energy"]/D0} & /@ rec, {#["t"], (#["entropy"] - S0)/(Smax - S0)} & /@ rec}, PlotStyle -> {orange, blue}, PlotRange -> {0, 1.02},
   AxesLabel -> {"t", "fraction"}, PlotLegends -> {"energy D/D(0)", "entropy: share of the way to ln 4π²"}, ImageSize -> 420]]"""),
-("Figure", "Energy falls to 1% of its start while the entropy of the area density climbs most of the way to its flat-metric maximum ln 4π² (the page’s chart “Energy falls, entropy rises”)."),
+("Figure", "Energy falls to 1% of its start while the entropy of the area density climbs most of the way to its flat-metric maximum ln 4π²."),
 ("Input", r"""kField[{t_, K_}, s_] := ArrayPlot[Reverse[Transpose[K]], ColorFunction -> (kcol[#, s] &), ColorFunctionScaling -> False, Frame -> False,
    PlotLabel -> Row[{"t = ", NumberForm[t, {3, 2}], "   colours ±", NumberForm[s, 3]}], ImageSize -> 200];
 Row[{kField[run["frames"][[1]], Max[Abs[run["frames"][[1, 2]]]]], kField[SelectFirst[run["frames"], #[[1]] >= 0.5 &], Max[Abs[SelectFirst[run["frames"], #[[1]] >= 0.5 &][[2]]]]],
    kField[run["frames"][[-1]], Max[Abs[run["frames"][[-1, 2]]]]]}, "  "]"""),
-("Figure", "The curvature field at t = 0, 0.5 and 2, each coloured on its own ±max|K| as the page now does, so the pattern stays visible as it shrinks: what survives is the slowest mode, a band in x."),
+("Figure", "The curvature field at t = 0, 0.5 and 2, each coloured on its own ±max|K| so the pattern stays visible as it shrinks: what survives is the slowest mode, a band in x."),
 ("Text", "The animator: play the flow; the readout gives t, max|K|, min K, the energy and the entropy at each frame. Choose a fixed colour scale to watch it fade to flat instead."),
 ("Input", r"""With[{nF = Length[run["frames"]], recT = #["t"] & /@ rec},
  Manipulate[With[{fr = run["frames"][[mF]]}, With[{q = rec[[First[Nearest[recT -> "Index", fr[[1]]]]]]},
@@ -120,18 +116,17 @@ Row[{kField[run["frames"][[1]], Max[Abs[run["frames"][[1, 2]]]]], kField[SelectF
 ("Text", "Ricci flow is nonlinear, and curvature obeys a reaction–diffusion equation: for the Riemann tensor ∂R/∂t = ΔR + R² + R^♯ (Hamilton), and on a surface exactly K_t = Δ_g K + 2K² (§3). Its model is u_t = Δu + u²: diffusion spreads, the reaction concentrates, and positive data can blow up in finite time."),
 ("Text", "Worked by hand. For constant data u₀ > 0 the reaction alone, u′ = u², gives u = u₀/(1 − u₀t), infinite at t = 1/u₀. The round unit sphere is this case: g = (1 − 2t)g₀ has K = 1/(1 − 2t), so R = 2K = 2/(1 − 2t) solves R′ = R² with ΔR = 0 and blows up at t = ½, when the sphere vanishes."),
 ("Input", r"""{Simplify[D[u0/(1 - u0 τ), τ] - (u0/(1 - u0 τ))^2], Simplify[D[2/(1 - 2 τ), τ] - (2/(1 - 2 τ))^2]}"""),
-("Text", "The page’s comparison: u_t = u_xx + c u² on a circle of length 2π from 0.6 + 0.4 cos x, with c = 1 (reaction on) and c = 0 (the heat equation)."),
+("Text", "The comparison: u_t = u_xx + c u² on a circle of length 2π from 0.6 + 0.4 cos x, with c = 1 (reaction on) and c = 0 (the heat equation)."),
 ("Input", r"""rdSolve[c_, m_ : 0.6, a_ : 0.4] := Quiet@NDSolveValue[{D[v[τ, x], τ] == D[v[τ, x], {x, 2}] + c v[τ, x]^2, v[0, x] == m + a Cos[x], v[τ, 0] == v[τ, 2 π]}, v, {τ, 0, 4}, {x, 0, 2 π},
     Method -> {"MethodOfLines", "SpatialDiscretization" -> {"TensorProductGrid", "MinPoints" -> 200}}];
 maxu[f_, τ_] := Max[Table[f[τ, x], {x, 0, 2 π, 2 π/200}]];
 rd1 = rdSolve[1]; rd0 = rdSolve[0]; tEnd = rd1["Domain"][[1, 2]];
 tHit = Quiet[τ /. FindRoot[maxu[rd1, τ] == 60, {τ, 0.95 tEnd, 0.5, tEnd}]];
-cmpGrid[{cmpRow["u_t = u_xx + u²", "max u reaches 60 at t", page["rd", "blowT"], tHit], {"", "solver stops (blow-up) near t", "", tEnd, ""},
-  cmpRow["u_t = u_xx", "max u at t = 4", page["rd", "heatEnd"], maxu[rd0, 4]]}]"""),
+valGrid[{"equation", "quantity", "value"}, {{"u_t = u_xx + u²", "max u reaches 60 at t", tHit}, {"", "solver stops (blow-up) near t", tEnd}, {"u_t = u_xx", "max u at t = 4", maxu[rd0, 4]}}]"""),
 ("Input", r"""LogPlot[{maxu[rd1, τ], maxu[rd0, τ]}, {τ, 0, Min[2.5, tEnd]}, PlotRange -> {0.3, 60}, PlotStyle -> {orange, blue},
  AxesLabel -> {"t", "max u"}, PlotLegends -> {"u_t = u_xx + u² (reaction wins)", "u_t = u_xx (diffusion only)"}, ImageSize -> 420]"""),
-("Text", "What to see: Wolfram’s method of lines reaches 60 at t = 1.316 and stops at the blow-up near t = 1.333; the page’s explicit steps lag slightly and pass 60 at t = 1.325 (both read t ≈ 1.32). Without the reaction both reach 0.6073 at t = 4."),
-("Figure", "With the reaction term the maximum blows up in finite time; without it the solution settles to its mean (the page’s reaction–diffusion chart)."),
+("Text", "What to see: the method of lines reaches 60 at t = 1.316 and stops at the blow-up near t = 1.333. Without the reaction the solution reaches 0.6073 at t = 4, on its way to the mean 0.6."),
+("Figure", "With the reaction term the maximum blows up in finite time; without it the solution settles to its mean."),
 ("Text", "The animator: change the mean m and the ripple a of the initial data m + a cos x and see whether the reaction wins. For small positive data diffusion spreads the heat first, but on a closed circle the mean itself grows like the ODE u′ = u², so every positive start blows up eventually; the time is about 1/m for small ripples."),
 ("Input", r"""Manipulate[With[{f = rdSolve[1, mM, mA]}, With[{te = f["Domain"][[1, 2]]},
    LogPlot[maxu[f, τ], {τ, 0, Min[te, 6]}, PlotRange -> {0.05, 100}, PlotStyle -> orange, AxesLabel -> {"t", "max u"},
@@ -139,6 +134,16 @@ cmpGrid[{cmpRow["u_t = u_xx + u²", "max u reaches 60 at t", page["rd", "blowT"]
  {{mM, 0.6, "mean m"}, 0.2, 1.5, 0.05, Appearance -> "Labeled"}, {{mA, 0.4, "ripple a"}, 0, 0.6, 0.05, Appearance -> "Labeled"}, SaveDefinitions -> True]"""),
 ("Text", "Why the torus flattens and the sphere vanishes. On the torus Gauss–Bonnet forces ∬K dA = 0, so positive and negative curvature balance and the reaction cannot win: the flow irons the metric flat (§4). On the sphere the total curvature is 4π > 0 and the reaction wins, but only uniformly: the sphere shrinks while becoming round. Hamilton (1988) and Chow (1991) proved that on any closed surface the normalised flow reaches constant curvature. In three dimensions necks pinch and singularities form; Perelman’s classification of them, and surgery, completed Hamilton’s programme for the Poincaré conjecture."),
 
+("Section", "Production Notes"),
+("Text", "How the Lab page computes, and its numbers set beside Wolfram’s. The page runs the flow of §4 in JavaScript (lab/core.js), one explicit step per animation frame, and the comparison u_t = u_xx + c u² of §5 with explicit steps dt = min(0.2h², 0.02/max u) on 64 points. The association page holds its readings, produced by running lab/core.js under Node exactly as the browser runs it (tools/lab_nb/js_readouts.js). Evaluate §§0–5 first."),
+("Input", L.page_data(['ricci', 'rd'])),
+("Input", r"""cmpRow[label_, q_, p_, w_] := {label, q, p, w, Abs[p - w]};
+cmpGrid[rows_] := valGrid[{"", "quantity", "page (JavaScript)", "Wolfram", "|difference|"}, rows];
+cmpGrid[Join[{cmpRow["Ricci flow", "max |K| at the end", page["ricci", "maxK"], rec[[-1, "maxK"]]], cmpRow["", "t at the end", page["ricci", "t"], rec[[-1, "t"]]]},
+   Flatten[Table[{cmpRow[If[q == "area", which, ""], q, page["ricci", which, q], rec[[If[which == "start", 1, -1], q]]]},
+     {which, {"start", "end"}}, {q, {"area", "energy", "entropy", "kmin", "umax", "umin"}}], 2],
+   {cmpRow["u_t = u_xx + u²", "max u reaches 60 at t", page["rd", "blowT"], tHit], cmpRow["u_t = u_xx", "max u at t = 4", page["rd", "heatEnd"], maxu[rd0, 4]]}]]"""),
+("Text", "The Ricci flow readings agree to round-off: the page and §4 take the same steps. For the reaction–diffusion comparison the page’s explicit steps lag the method of lines slightly near the blow-up and pass 60 at t = 1.325 instead of 1.316 (both read t ≈ 1.32)."),
 ("Section", "References"),
 ("Text", "G. Khan, An Illustrated Introduction to the Ricci Flow, arXiv:2201.04923 (2022), pp. 14–33: the heat equation, curvature, Ricci flow as a geometric heat flow, and its differences from the heat equation. The source of this notebook’s outline."),
 ("Text", "R. S. Hamilton, Three-manifolds with positive Ricci curvature, J. Differential Geom. 17 (1982) 255–306: introduces Ricci flow. (Not opened for this notebook.)"),
@@ -149,3 +154,25 @@ cmpGrid[{cmpRow["u_t = u_xx + u²", "max u reaches 60 at t", page["rd", "blowT"]
 ("Text", "C. Villani, Optimal Transport, Old and New, Springer (2009), ch. 14: Ricci curvature as the distortion of narrow geodesic cones. (Not opened.)"),
 ("Text", "© 2026 Computational Classnotes · CC BY-NC-SA 4.0"),
 ]
+
+# ---- cosmetics: intro wording, display formulas, "Worked by hand" headings
+CELLS[3] = ("Text", "Ricci flow is a heat flow of curvature. This notebook follows G. Khan, An Illustrated Introduction to the Ricci Flow (arXiv:2201.04923, 2022), pp. 14–33, and makes each step concrete on the flow the Laplacian Curvature Lab runs (" + PAGE + "): a bumpy metric e^{2u}(dx² + dy²) on the flat torus. Every derivation is worked by hand, then checked on the kernel; the Lab’s charts are redrawn as numbered figures, and the flow can be played with an animator. How the Lab page computes, and its numbers set beside Wolfram’s, are under Production Notes at the end.")
+_DF = {
+ "A Riemannian metric g is an inner product": "L(ε) = ε‖X − Y‖ (1 − K(X, Y)(1 + ⟨X, Y⟩) ε²/12) + O(ε⁴),        ∂g/∂t = −2 Ric(g).",
+ "Worked by hand: the flow on a surface.": "u_t = −K = e^{−2u} Δ₀u,        K = −e^{−2u} Δ₀u.",
+ "Worked by hand. Where u is largest": "K_t = Δ_g K + 2K²,        Δ_g = e^{−2u} Δ₀.",
+ "Worked by hand: the heat equation.": "E′ = −2∫|∇u|² ≤ 0,        S′ = ∫|∇u|²/u ≥ 0.",
+ "Worked by hand: the flow’s own energy and entropy.": "A′ = 0,        D′ = −2∬K² dA ≤ 0,        S′ = 4D/A ≥ 0,        S ≤ ln 4π².",
+ "Worked by hand. For constant data u₀": "u = u₀/(1 − u₀ t),        R = 2K = 2/(1 − 2t).",
+}
+_out = []
+for _s, _t in CELLS:
+    if _s == "Text" and _t.startswith("Worked by hand"):
+        _head, _rest = (_t.split(". ", 1) + [""])[:2] if _t.startswith("Worked by hand.") else (_t.split(". ", 1) + [""])[:2]
+        _out.append(("Subsubsection", _head.rstrip(".").replace("Worked by hand:", "Worked by hand —")))
+        _out.append(("Text", _rest))
+    else:
+        _out.append((_s, _t))
+    for _k, _f in _DF.items():
+        if _s == "Text" and _t.startswith(_k): _out.append(("DisplayFormula", _f))
+CELLS = _out

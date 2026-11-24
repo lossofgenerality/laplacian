@@ -12,7 +12,7 @@ lines = ["(* ::Package:: *)", "", "(* %s *)" % m.TITLE, "(* © 2026 Computationa
 for s, t in CS:
     if s == 'FigCaption': lines += ["(* ::Text:: *)", "(*%s*)" % text_plain(t.replace('|', ' ')), ""]
     elif s == 'Input': lines += [t, ""]
-    elif s in ('Title', 'Section', 'Subsection'): lines += ["(* ::%s:: *)" % s, "(*%s*)" % text_plain(t), ""]
+    elif s in ('Title', 'Section', 'Subsection', 'Subsubsection'): lines += ["(* ::%s:: *)" % s, "(*%s*)" % text_plain(t), ""]
     else: lines += ["(* ::Text:: *)", "(*%s*)" % text_plain(t).replace("(*", "( *").replace("*)", "* )"), ""]
 open(fn + '.wl', 'w', encoding='utf-8').write('\n'.join(lines))
 print(fn)

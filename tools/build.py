@@ -39,10 +39,13 @@ def wl_escape(s):
 import re as _re
 _SUB = _re.compile(r'([A-Za-z\u0370-\u03FF\u2200-\u22FF\u1D00-\u1DBF\u2100-\u214F]+)_(\{[^}]*\}|[A-Za-z0-9\u0370-\u03FF\u2070-\u209F\u00B2\u00B3\u00B9\u00BD\u211D]+)')
 
+_PATH = _re.compile(r'\S*/\S*')  # URLs and file paths keep their underscores
 def sub_parts(text):
-    """Split prose into plain strings and (base, subscript) pairs for X_Y and X_{Y}."""
+    """Split prose into plain strings and (base, subscript) pairs for X_Y and X_{Y}; paths and URLs stay plain."""
     out, i = [], 0
+    paths = [m.span() for m in _PATH.finditer(text)]
     for m in _SUB.finditer(text):
+        if any(a <= m.start() < b for a, b in paths): continue
         out.append(text[i:m.start()]); sb = m.group(2)
         out.append((m.group(1), sb[1:-1] if sb.startswith('{') else sb)); i = m.end()
     out.append(text[i:])

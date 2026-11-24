@@ -6,5 +6,5 @@ for s,t in m.CELLS:
     if s=='Section': cur=int(t.split('.')[0]); secs[cur]=[]
     elif s=='Input' and cur is not None: secs[cur].append(t)
 tail=sys.argv[4] if len(sys.argv)>4 else ''
-code='\n'.join([m.page_data(keys) if keys else '', m.HELPERS]+[secs[sec][i-1] for i in idx])+'\n'+tail
+code='\n'.join([m.page_data(keys) if keys else '', m.TOOLKIT.replace("ClearAll[\"Global`*\"];", ""), m.PN_HELPERS]+[secs[sec][i-1] for i in idx])+'\n'+tail
 open('/tmp/dbg.wl','w').write(code)
