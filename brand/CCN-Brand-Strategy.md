@@ -69,7 +69,7 @@ Three findings matter most:
 - Authored documents carry the byline under the title, with the group title on its own line under the names:
   By Dara O Shayda and Hikari Noor Hoshino (星野ヌール)  
   AI System Programming Group
-- Story and tutorial work carries the production credits: Principal Investigator Lucval; Oversight Directorate Zil; Editors Dara, Lucia, Zil; Software FreeFormer; Agent Kirari-chan (キラリちゃん).
+- Story and tutorial work carries the production credits: Principal Investigator Lucval; Editors Dara, Lucia; Software FreeFormer; Agent Kirari-chan (キラリちゃん).
 - Justice Node work may carry the 正義節点 seal with “CCN 制作”.
 
 ![Fig. 5](img/fig5.png)
