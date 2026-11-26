@@ -170,6 +170,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Set the reminder for Thursday 26 November, 14:00, as the owner chose. Added the four parts to `TODO.md` in GitHub ccn-hoshino-and-colleagues, due Friday 27 November, 04:41: the Riemann tensor, sectional curvature, its pictorial definition, and the rewrite of Ricci part 1.
 
+**Scheduled reminder** (14:00, set at the owner's request at 04:41).
+
+**Hikari Noor Hoshino:** Reminded the owner that the curvature topics are due on Friday 27 November at 04:41. Reported that none of the four parts has been started, since no session ran after 04:41, and listed the groundwork that is ready. Proposed an order and timing, with the Lab rewrite held for the owner's review, and awaited his word to begin.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
