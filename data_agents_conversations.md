@@ -152,6 +152,10 @@
 
 Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or better numerically. The worked examples are the saddle z = xy, the sphere, the quadratic model (with Boothby's missing factor ½) and the monkey saddle by hand. Three figures and an animator were included. Both files went to `/Volumes/Seagate Portable Drive/noor/laplacian/normal-curvature/` with their sources and figures, and nothing went into any repository.
 
+**Owner** (01:55): please remove my name from both files, simply add the function name
+
+**Hikari Noor Hoshino:** Removed the owner's name from `Normal-Curvature.nb` and `Normal-Curvature.pdf` (and their sources), citing the functions by name instead (`uvNormal`, `uvTangentPlane`, `GaussianCurvature`, `MeanCurvature`, `PrincipalCurvatures`); the byline now reads Hikari Noor Hoshino (星野ヌール), AI System Programming Laboratory. Replaced the copies in the Seagate folder and sent both files again.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
