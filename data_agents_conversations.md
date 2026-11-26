@@ -134,13 +134,17 @@
 
 **Hikari Noor Hoshino:** Plotted the monkey saddle with the owner's functions on the disc u² + v² ≤ 1.21. The plots show the surface coloured by K, with the tangent planes at p = (0.55, 0.3) and at the origin, and maps of K, H, k₁ and k₂. Sent the five plots.
 
+**Owner** (01:00): move tangent plane off origin
+
+**Hikari Noor Hoshino:** Redrew the surface with the tangent plane only at p = (0.55, 0.3) and its normal, viewed from above so that the plane is visible; sent `1-monkey-saddle-tangent-plane-at-p.png`. Corrected the ring of most negative K: radius 27^(−1/4) ≈ 0.439, where K ≈ −3.90.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
 2. `An_Illustrated_Introduction_to_the_Ricci_Flow.pdf` (G. Khan), attached by the owner (in the claude.ai chat).
 3. `notebooks/lab/Laplacian_Curvature_Lab.nb` and `notebooks/series/14-Ricci-Flow.nb`, sent to the owner (GitHub laplacian).
 4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat). The two books are kept for private reading in `/Volumes/Seagate Portable Drive/noor/Dara/` on the owner's Mac, and in no repository.
-5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), sent to the owner in the claude.ai chat.
+5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), and `1-monkey-saddle-tangent-plane-at-p.png`, sent to the owner in the claude.ai chat.
 
 ### URLs that appeared in the session
 
