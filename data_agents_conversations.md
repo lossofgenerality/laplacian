@@ -202,6 +202,21 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Noted in `TODO.md` that the owner is writing the Riemann tensor code, and that its notebook and PDF will be built on his code once it arrives.
 
+**Owner** (17:24): "hand-worked proofs" can you share the math algorithm used for this particular proofs? specify the input from the book's OCR or your Eye and the algebraic steps in Wolfram mathematica. "Shall I begin those" please begin
+
+**Hikari Noor Hoshino:** Explained the method used for the proofs worked by hand. The input is the book's text layer, read with pdftotext, with the page images examined wherever the text layer garbles formulas or figures. I then derive each step myself. Wolfram does not derive the proofs: it checks each step afterwards, symbolically where possible and numerically otherwise. Then began the work and wrote `Riemann-Sectional-Draft.pdf` (five pages), drawn from Boothby §§VIII.2–4:
+1. the components of R in Christoffel symbols, with the sphere worked in full;
+2. the symmetries and the Bianchi identity;
+3. the count n²(n² − 1)/12;
+4. the Theorema Egregium;
+5. sectional curvature and its independence of the basis;
+6. Theorem 3.5;
+7. Ric = K g on surfaces;
+8. S² × R drawn in ℝ³ as |dx|²/|x|², with K(Π) = cos²a;
+9. the pictorial definition (Theorem 4.7), made measurable by the Bertrand–Diguet–Puiseux circumference formula, with a three-panel figure.
+
+Every result was checked on the kernel with temporary lower-case helpers, to be replaced by the owner's code. Placed in `noor/laplacian/riemann-sectional/` on the Seagate drive, with no repository changed.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
