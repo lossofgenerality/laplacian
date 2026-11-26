@@ -182,6 +182,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Recorded the naming rule in `common/wolfram-cloud-build-process.md` of GitHub ccn-hoshino-and-colleagues, and pushed. Asked whether the owner's five capitalised functions (`GaussianCurvature`, `MeanCurvature`, `PrincipalCurvatures`, `RiemannTensor`, `RicciCurvature`) should be renamed in the curvature notebooks.
 
+**Owner** (16:04): I Will fix them
+
+**Hikari Noor Hoshino:** Noted that the owner will rename the five capitalised functions himself. Until his renamed versions arrive, the curvature notebooks leave them untouched; every new function follows the lower-case rule.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
