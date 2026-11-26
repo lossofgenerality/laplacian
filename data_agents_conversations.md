@@ -186,6 +186,18 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Noted that the owner will rename the five capitalised functions himself. Until his renamed versions arrive, the curvature notebooks leave them untouched; every new function follows the lower-case rule.
 
+**Owner** (16:08): You added some write up last night defining S=-dN where is that ?
+
+**Hikari Noor Hoshino:** Pointed to `Normal-Curvature.pdf` and `Normal-Curvature.nb` in `noor/laplacian/normal-curvature/` on the Seagate drive, listing where S = −dN is defined: the conventions, §1, Theorem 1 in §2, and `shapeOperator` in the toolkit.
+
+**Owner** (16:08): where is that in the lab?
+
+**Hikari Noor Hoshino:** It is not in the Lab, which was left untouched as the owner asked. Restated the proposal for a "Curvature in ℝ³" Lab section before Ricci flow.
+
+**Owner** (16:09): ok good. I am writing some code now, be back after finished
+
+**Hikari Noor Hoshino:** Acknowledged; waiting for the owner's code.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
