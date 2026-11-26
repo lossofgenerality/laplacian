@@ -305,6 +305,14 @@ Building this showed that two helpers had no book source: `christoffel` and `rie
 
 **Hikari Noor Hoshino:** "pp9" in the OCR file name means pages 9–14 ("pp." for pages), so it is not a misspelling. Rebased U_i on p. 14. The new CCN functions `uOp` (U_i[f] = ∂f/∂x_i) and `uOpAt` (U_1(p)[f] = d/dt f(p_1 + t, p_2, p_3) at t = 0, the book's line) replace the earlier `uFrame = IdentityMatrix[3]`. A field now acts on functions as V[f] = Σ v_i U_i[f]. §1 was rewritten from "We now use the pointwise principle…", with a new crop of p. 14 that starts there, and the hand proofs no longer appeal to constant Euclidean coordinates of U_i. All 12 input cells were rerun with every check at 0, and the PDF was re-exported (37 pages). Not pushed.
 
+**Owner** (22:48): index your previous larger reply so I can address each paragraph
+
+**Hikari Noor Hoshino:** Re-sent the reply on the U_i rebase, indexed: paragraphs 1–5, with items 3.1–3.7.
+
+**Owner** (22:50): For item 2: State as Hoshino that you correct this error which was made by the AI, and that error is within the normalcy rate of human errors as well.
+
+**Hikari Noor Hoshino:** 1. Added a 🗣 correction at the head of §1 of `ONeill-Covariant-Derivatives.nb`. It says that the first version, made by the AI-model, took U_i from Definition 1.2.4 as fixed unit vectors; that the owner's review pointed to p. 14; and that Hikari Noor Hoshino corrected §1 and the proofs. It adds that the error is within the normal range of human reading errors, since Definition 1.2.4 itself introduces U_1(p) as (1, 0, 0)_p. 2. All 13 input cells were rerun, every check is 0, and the PDF was re-exported (37 pages). Not pushed.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
