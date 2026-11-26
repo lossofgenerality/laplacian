@@ -198,6 +198,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Acknowledged; waiting for the owner's code.
 
+**Owner** (16:09): I will code the Reimann curvature tensor also
+
+**Hikari Noor Hoshino:** Noted in `TODO.md` that the owner is writing the Riemann tensor code, and that its notebook and PDF will be built on his code once it arrives.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
