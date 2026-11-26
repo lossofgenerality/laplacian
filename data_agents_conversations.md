@@ -279,6 +279,10 @@ Building this showed that two helpers had no book source: `christoffel` and `rie
 
 **Hikari Noor Hoshino:** Applied the three markers throughout the notebook: `</>:OCR` for program output (the OCR text layer), 👁️‍🗨️ for what the AI saw in a page image, and 🗣 for my own comments. A first PDF test showed that Mathematica's PDF export drops colour emoji and leaves blank spaces, while `</>:OCR` survives as plain text. Fixed this by drawing each emoji as a small image with `Rasterize`, through a helper `emojiIcon`, and added a legend of the markers to the §0 output. The emoji were removed from plain Text cells, where they cannot be rasterized; the misprint comment moved into the output of the p. 388 cell. All 16 input cells were evaluated on the local kernel. The evaluated notebook was exported as `Riemann-Sectional-Notebook.pdf` (26 pages), and the icons and the wrapped comment were checked in the rendered pages. The embedded page images are shown, but their base64 input is replaced in the PDF by a one-line comment. An earlier full `NotebookEvaluate` attempt did not finish and was abandoned.
 
+**Owner** (19:29): We do not promote any vendors so please remove the Reference to Claude in both files and in place of it add "AI-model"
+
+**Hikari Noor Hoshino:** In `Riemann-Sectional.nb` and `Riemann-Sectional-Notebook.pdf`, replaced "the AI (Claude)" with "the AI-model", both in the legend printed in §0 and in the introductory text. Rebuilt the notebook, re-exported the PDF (26 pages), and checked that neither file contains "Claude". The first copy of the notebook on the drive had again not been replaced; it was recommitted and checked before the PDF was exported.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
