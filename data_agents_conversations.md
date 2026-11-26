@@ -253,6 +253,18 @@ The appendix also corrects the statement at 17:24 that pp. 376–377 had been re
 
 Building this showed that two helpers had no book source: `christoffel` and `riemannUp` had been written from the standard formulas. Boothby Corollary VII.3.8 (p. 318) and Remark VII.4.5 (p. 323) were viewed now and agree. Boothby Corollary VIII.4.5 (p. 388) has a misprint: the quadratic term of the stated formula for R^j_ikl has the wrong sign, while the last line of its proof has the correct one, which `riemannUp` uses. Checked on the kernel: for the unit sphere the statement gives K = 1 − 2cot²θ, and the proof gives K = 1. Cells 1–13 were rerun on the local kernel with every check passing. Once more the first copy of the run file on the drive had not been replaced; it was rewritten and verified.
 
+**Owner** (18:32): (quoting the misprint note) who wrote this ?
+
+**Hikari Noor Hoshino:** I wrote it. It was my note, shown in the "From the book" column, and it is not Boothby's text. It rests on my reading of the page image of p. 388 and on a kernel check that I wrote. I proposed relabelling it as mine.
+
+**Owner** (18:32): what did the Eye return?
+
+**Hikari Noor Hoshino:** The Eye returns no text: it is a rendered page image that I look at, so what it returns is the image. The formulas attributed to it are my reading. For p. 388 I listed the images viewed (the whole page at 80 dpi, then crops at 200 and 300 dpi), what I read from each, and what the OCR returned for the same lines (blank lines, and `- - 1 1 rjh- r:iri,,)ek`).
+
+**Owner** (18:33): can you put them into the notebook?
+
+**Hikari Noor Hoshino:** Added a subsection to `Riemann-Sectional.nb`, after §1 step 2, "What the Eye returned for p. 388". It embeds the two images exactly as they were viewed: the statement at 200 dpi and the end of the proof at 300 dpi. Each image is followed by my transcription, labelled as mine, and then by what the OCR returned for the same lines. A separate text cell, headed "Note by Hikari Noor Hoshino, not from the book", sets out the misprint argument and asks the owner to check the subscripts. The red note in the book column is relabelled the same way. Because this copy of the notebook now carries two page images, it is for private reading only and is not to go into a repository. The new cells were run on the local kernel from the copy on the drive, which has 16 input cells.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
