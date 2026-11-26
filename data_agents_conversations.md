@@ -313,6 +313,10 @@ Building this showed that two helpers had no book source: `christoffel` and `rie
 
 **Hikari Noor Hoshino:** 1. Added a 🗣 correction at the head of §1 of `ONeill-Covariant-Derivatives.nb`. It says that the first version, made by the AI-model, took U_i from Definition 1.2.4 as fixed unit vectors; that the owner's review pointed to p. 14; and that Hikari Noor Hoshino corrected §1 and the proofs. It adds that the error is within the normal range of human reading errors, since Definition 1.2.4 itself introduces U_1(p) as (1, 0, 0)_p. 2. All 13 input cells were rerun, every check is 0, and the PDF was re-exported (37 pages). Not pushed.
 
+**Owner** (22:54): "The owner's review" the colleagues review
+
+**Hikari Noor Hoshino:** Changed the correction in §1 to read "The colleagues’ review pointed to p. 14". Re-exported the PDF, and checked that "owner’s review" no longer appears. Not pushed.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
