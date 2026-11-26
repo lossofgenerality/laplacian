@@ -283,6 +283,16 @@ Building this showed that two helpers had no book source: `christoffel` and `rie
 
 **Hikari Noor Hoshino:** In `Riemann-Sectional.nb` and `Riemann-Sectional-Notebook.pdf`, replaced "the AI (Claude)" with "the AI-model", both in the legend printed in §0 and in the introductory text. Rebuilt the notebook, re-exported the PDF (26 pages), and checked that neither file contains "Claude". The first copy of the notebook on the drive had again not been replaced; it was recommitted and checked before the PDF was exported.
 
+**Owner** (19:35): how did you make the PDF file, from Wolfram or from your local libraries
+
+**Hikari Noor Hoshino:** From Wolfram, on the owner's Mac. The local kernel ran the 16 input cells, built a notebook of inputs and outputs, and exported it with the front end (`UsingFrontEnd[Export[…]]`). The local tools (`pdfinfo`, `pdffonts`, `pdftotext`, `pdftoppm`) only checked the PDF. The draft PDF and the conversation record are made differently: pandoc, then headless Chrome.
+
+**Owner** (19:36): (a screenshot of the legend of the markers) good , make a note into your report about the convention
+
+**Owner** (19:37): push
+
+**Hikari Noor Hoshino:** Added a section "The source markers" to the appendix of the draft (`Riemann-Sectional-Draft.pdf`, 7 pages, on the Seagate drive), and marked its table and comments with `</>:OCR`, 👁️‍🗨️ and 🗣. Recorded the convention as a standing rule in `common/working-practice.md` of ccn-hoshino-and-colleagues, with the emoji-rasterizing technique and the rule to write "AI-model". Pushed that note. The draft and the notebook stay off GitHub because they carry book material.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
