@@ -265,6 +265,14 @@ Building this showed that two helpers had no book source: `christoffel` and `rie
 
 **Hikari Noor Hoshino:** Added a subsection to `Riemann-Sectional.nb`, after §1 step 2, "What the Eye returned for p. 388". It embeds the two images exactly as they were viewed: the statement at 200 dpi and the end of the proof at 300 dpi. Each image is followed by my transcription, labelled as mine, and then by what the OCR returned for the same lines. A separate text cell, headed "Note by Hikari Noor Hoshino, not from the book", sets out the misprint argument and asks the owner to check the subscripts. The red note in the book column is relabelled the same way. Because this copy of the notebook now carries two page images, it is for private reading only and is not to go into a repository. The new cells were run on the local kernel from the copy on the drive, which has 16 input cells.
 
+**Owner** (18:40): Ok let me make your jobs easier, BTW excellent work, make a Column like this:
+
+**Hikari Noor Hoshino:** The example had not come through, and I asked for it.
+
+**Owner** (18:45): (a screenshot of a vertical `Column@{…}` holding "Step 1.", the source line, the OCR label, the OCR box, the Eye label and the page image) vertical column and lave the Wolfram text normal size, then all else remain as you computed, this should be easier to read and turn into pdf
+
+**Hikari Noor Hoshino:** Rebuilt `stepView` so that each step is one vertical `Column`, in this order: "Step n.", the source line, the OCR label and its framed raw text, the Eye label and the page image, and last "Computation:" with its value. The grid is gone. All the explicit font sizes were removed from the display, so the text is the notebook's normal size; only the colours and bold or italic remain. The "What the Eye returned for p. 388" cell was changed the same way. The computations are unchanged. Rerun on the local kernel from the copy on the drive (16 input cells); the first five cells pass.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
