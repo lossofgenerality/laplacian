@@ -217,6 +217,21 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 Every result was checked on the kernel with temporary lower-case helpers, to be replaced by the owner's code. Placed in `noor/laplacian/riemann-sectional/` on the Seagate drive, with no repository changed.
 
+**Owner** (17:41): please issue us the notebook for the last draft steps by steps
+
+**Hikari Noor Hoshino:** Built `Riemann-Sectional.nb`, which follows the draft step by step, each hand step as a Text cell with its Wolfram computation beneath. Nine sections:
+1. the sphere's Christoffel symbols and R term by term;
+2. the four symmetries, checked exactly in all 81 components;
+3. the count of independent components, by solving the symmetry equations (1, 6, 20);
+4. the Theorema Egregium in three ways on the monkey saddle and the torus;
+5. independence of the basis, and Ric = K g;
+6. Theorem 3.5, by solving for the general tensor;
+7. S² × ℝ, with K(Π) = cos²a;
+8. the geodesics checked exactly against the geodesic equation, and the circumference measurement;
+9. the figure and an animator.
+
+All 15 input cells ran on the kernel with every check passing. Kept in `noor/laplacian/riemann-sectional/` and sent.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
