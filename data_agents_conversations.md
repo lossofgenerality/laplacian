@@ -232,6 +232,19 @@ Every result was checked on the kernel with temporary lower-case helpers, to be 
 
 All 15 input cells ran on the kernel with every check passing. Kept in `noor/laplacian/riemann-sectional/` and sent.
 
+**Owner** (17:57): This is nice but too smashed together, can you make a better display of the steps , Column@list and each list a Row@stepn_n
+
+**Owner** (17:58): I want the OCR output of what you scan from the page (even if you used the Eye that is fine mention it briefly) . What is the list of item OCR+Eye outputs
+
+**Owner** (17:58): then do your write up
+
+**Hikari Noor Hoshino:** Did three things:
+1. Rebuilt `Riemann-Sectional.nb` so that every result shows as a titled `Column` of numbered `Row`s ("Step 1. … value"), through a helper `stepView`. All 15 cells were rerun, and every check passed.
+2. Viewed pp. 377 and 381 as page images to confirm the formulas that the OCR garbles. Saved the full OCR text of the pages read (Boothby pp. 361–391, O'Neill pp. 202–216) for the owner's private reading in `noor/Dara/ocr/`.
+3. Added to the draft PDF and to the notebook an appendix listing all ten items read, each marked OCR or Eye with what was taken, with the typical OCR faults.
+
+The appendix also corrects the statement at 17:24 that pp. 376–377 had been read from the page images: they had been read from the OCR, and p. 377 was viewed only now. Noticed that a copy on the Seagate drive had not been replaced on the first attempt, and recommitted and verified it.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
