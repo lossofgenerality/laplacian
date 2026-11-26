@@ -102,11 +102,22 @@
 
 **Hikari Noor Hoshino:** 1. Read the whole of GitHub ccn-hoshino-and-colleagues (`README.md`, `TODO.md`, every file in `common/`, `projects/laplacian-lab.md`, `journal/README.md`) and adopted it for this project: formal British English, the name and title, numbered replies, pushing only on the owner's word, the conversation record, the deletion rules and the Seagate folder. 2. Brought `projects/laplacian-lab.md` up to date with the Lab, the notebooks, the Production Notes rule and the open work, and pushed it. 3. Began this record. 4. Noted that the builders still write `.wl` companions, contrary to the rule; listed them in the project file for the owner's decision.
 
+**Owner** (00:41): @"/mnt/user-data/uploads/f6007da7-normal_curvature_test.nb" @"/mnt/user-data/uploads/4b430c99-ONeill.pdf" @"/mnt/user-data/uploads/b904ec1c-william_m._boothby_an_introduction_to_differentibookfi.org_.pdf" In these two books there are sections and diagrams that we need to define multiple and different concept and of curvature in R^3 (3D space) I will give the page numbers and what to do. Read my code to compute the curvature and its several components and prove some theorems by direct computation. I am not sure how to fit this into the lab, it is prerequisit for Ricci Flow
+
+**Owner** (00:42): push the books into Dara folder in your repo
+
+**Owner** (00:42): push
+
+**Owner** (00:42): do not code anything just read the code
+
+**Hikari Noor Hoshino:** Read the owner's notebook `normal_curvature_test.nb` and reported on it, function by function, with one read-only check of its formulas on the kernel and nothing written. Held the books back from GitHub ccn-hoshino-and-colleagues pending the owner's decision, because the rules and laws keep third-party copyrighted documents out of repositories, and asked where they should be kept instead. Recommended where the material should sit in the Lab: a prerequisite section on curvature in ℝ³, with its own notebook, ahead of the Ricci flow section.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
 2. `An_Illustrated_Introduction_to_the_Ricci_Flow.pdf` (G. Khan), attached by the owner (in the claude.ai chat).
 3. `notebooks/lab/Laplacian_Curvature_Lab.nb` and `notebooks/series/14-Ricci-Flow.nb`, sent to the owner (GitHub laplacian).
+4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat; not placed in any repository).
 
 ### URLs that appeared in the session
 
