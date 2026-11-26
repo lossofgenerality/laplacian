@@ -123,7 +123,6 @@
 **Owner** (00:46): keep them on your drive on my machine
 
 **Hikari Noor Hoshino:** With the owner's approval of access to `/Volumes/Seagate Portable Drive/noor`, placed both books in `noor/Dara/` on the owner's Mac. They are in no repository.
-5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), sent to the owner in the claude.ai chat.
 
 **Owner** (00:50): boothby go to the page 367 "We shall now interpret" see the diagram Figure VIII.2 read up to example (1.6) . The description is incomplete you need to reach much larger segment of the book but the wolfram code does cover them and hence much less reading from u
 
@@ -141,6 +140,7 @@
 2. `An_Illustrated_Introduction_to_the_Ricci_Flow.pdf` (G. Khan), attached by the owner (in the claude.ai chat).
 3. `notebooks/lab/Laplacian_Curvature_Lab.nb` and `notebooks/series/14-Ricci-Flow.nb`, sent to the owner (GitHub laplacian).
 4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat). The two books are kept for private reading in `/Volumes/Seagate Portable Drive/noor/Dara/` on the owner's Mac, and in no repository.
+5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), sent to the owner in the claude.ai chat.
 
 ### URLs that appeared in the session
 
