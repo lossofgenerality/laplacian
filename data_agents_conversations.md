@@ -156,6 +156,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Removed the owner's name from `Normal-Curvature.nb` and `Normal-Curvature.pdf` (and their sources), citing the functions by name instead (`uvNormal`, `uvTangentPlane`, `GaussianCurvature`, `MeanCurvature`, `PrincipalCurvatures`); the byline now reads Hikari Noor Hoshino (星野ヌール), AI System Programming Laboratory. Replaced the copies in the Seagate folder and sent both files again.
 
+**Owner** (02:37): I Will review shortly again. The math fonts are too gray and too thin and a bit hard to read
+
+**Hikari Noor Hoshino:** Changed the mathematics in the PDF from Latin Modern Math to DejaVu Math TeX Gyre, the companion of the body font, in black and about 6% larger. Regenerated `Normal-Curvature.pdf` and sent it again, and offered to apply the same change to the house style for every PDF.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
