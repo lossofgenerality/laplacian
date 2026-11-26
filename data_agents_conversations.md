@@ -112,12 +112,24 @@
 
 **Hikari Noor Hoshino:** Read the owner's notebook `normal_curvature_test.nb` and reported on it, function by function, with one read-only check of its formulas on the kernel and nothing written. Held the books back from GitHub ccn-hoshino-and-colleagues pending the owner's decision, because the rules and laws keep third-party copyrighted documents out of repositories, and asked where they should be kept instead. Recommended where the material should sit in the Lab: a prerequisite section on curvature in ℝ³, with its own notebook, ahead of the Ricci flow section.
 
+**Owner** (00:43): book is only for private reading and no distribution allowed
+
+**Hikari Noor Hoshino:** Explained that a private GitHub repository is still shared with its collaborators and bound by GitHub's terms, and proposed keeping the books on the owner's own storage.
+
+**Owner** (00:45): No my folder is only for my viewing,  except in case of emergency mr. wayne might review contents
+
+**Hikari Noor Hoshino:** Noted that GitHub cannot restrict a single folder, and declined to upload the books to GitHub; offered the Seagate drive or the owner's own storage.
+
+**Owner** (00:46): keep them on your drive on my machine
+
+**Hikari Noor Hoshino:** With the owner's approval of access to `/Volumes/Seagate Portable Drive/noor`, placed both books in `noor/Dara/` on the owner's Mac. They are in no repository.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
 2. `An_Illustrated_Introduction_to_the_Ricci_Flow.pdf` (G. Khan), attached by the owner (in the claude.ai chat).
 3. `notebooks/lab/Laplacian_Curvature_Lab.nb` and `notebooks/series/14-Ricci-Flow.nb`, sent to the owner (GitHub laplacian).
-4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat; not placed in any repository).
+4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat). The two books are kept for private reading in `/Volumes/Seagate Portable Drive/noor/Dara/` on the owner's Mac, and in no repository.
 
 ### URLs that appeared in the session
 
