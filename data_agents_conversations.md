@@ -123,10 +123,17 @@
 **Owner** (00:46): keep them on your drive on my machine
 
 **Hikari Noor Hoshino:** With the owner's approval of access to `/Volumes/Seagate Portable Drive/noor`, placed both books in `noor/Dara/` on the owner's Mac. They are in no repository.
+5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), sent to the owner in the claude.ai chat.
 
 **Owner** (00:50): boothby go to the page 367 "We shall now interpret" see the diagram Figure VIII.2 read up to example (1.6) . The description is incomplete you need to reach much larger segment of the book but the wolfram code does cover them and hence much less reading from u
 
 **Hikari Noor Hoshino:** Read Boothby §VIII.1 from its opening (pp. 361–369, Figures VIII.1–VIII.3) and Theorem 2.1 (pp. 370–371), and matched each step to the owner's functions. Reported a factor-of-two slip in the book's local quadric (p. 368 and Example 1.6): the principal curvatures of z = ax² + by² at the origin are 2a and 2b, so the matching surface is z = ½(ax² + by²). Proposed the Lab section's structure and its figure (an interactive Fig. VIII.2), and wrote no code, as instructed.
+
+**Owner** (00:54): I added some functions in the attached notebook e.g. f = monekysaddle = {u, v, u^3 - 3 u v^2}; plot that f choose reasonable ranges of u, v and uvTangentPlane[ ] , GaussianCurvature[x_List, {u_, v_} ] , PrincipalCurvatures[ ] , MeanCurvature[ x_, {u_, v_}] . x_List is {u, v, u^3 - 3 u v^2}
+
+**Owner** (00:55): once you finish just show me the plots
+
+**Hikari Noor Hoshino:** Plotted the monkey saddle with the owner's functions on the disc u² + v² ≤ 1.21. The plots show the surface coloured by K, with the tangent planes at p = (0.55, 0.3) and at the origin, and maps of K, H, k₁ and k₂. Sent the five plots.
 
 ### Diagrams, images and files placed into the session
 
