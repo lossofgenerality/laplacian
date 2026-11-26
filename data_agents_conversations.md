@@ -178,6 +178,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Acknowledged, and will wait for the owner's new code and mathematics before beginning the curvature topics.
 
+**Owner** (15:59): The new text you added to Ricci Flow as excellent, you need to name the CCN Wolfram functions like this uvNormal[ ] always the first letter lowercase to avoid mixup with wolfram calls e.g. nSolve for CCN , in Wolfram NSolve[ ] . Please add this to your repo for any future wolfram functions. and push
+
+**Hikari Noor Hoshino:** Recorded the naming rule in `common/wolfram-cloud-build-process.md` of GitHub ccn-hoshino-and-colleagues, and pushed. Asked whether the owner's five capitalised functions (`GaussianCurvature`, `MeanCurvature`, `PrincipalCurvatures`, `RiemannTensor`, `RicciCurvature`) should be renamed in the curvature notebooks.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
