@@ -245,6 +245,14 @@ All 15 input cells ran on the kernel with every check passing. Kept in `noor/lap
 
 The appendix also corrects the statement at 17:24 that pp. 376–377 had been read from the page images: they had been read from the OCR, and p. 377 was viewed only now. Noticed that a copy on the Seagate drive had not been replaced on the first attempt, and recommitted and verified it.
 
+**Owner** (18:10): (quoting the `stepView` call for the Christoffel symbols) I need the image or text that OCR gave you in the 2nd column or someplace which you used to make the stepView data
+
+**Owner** (18:11): thank you
+
+**Hikari Noor Hoshino:** Changed `stepView` to a grid with four columns: Step | From the book (OCR or Eye) | Computation | Value. For each step the book column shows the raw OCR text of the lines used, unrepaired, with the file and line numbers. Where the OCR lost a formula or the page image was used, it shows the page image as well. Each entry says when it was read, and steps with no book source say so (the component count, the S² × ℝ example, the closed-form geodesics, the Bertrand–Diguet–Puiseux formula). The book text and page images are not stored in the notebook. They are read at evaluation from `noor/Dara/ocr/` (17 page crops in `crops/`, and a new OCR file for Boothby pp. 318 and 323), so the notebook carries no book material.
+
+Building this showed that two helpers had no book source: `christoffel` and `riemannUp` had been written from the standard formulas. Boothby Corollary VII.3.8 (p. 318) and Remark VII.4.5 (p. 323) were viewed now and agree. Boothby Corollary VIII.4.5 (p. 388) has a misprint: the quadratic term of the stated formula for R^j_ikl has the wrong sign, while the last line of its proof has the correct one, which `riemannUp` uses. Checked on the kernel: for the unit sphere the statement gives K = 1 − 2cot²θ, and the proof gives K = 1. Cells 1–13 were rerun on the local kernel with every check passing. Once more the first copy of the run file on the drive had not been replaced; it was rewritten and verified.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
@@ -253,6 +261,7 @@ The appendix also corrects the statement at 17:24 that pp. 376–377 had been re
 4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat). The two books are kept for private reading in `/Volumes/Seagate Portable Drive/noor/Dara/` on the owner's Mac, and in no repository.
 5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), `1-monkey-saddle-tangent-plane-at-p.png`, `6-surface-mean-H.png`, `7-surface-principal-k1.png` and `8-surface-principal-k2.png`, sent to the owner in the claude.ai chat.
 6. `Normal-Curvature.nb` and `Normal-Curvature.pdf`, sent to the owner and kept in `/Volumes/Seagate Portable Drive/noor/laplacian/normal-curvature/` with `normal-curvature.md`, `normal_curvature.py`, `fig1.png`–`fig3.png` and the test file `tests/nc_run.txt`.
+7. `Riemann-Sectional.nb` with the book column, sent to the owner and kept in `/Volumes/Seagate Portable Drive/noor/laplacian/riemann-sectional/`; page crops in `/Volumes/Seagate Portable Drive/noor/Dara/ocr/crops/` (private reading only).
 
 ### URLs that appeared in the session
 
