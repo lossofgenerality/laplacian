@@ -142,6 +142,16 @@
 
 **Hikari Noor Hoshino:** Drew the monkey saddle coloured by H, k₁ and k₂, each with the tangent plane and normal at p = (0.55, 0.3), and gave the values at p: K = −2.48094, H = −0.05138, k₁ = 1.52456, k₂ = −1.62732, with k₁k₂ = K and ½(k₁ + k₂) = H. The Wolfram Cloud evaluator was unavailable, so this ran on the owner's local Wolfram kernel through the desktop app.
 
+**Owner** (01:06): in these two books or over the net seek the defintion of Normal Curvature , and create a write-up for it in wolfram and .pdf, for now we just work the notebook , but later we discuss how to add it to the lab
+
+**Hikari Noor Hoshino:** Took the definition from O'Neill §5.2 (Lemma 2.1, Definition 2.2, Theorem 2.5, Corollary 2.6) and Boothby §VIII.1, with the Encyclopedia of Mathematics and MathWorld. Wrote `Normal-Curvature.nb` and `Normal-Curvature.pdf` (five pages) with a definition in three equivalent forms and four theorems, each worked by hand and checked on the kernel:
+1. dN is tangent and S is self-adjoint;
+2. Meusnier;
+3. the normal section, Boothby's Fig. VIII.2;
+4. Euler's formula and the principal curvatures.
+
+Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or better numerically. The worked examples are the saddle z = xy, the sphere, the quadratic model (with Boothby's missing factor ½) and the monkey saddle by hand. Three figures and an animator were included. Both files went to `/Volumes/Seagate Portable Drive/noor/laplacian/normal-curvature/` with their sources and figures, and nothing went into any repository.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
@@ -149,6 +159,7 @@
 3. `notebooks/lab/Laplacian_Curvature_Lab.nb` and `notebooks/series/14-Ricci-Flow.nb`, sent to the owner (GitHub laplacian).
 4. `normal_curvature_test.nb` (the owner's code), B. O'Neill, *Elementary Differential Geometry* (revised 2nd edition, PDF), and W. M. Boothby, *An Introduction to Differentiable Manifolds and Riemannian Geometry* (PDF), attached by the owner (in the claude.ai chat). The two books are kept for private reading in `/Volumes/Seagate Portable Drive/noor/Dara/` on the owner's Mac, and in no repository.
 5. Five plots of the monkey saddle (`1-monkey-saddle-tangent-planes.png`, `2-gauss-K.png`, `3-mean-H.png`, `4-principal-k1.png`, `5-principal-k2.png`), `1-monkey-saddle-tangent-plane-at-p.png`, `6-surface-mean-H.png`, `7-surface-principal-k1.png` and `8-surface-principal-k2.png`, sent to the owner in the claude.ai chat.
+6. `Normal-Curvature.nb` and `Normal-Curvature.pdf`, sent to the owner and kept in `/Volumes/Seagate Portable Drive/noor/laplacian/normal-curvature/` with `normal-curvature.md`, `normal_curvature.py`, `fig1.png`–`fig3.png` and the test file `tests/nc_run.txt`.
 
 ### URLs that appeared in the session
 
@@ -156,6 +167,8 @@
 2. https://lossofgenerality.github.io/laplacian/lab/Laplacian_Curvature_Lab.html#ricci
 3. https://arxiv.org/abs/2201.04923
 4. https://github.com/lossofgenerality/ccn-hoshino-and-colleagues
+5. https://encyclopediaofmath.org/wiki/Normal_curvature
+6. https://archive.lib.msu.edu/crcmath/math/math/n/n170.htm
 
 ---
 
