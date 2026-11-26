@@ -124,6 +124,10 @@
 
 **Hikari Noor Hoshino:** With the owner's approval of access to `/Volumes/Seagate Portable Drive/noor`, placed both books in `noor/Dara/` on the owner's Mac. They are in no repository.
 
+**Owner** (00:50): boothby go to the page 367 "We shall now interpret" see the diagram Figure VIII.2 read up to example (1.6) . The description is incomplete you need to reach much larger segment of the book but the wolfram code does cover them and hence much less reading from u
+
+**Hikari Noor Hoshino:** Read Boothby §VIII.1 from its opening (pp. 361–369, Figures VIII.1–VIII.3) and Theorem 2.1 (pp. 370–371), and matched each step to the owner's functions. Reported a factor-of-two slip in the book's local quadric (p. 368 and Example 1.6): the principal curvatures of z = ax² + by² at the origin are 2a and 2b, so the matching surface is z = ½(ax² + by²). Proposed the Lab section's structure and its figure (an interactive Fig. VIII.2), and wrote no code, as instructed.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
