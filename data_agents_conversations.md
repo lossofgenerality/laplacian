@@ -160,6 +160,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Changed the mathematics in the PDF from Latin Modern Math to DejaVu Math TeX Gyre, the companion of the body font, in black and about 6% larger. Regenerated `Normal-Curvature.pdf` and sent it again, and offered to apply the same change to the house style for every PDF.
 
+**Owner** (04:34): the math fonts are much better, make a note for yourself in your directry to update all math fonts like this ones here in all repos. But that one at a time
+
+**Hikari Noor Hoshino:** Recorded the change, with its exact CSS, as an item in `TODO.md` of GitHub ccn-hoshino-and-colleagues: update the mathematics fonts in every repository, one at a time, on the owner's word.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
