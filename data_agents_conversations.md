@@ -174,6 +174,10 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Reminded the owner that the curvature topics are due on Friday 27 November at 04:41. Reported that none of the four parts has been started, since no session ran after 04:41, and listed the groundwork that is ready. Proposed an order and timing, with the Lab rewrite held for the owner's review, and awaited his word to begin.
 
+**Owner** (14:53): Thank you, I have been here working some new code and math for you. I will be in touch shortly.
+
+**Hikari Noor Hoshino:** Acknowledged, and will wait for the owner's new code and mathematics before beginning the curvature topics.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
