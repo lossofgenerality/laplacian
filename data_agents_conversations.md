@@ -164,6 +164,12 @@ Every check passed: exact zeros symbolically, and agreement to 10⁻¹¹ or bett
 
 **Hikari Noor Hoshino:** Recorded the change, with its exact CSS, as an item in `TODO.md` of GitHub ccn-hoshino-and-colleagues: update the mathematics fonts in every repository, one at a time, on the owner's word.
 
+**Owner** (04:41): In coming 24 hours we need to finish the curvature topics: Sectional Curvature, pictorial definition, Reimann curvature tensor , then the Ricci Flow is complete
+
+**Owner** (04:41): make a reminder to let me know tomorrow afternoon at 2pm
+
+**Hikari Noor Hoshino:** Set the reminder for Thursday 26 November, 14:00, as the owner chose. Added the four parts to `TODO.md` in GitHub ccn-hoshino-and-colleagues, due Friday 27 November, 04:41: the Riemann tensor, sectional curvature, its pictorial definition, and the rewrite of Ricci part 1.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
