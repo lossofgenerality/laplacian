@@ -317,6 +317,14 @@ Building this showed that two helpers had no book source: `christoffel` and `rie
 
 **Hikari Noor Hoshino:** Changed the correction in §1 to read "The colleagues’ review pointed to p. 14". Re-exported the PDF, and checked that "owner’s review" no longer appears. Not pushed.
 
+**Owner** (22:55–22:57): rerun the cells no push yet; I need the notebook
+
+**Hikari Noor Hoshino:** Reran all 13 input cells in a fresh session, with every check at 0, and re-exported the PDF (37 pages). Sent the notebook with its outputs saved, which means it now carries book OCR text and page images and is for private reading only.
+
+**Owner** (27 November 2026, 00:25): We need to pause here, the definitions for the Covariant Derivatives are difficult for grad students and I need to find a better way for you to interpret those images in the test. The interpretations you made are not correct but can got the correct answers. Do not take this as your errors, this is my bad management. Let us leave this as is now. I will talk to you in other projects shortly.
+
+**Hikari Noor Hoshino:** Paused as it stands. Nothing pushed.
+
 ### Diagrams, images and files placed into the session
 
 1. Screenshots from the owner of the curve-shortening animation, notebook errors in §2 and under Fig. 10, and the Ricci animation (in the claude.ai chat).
